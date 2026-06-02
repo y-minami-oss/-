@@ -21,7 +21,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 from .config import load_config
-from .extract_receipt import IMAGE_MEDIA_TYPES, extract_receipt
+from .extract_receipt import IMAGE_MEDIA_TYPES, extract_receipt, mock_extract
 from .models import Receipt
 
 SUPPORTED_SUFFIXES = set(IMAGE_MEDIA_TYPES) | {".pdf"}
@@ -65,7 +65,17 @@ def main() -> None:
         action="store_true",
         help="読み取りだけ行い、TeamSpirit には入力しない",
     )
+    parser.add_argument(
+        "--mock",
+        action="store_true",
+        help="Claudeを呼ばずダミーデータで動かす(APIキー不要・動作確認用)",
+    )
     args = parser.parse_args()
+
+    # 読み取り関数を選ぶ(モック or 本物)
+    extract = mock_extract if args.mock else extract_receipt
+    if args.mock:
+        print("⚠ モックモード: ダミーデータで動作確認します(Claudeは呼びません)。\n")
 
     inbox = Path(cfg["paths"]["inbox"])
     processed = Path(cfg["paths"]["processed"])
@@ -84,7 +94,7 @@ def main() -> None:
     for path in receipts:
         print(f"📄 読み取り中: {path.name}")
         try:
-            receipt = extract_receipt(path, categories)
+            receipt = extract(path, categories)
         except Exception as e:
             print(f"  ✗ 読み取り失敗: {e}\n")
             continue

@@ -50,6 +50,16 @@ cp config.example.yaml config.yaml
 
 ## 使い方
 
+### APIキーがまだ無い場合 — モックモードで流れだけ試す
+
+Claudeを呼ばずダミーデータで全体の流れを確認できます(APIキー不要):
+
+```bash
+source .venv/bin/activate
+# inbox/ に適当な画像かPDFを1枚入れてから:
+python -m src.run --mock --extract-only
+```
+
 ### まず「読み取りだけ」を試す(TeamSpiritには触りません)
 
 `inbox/` に領収書の写真かPDFを入れて:
@@ -102,6 +112,15 @@ python -m src.inspect_form
 `form_dump.txt` を共有してもらえれば、セレクタ特定と実装を一緒に進められます。
 
 ---
+
+## テスト
+
+APIキー無しで動く自動テストがあります(Claudeは偽クライアントで差し替え):
+
+```bash
+source .venv/bin/activate
+python -m unittest tests.test_logic -v
+```
 
 ## ファイル構成
 

@@ -128,6 +128,27 @@ def extract_receipt(
     return receipt
 
 
+def mock_extract(file_path: str | Path, categories: list[str]) -> Receipt:
+    """APIキー無しで全体の流れを試すためのダミー読み取り。
+
+    ファイル名から決め打ちのデータを返すだけで、Claude は呼びません。
+    `python -m src.run --mock` から使います。
+    """
+    file_path = Path(file_path)
+    return Receipt(
+        date="2026-06-01",
+        amount=1480,
+        currency="JPY",
+        vendor=f"(モック) {file_path.stem}",
+        category=categories[0] if categories else "雑費",
+        description="モックデータ(APIキー無しの動作確認用)",
+        tax_amount=134,
+        payment_method="クレジットカード",
+        confidence=1.0,
+        notes="これはダミーです。実データではありません。",
+    )
+
+
 if __name__ == "__main__":
     # 単体動作確認用: python -m src.extract_receipt <ファイル>
     if len(sys.argv) < 2:

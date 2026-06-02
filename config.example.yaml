@@ -1,0 +1,37 @@
+# 設定サンプル。これを config.yaml にコピーして自分用に編集してください。
+#   cp config.example.yaml config.yaml
+
+# 経費の科目(勘定科目)候補。
+# 領収書を読み取るとき、Claude にこの一覧から最も近いものを選ばせます。
+# ★ご自身の TeamSpirit で実際に使える科目名に書き換えてください。
+expense_categories:
+  - 旅費交通費
+  - 会議費
+  - 接待交際費
+  - 消耗品費
+  - 通信費
+  - 新聞図書費
+  - 諸会費
+  - 雑費
+
+# 入力時の挙動
+behavior:
+  # true: 入力・領収書添付まで行い「下書き保存」で止める(人が最終確認して申請)
+  # false: 申請の確定まで自動で行う(慣れてから true→false に変更を推奨)
+  # ★安全のため既定は true(下書きで止める)
+  draft_only: true
+
+  # ブラウザを画面に表示するか。最初は true にして動きを目視確認するのがおすすめ。
+  # 慣れたら false でバックグラウンド実行(headless)。
+  show_browser: true
+
+  # 1件入力するごとに人の確認を待つか
+  confirm_each: true
+
+# フォルダ設定(通常は変更不要)
+paths:
+  inbox: inbox        # ここに領収書を入れる
+  processed: processed # 処理が終わった領収書の移動先
+
+# 既定の通貨(領収書から読み取れない場合のフォールバック)
+default_currency: JPY

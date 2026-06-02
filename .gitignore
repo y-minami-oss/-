@@ -1,0 +1,31 @@
+# 認証情報 — 絶対にコミットしない
+.env
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+.python-version
+
+# 領収書・処理結果(個人情報を含むためコミットしない)
+inbox/*
+!inbox/.gitkeep
+processed/*
+!processed/.gitkeep
+*.png
+*.jpg
+*.jpeg
+*.pdf
+
+# Playwright が保存するログイン状態(セッション)
+.auth/
+storage_state.json
+
+# 実際の設定(科目マッピング等。サンプルだけ管理)
+config.yaml
+
+# OS / エディタ
+.DS_Store
+.vscode/
+.idea/

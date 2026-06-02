@@ -1,0 +1,13 @@
+# TeamSpirit 経費申請 自動化ツール — 依存パッケージ
+#
+# インストール手順 (Mac):
+#   python3 -m venv .venv
+#   source .venv/bin/activate
+#   pip install -r requirements.txt
+#   playwright install chromium
+
+anthropic>=0.92.0      # Claude API (領収書の読み取り / Vision・PDF)
+playwright>=1.49.0     # ブラウザ自動操作 (TeamSpirit への入力)
+pydantic>=2.0          # 抽出結果の構造化・検証
+PyYAML>=6.0            # 設定ファイル(config.yaml)の読み込み
+python-dotenv>=1.0     # .env から認証情報を読み込む

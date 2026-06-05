@@ -1,0 +1,45 @@
+# プロジェクトシート 毎月更新ツール 設定サンプル。
+#   cp project_sheet/config.example.yaml project_sheet/config.yaml
+# として、自分用に編集してください(config.yaml は .gitignore 済み)。
+
+# マネジメントシート(全体シート)のスプレッドシートID。
+# URL: https://docs.google.com/spreadsheets/d/<ここがID>/edit
+master_spreadsheet_id: "1-TTEKJH6MyKiFeSAJzHdSUCDciwRZHWmRk_Kx6FuRFc"
+master_sheet_name: "全体シート"
+
+# 自分(担当者)の名前。全体シートの CS/SSP/TSP/CC 担当 列に入っている表記と一致させる。
+owner: "三並"
+
+# 効果測定シート側の、投稿データが自動で溜まるタブ名。
+dc_sheet_name: "簡単DC"
+
+# クライアント名 -> 効果測定シートのスプレッドシートID の対応表。
+# ここに書いておくと確実(名前検索のゆらぎを避けられる)。
+# 未登録のクライアントは、実行時にタイトル検索でフォールバックします。
+# ★ID は効果測定シートのURL https://docs.google.com/spreadsheets/d/<ID>/edit から。
+koka_spreadsheet_ids:
+  "株式会社廣記商行": "1bDNDQiGCPN5lA9lX-VBBe1V4SQWSJd2W4N4OByYKTS8"
+  "株式会社利久": "1xgc_vC_r2PCmziTW6QLGPQorIVUwEQGPVQfGdU9jSSQ"
+  "R&C株式会社": "1VIWrsNdH_3j47emYEZFTETCi4MJbeYumKRT36yf_1_o"
+  " B-first株式会社 / Agu.": "1F2lT6T2PMVD1VqouucuReuoIww2NZlm_QAQPhrlqKt0"
+  # 以下は実行時にタイトル検索で見つかればそれを使う。確実にしたい場合はIDを追記:
+  # "株式会社TOWA/恭子ママ": ""
+  # "税理士法人イデアコンサルティング": ""
+  # "さくらフォレスト株式会社": ""
+  # "医療法人社団 凰佳会 / ノア歯科": ""
+  # "東京ビックハウス株式会社": ""
+  # "出光リテール販売株式会社": ""
+  # "株式会社トータルライフプロモーターズ / MOHIPILATES": ""
+  # "しろくま電力株式会社": ""
+  # "三承工業株式会社": ""
+  # "AOE株式会社": ""
+  # "有限会社山謙": ""
+  # "株式会社ラングローブ": ""
+
+# タイトル検索フォールバックで使うキーワード(クライアント名から自動生成しづらい場合に指定)。
+# 例: "B-first株式会社 / Agu." -> "B-first"
+search_keyword_overrides:
+  " B-first株式会社 / Agu.": "B-first"
+  "医療法人社団 凰佳会 / ノア歯科": "ノア歯科"
+  "株式会社トータルライフプロモーターズ / MOHIPILATES": "MOHIPILATES"
+  "株式会社TOWA/恭子ママ": "恭子ママ"

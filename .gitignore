@@ -28,6 +28,14 @@ form_dump.html
 
 # 実際の設定(科目マッピング等。サンプルだけ管理)
 config.yaml
+project_sheet/config.yaml
+
+# プロジェクトシートツール: Google OAuth 認証情報(絶対にコミットしない)
+credentials.json
+token.json
+
+# ダウンロードした実シート(顧客データを含むためコミットしない)
+*.xlsx
 
 # OS / エディタ
 .DS_Store

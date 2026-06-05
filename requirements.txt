@@ -11,3 +11,9 @@ playwright>=1.49.0     # ブラウザ自動操作 (TeamSpirit への入力)
 pydantic>=2.0          # 抽出結果の構造化・検証
 PyYAML>=6.0            # 設定ファイル(config.yaml)の読み込み
 python-dotenv>=1.0     # .env から認証情報を読み込む
+
+# --- プロジェクトシート 毎月更新ツール (project_sheet/) ---
+gspread>=6.0                 # Google スプレッドシートの読み取り
+google-auth>=2.0             # Google 認証
+google-auth-oauthlib>=1.0    # OAuth(初回ブラウザ認証)
+openpyxl>=3.1                # ダウンロードした .xlsx の読み取り(オフライン/テスト)

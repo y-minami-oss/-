@@ -228,8 +228,9 @@
   .hero .cta{margin-top:30px}
   /* 流れる極細グラデ罫 */
   .rule{background:linear-gradient(90deg,transparent,var(--gold),transparent);height:1px;width:80px;opacity:.9}
-  /* 可変タイポ（端末幅で最適化） */
-  .hero h1{font-size:clamp(28px,8.6vw,36px)}
+  /* 可変タイポ（端末幅で最適化）— 文節は途中で折り返さない */
+  .hero h1{font-size:clamp(23px,6.8vw,32px)}
+  .hero h1 .ln{display:inline-block;white-space:nowrap}
   .sec-title{font-size:clamp(21px,6vw,24px)}
 
   /* 恭子ママ・メッセージ */
@@ -320,7 +321,7 @@
   <!-- ヒーロー -->
   <header class="hero">
     <span class="eyebrow">大阪ミナミ 会員制ラウンジ「永遠」｜未経験歓迎</span>
-    <h1 class="serif">未経験でも、大丈夫。<br>30代からでも、<span class="g">遅くない。</span></h1>
+    <h1 class="serif"><span class="ln">未経験でも、大丈夫。</span><br><span class="ln">30代からでも、<span class="g">遅くない。</span></span></h1>
     <p class="lead">夜の仕事が初めてでも。お酒が弱くても。ひとりが不安でも。<br>——まずは恭子ママに、話を聞いてみませんか。</p>
     <!-- ベネフィット即提示（不安に直接答える） -->
     <div class="benefits">

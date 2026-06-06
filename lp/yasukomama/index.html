@@ -313,8 +313,29 @@
 <script id="config">
   const LINE_URL = "https://lin.ee/6VX0gci"; // 公式LINE友だち追加URL
   const DM_URL   = "https://www.tiktok.com/@towamembers";
+  const GA_ID    = "G-XXXXXXXXXX"; // ★【要差し替え】GA4 測定ID（管理画面で発行）
 </script>
 <script>
+  // ---- GA4 計測（測定IDが設定されている時だけ読み込む） ----
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ dataLayer.push(arguments); }
+  (function(){
+    if(!GA_ID || GA_ID.indexOf("XXXX") !== -1) return; // 未設定なら何もしない
+    var s=document.createElement("script"); s.async=true;
+    s.src="https://www.googletagmanager.com/gtag/js?id="+GA_ID;
+    document.head.appendChild(s);
+    gtag('js', new Date());
+    gtag('config', GA_ID);
+    // 流入元(UTM/TikTok)をユーザープロパティとして保持
+    var p=new URLSearchParams(location.search);
+    gtag('set','user_properties',{
+      utm_source:p.get('utm_source')||'', utm_medium:p.get('utm_medium')||'',
+      utm_campaign:p.get('utm_campaign')||'', landing_video:p.get('v')||''
+    });
+  })();
+  function track(name, params){ try{ gtag('event', name, params||{}); }catch(e){} }
+
+  // ---- CTAリンク反映＋クリックをコンバージョン計測 ----
   (function(){
     var ok = LINE_URL && LINE_URL.indexOf("#REPLACE") === -1;
     ["line-mid","line-sticky"].forEach(function(id){
@@ -322,8 +343,10 @@
       if(ok){ el.href=LINE_URL; }
       else{ el.addEventListener("click",function(e){e.preventDefault();
         alert("【設定待ち】公式LINEのURLを config の LINE_URL に設定してください。");});}
+      el.addEventListener("click",function(){ track('line_add_click',{location:id}); });
     });
-    var dm=document.getElementById("dm-link-1"); if(dm) dm.href=DM_URL;
+    var dm=document.getElementById("dm-link-1");
+    if(dm){ dm.href=DM_URL; dm.addEventListener("click",function(){ track('dm_click'); }); }
   })();
   (function(){
     var ua=(navigator.userAgent||"").toLowerCase();

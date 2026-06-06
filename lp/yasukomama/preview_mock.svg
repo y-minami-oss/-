@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="990" viewBox="0 0 480 990" font-family="'Hiragino Kaku Gothic ProN','Yu Gothic',sans-serif">
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#C9A64A"/><stop offset="1" stop-color="#A8822B"/>
+    </linearGradient>
+    <linearGradient id="heroBg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFDF8"/><stop offset="1" stop-color="#F7F2E9"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 背景 -->
+  <rect width="480" height="990" fill="#F7F2E9"/>
+  <rect width="480" height="520" fill="url(#heroBg)"/>
+
+  <!-- ヘッダー -->
+  <text x="240" y="40" text-anchor="middle" font-family="serif" font-size="22" letter-spacing="7" fill="#2C2620">永 遠</text>
+  <text x="240" y="60" text-anchor="middle" font-family="serif" font-size="9" letter-spacing="5" fill="#A8822B">LOUNGE EIEN · CLUB ETERNITY</text>
+  <line x1="0" y1="80" x2="480" y2="80" stroke="#2C2620" stroke-opacity="0.10"/>
+
+  <!-- eyebrow -->
+  <text x="240" y="124" text-anchor="middle" font-family="serif" font-size="11" letter-spacing="3" fill="#A8822B">大阪ミナミ ｜ ラウンジ求人・未経験歓迎</text>
+
+  <!-- 見出し -->
+  <text x="240" y="172" text-anchor="middle" font-family="serif" font-size="31" letter-spacing="2" fill="#2C2620">ここにいれば、</text>
+  <text x="240" y="214" text-anchor="middle" font-family="serif" font-size="31" letter-spacing="2" fill="#5C0F18">大丈夫。</text>
+
+  <!-- リード -->
+  <text x="240" y="252" text-anchor="middle" font-size="13" fill="#5F5448">大阪ミナミの会員制ラウンジ「永遠」。</text>
+  <text x="240" y="274" text-anchor="middle" font-size="13" fill="#5F5448">未経験から、長く。あなたの再出発を応援します。</text>
+
+  <!-- ベネフィットchip 行1 -->
+  <g font-size="11.5" fill="#2C2620" text-anchor="middle">
+    <rect x="96"  y="298" width="86" height="30" rx="15" fill="#fff" stroke="#A8822B" stroke-opacity="0.3"/>
+    <text x="139" y="318"><tspan fill="#A8822B" font-weight="bold">未経験</tspan> OK</text>
+    <rect x="190" y="298" width="100" height="30" rx="15" fill="#fff" stroke="#A8822B" stroke-opacity="0.3"/>
+    <text x="240" y="318"><tspan fill="#A8822B" font-weight="bold">30代</tspan> 活躍中</text>
+    <rect x="298" y="298" width="86" height="30" rx="15" fill="#fff" stroke="#A8822B" stroke-opacity="0.3"/>
+    <text x="341" y="318"><tspan fill="#A8822B" font-weight="bold">3ヶ月</tspan> 保証</text>
+  </g>
+  <!-- chip 行2 -->
+  <g font-size="11.5" fill="#2C2620" text-anchor="middle">
+    <rect x="146" y="336" width="86" height="30" rx="15" fill="#fff" stroke="#A8822B" stroke-opacity="0.3"/>
+    <text x="189" y="356">ドレス <tspan fill="#A8822B" font-weight="bold">無料</tspan></text>
+    <rect x="240" y="336" width="98" height="30" rx="15" fill="#fff" stroke="#A8822B" stroke-opacity="0.3"/>
+    <text x="289" y="356">体験 <tspan fill="#A8822B" font-weight="bold">だけOK</tspan></text>
+  </g>
+
+  <!-- CTA -->
+  <rect x="40" y="392" width="400" height="62" rx="12" fill="url(#gold)"/>
+  <circle cx="150" cy="418" r="5" fill="#fff" stroke="#06c755" stroke-width="2"/>
+  <text x="240" y="423" text-anchor="middle" font-family="serif" font-size="17" letter-spacing="2" fill="#fff">まずはLINEで話を聞く</text>
+  <text x="240" y="441" text-anchor="middle" font-size="9" letter-spacing="3" fill="#ffffff" fill-opacity="0.85">ADD FRIEND · 体験 / ご相談</text>
+  <text x="240" y="474" text-anchor="middle" font-size="11" fill="#5F5448">＼ 質問だけでOK・1分・しつこい連絡はしません ／</text>
+
+  <!-- 額装フレーム（メインビジュアル枠） -->
+  <rect x="120" y="500" width="240" height="426" rx="3" fill="#FBF6EC" stroke="#A8822B" stroke-opacity="0.3"/>
+  <rect x="128" y="508" width="224" height="410" rx="2" fill="none" stroke="#A8822B" stroke-opacity="0.18"/>
+  <text x="240" y="715" text-anchor="middle" font-family="serif" font-size="40" fill="#A8822B">永</text>
+  <text x="240" y="745" text-anchor="middle" font-family="serif" font-size="9" letter-spacing="3" fill="#5F5448">MAIN VISUAL</text>
+  <text x="240" y="900" text-anchor="middle" font-size="9" fill="#A8822B" fill-opacity="0.8">★ 恭子ママの写真が入る場所（素材待ち）</text>
+
+  <!-- 追従CTA（イメージ） -->
+  <rect x="0" y="930" width="480" height="60" fill="#F7F2E9" fill-opacity="0.96"/>
+  <line x1="0" y1="930" x2="480" y2="930" stroke="#A8822B" stroke-opacity="0.3"/>
+  <rect x="22" y="944" width="436" height="40" rx="10" fill="url(#gold)"/>
+  <text x="240" y="969" text-anchor="middle" font-family="serif" font-size="15" letter-spacing="2" fill="#fff">まずはLINEで話を聞く</text>
+</svg>

@@ -231,6 +231,34 @@
   /* 可変タイポ（端末幅で最適化） */
   .hero h1{font-size:clamp(28px,8.6vw,36px)}
   .sec-title{font-size:clamp(21px,6vw,24px)}
+
+  /* 恭子ママ・メッセージ */
+  .mama{background:var(--paper);border-top:1px solid var(--hair-soft);
+    border-bottom:1px solid var(--hair-soft);padding:54px 26px;text-align:center}
+  .mama .portrait{width:128px;height:128px;margin:0 auto 22px;border-radius:50%;overflow:hidden;
+    border:1px solid var(--hair);background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow)}
+  .mama .portrait .mono{font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;font-size:46px;color:var(--gold)}
+  .mama .portrait img{width:100%;height:100%;object-fit:cover}
+  .mama .role{font-size:11px;letter-spacing:.2em;color:var(--gold);font-family:"Cormorant Garamond",serif}
+  .mama .msg{font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;font-weight:300;
+    font-size:16.5px;line-height:2.5;letter-spacing:.06em;color:var(--ink);margin-top:14px}
+  .mama .sign{margin-top:22px;font-size:12.5px;letter-spacing:.1em;color:var(--ink)}
+  .mama .sign b{font-family:"Shippori Mincho",serif;font-weight:500}
+  /* 実績バンド */
+  .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--hair-soft);
+    border:1px solid var(--hair-soft);margin-top:30px}
+  .stats div{background:var(--paper);padding:22px 8px;text-align:center}
+  .stats b{display:block;font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;font-size:26px;color:var(--gold);font-weight:400}
+  .stats b small{font-size:13px}
+  .stats span{font-size:11px;color:var(--muted);letter-spacing:.04em;margin-top:6px;display:block}
+  /* 不安解消カード「みんな最初は同じ」 */
+  .same{display:flex;flex-direction:column;gap:12px;margin-top:24px}
+  .same .c{background:var(--bg2);border:1px solid var(--hair-soft);border-radius:14px;
+    padding:18px;box-shadow:var(--shadow)}
+  .same .tag{display:inline-block;font-size:11px;color:var(--gold);border:1px solid var(--hair);
+    border-radius:999px;padding:4px 12px;letter-spacing:.06em;margin-bottom:12px}
+  .same .ln{font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;font-size:15px;color:var(--ink);line-height:1.9}
+  .same .ln .ar{color:var(--gold);margin:0 7px;font-family:"Cormorant Garamond",serif}
 </style>
 </head>
 <body>
@@ -245,7 +273,7 @@
   <!-- グラス・アップバー（スクロールで出現） -->
   <div class="appbar" id="appbar">
     <span class="bar-b">永 遠</span>
-    <a id="line-bar" href="#" target="_blank" rel="noopener">LINEで話を聞く</a>
+    <a id="line-bar" href="#" target="_blank" rel="noopener">LINEで相談</a>
   </div>
 
   <!-- ヘッダー -->
@@ -256,36 +284,44 @@
 
   <!-- ヒーロー -->
   <header class="hero">
-    <span class="eyebrow">大阪ミナミ ｜ ラウンジ求人・未経験歓迎</span>
-    <h1 class="serif">ここにいれば、<br><span class="g">大丈夫。</span></h1>
-    <p class="lead">大阪ミナミの会員制ラウンジ「永遠」。<br>未経験から、長く。あなたの再出発を応援します。</p>
-    <!-- ベネフィット即提示（FVで価値を3秒で） -->
+    <span class="eyebrow">大阪ミナミ 会員制ラウンジ「永遠」｜未経験歓迎</span>
+    <h1 class="serif">未経験でも、大丈夫。<br>30代からでも、<span class="g">遅くない。</span></h1>
+    <p class="lead">夜の仕事が初めてでも。お酒が弱くても。ひとりが不安でも。<br>——まずは恭子ママに、話を聞いてみませんか。</p>
+    <!-- ベネフィット即提示（不安に直接答える） -->
     <div class="benefits">
-      <span class="chip"><b>未経験</b> OK</span>
+      <span class="chip"><b>未経験</b> 歓迎</span>
       <span class="chip"><b>30代</b> 活躍中</span>
-      <span class="chip"><b>3ヶ月</b> 保証</span>
-      <span class="chip">ドレス <b>無料</b></span>
+      <span class="chip">ノルマ <b>なし</b></span>
+      <span class="chip">お酒弱くても <b>OK</b></span>
       <span class="chip">体験 <b>だけOK</b></span>
     </div>
-    <!-- FV直下CTA（離脱前にCV機会） -->
+    <!-- FV直下CTA（相談ベース） -->
     <a class="cta" id="line-hero" href="#" target="_blank" rel="noopener">
-      <span class="main"><span class="dot"></span>まずはLINEで話を聞く</span>
-      <span class="en">Add Friend · 体験 / ご相談</span>
+      <span class="main"><span class="dot"></span>私でも働けるか、聞いてみる</span>
+      <span class="en">Add Friend · 30秒で相談</span>
     </a>
-    <p class="cta-note">＼ 質問だけでOK・1分・しつこい連絡はしません ／</p>
+    <p class="cta-note">＼ 質問だけでOK・しつこい連絡はしません ／</p>
     <!-- 【画像①】縦9:16 ／ ★恭子ママの顔写真 推奨（人柄ドリブンの磁石）。無くても額装として成立 -->
     <div class="frame r916">
       <div class="mark"><div class="mono">永</div><div class="cap">Main Visual</div></div>
     </div>
   </header>
 
-  <!-- コンセプト（余白多用・写真なしでも主役級） -->
-  <div class="concept">
-    <p class="serif">一生、<br>働きたいと思える場所へ。</p>
-    <p class="small">夜の仕事に、品格を。<br>未経験でも、長く。誰かの“第二の家”のように。<br>ここは、大人のための場所です。</p>
-    <!-- ★実績は実数値で更新可（出典：採用実績）。社会的証明として有効 -->
-    <p class="proof">この一年で、20名以上が新たに永遠へ。</p>
-  </div>
+  <!-- 恭子ママより（応募理由の多くがママへの信頼） -->
+  <section class="mama">
+    <!-- 【画像】恭子ママの顔写真（1:1）。無くてもモノグラムで成立 -->
+    <div class="portrait"><div class="mono">恭</div></div>
+    <div class="role">KYOKO — Owner Mama</div>
+    <p class="msg">「うちは、技術より“人”やと思てる。<br>未経験でも、30代でも、お酒が弱くても——<br>大事なんは、続けたいって気持ちだけ。<br>あとは、私らが全部教えるから。<br>ひとりにはせえへんよ。」</p>
+    <p class="sign">— 恭子ママ ／ ラウンジ永遠 オーナー</p>
+    <!-- ★実績は実数で更新可。社会的証明 -->
+    <div class="stats">
+      <div><b>9<small>割</small></b><span>未経験スタート</span></div>
+      <div><b>20<small>名+</small></b><span>年間の入店実績</span></div>
+      <div><b>11.7<small>万</small></b><span>SNSフォロワー</span></div>
+      <div><b>3<small>ヶ月</small></b><span>給与保証あり</span></div>
+    </div>
+  </section>
 
   <!-- 待遇 -->
   <section>
@@ -303,6 +339,23 @@
     </div>
   </section>
 
+  <!-- 不安解消：みんな最初は同じでした -->
+  <section>
+    <span class="sec-label eyebrow">You are not alone</span>
+    <h2 class="sec-title serif">みんな、最初は同じでした</h2>
+    <p class="sec-sub">いま活躍している先輩も、はじめは不安だらけ。<br>あなたの「できるかな」は、ちゃんと超えられます。</p>
+    <div class="same">
+      <div class="c"><span class="tag">未経験だった</span>
+        <p class="ln">「夜の仕事、初めてで怖い」<span class="ar">→</span>役職とお姉さんが基本から指導。今は毎日が楽しい。</p></div>
+      <div class="c"><span class="tag">30代・ブランクあり</span>
+        <p class="ln">「この年で雇ってもらえる？」<span class="ar">→</span>30〜40代の先輩も多数。年齢より気持ち。</p></div>
+      <div class="c"><span class="tag">お酒が苦手</span>
+        <p class="ln">「お酒が弱くて続くか不安」<span class="ar">→</span>無理に飲ませない。周りの支えで続けられる。</p></div>
+      <div class="c"><span class="tag">人間関係が心配</span>
+        <p class="ln">「女の子同士、怖そう…」<span class="ar">→</span>派閥なし。入って一番驚くのが“仲の良さ”。</p></div>
+    </div>
+  </section>
+
   <!-- 額装ビジュアル帯（店内/雰囲気） -->
   <div style="padding:0 26px 8px">
     <!-- 【画像②】4:3 ／ 店内・内装の写真 -->
@@ -315,28 +368,28 @@
   <section>
     <span class="sec-label eyebrow">Voices</span>
     <h2 class="sec-title serif">先輩の言葉</h2>
-    <p class="sec-sub">動画を見て、ここを選んだ先輩たちより。</p>
+    <p class="sec-sub">応募前の不安 → 入店後の変化 → 今の働き方。</p>
     <div style="margin-top:24px">
       <div class="voice">
         <div class="qm">“</div>
-        <div class="q">未経験でも全然いける。新しいことをたくさん知れて、毎日が楽しい。夜の仕事が初めてで怖いという人ほど、来てほしい。</div>
-        <div class="meta"><span class="ini">R</span>20代・未経験 ／ 前職 居酒屋</div>
+        <div class="q"><b>応募前：</b>夜の仕事が初めてで、ただただ怖かった。<br><b>入店後：</b>ママもお姉さんも黒服さんも、みんな優しかった。<br><b>今：</b>覚えることは多いけど毎日が楽しい。来て良かった。</div>
+        <div class="meta"><span class="ini">R</span>20代・未経験 ／ 前職 居酒屋バイト</div>
       </div>
       <div class="voice">
         <div class="qm">“</div>
-        <div class="q">派閥がなく、誰かを蹴落とす空気もない。最初は緊張したけれど、どの先輩も品があって、優しい。それが続けられる理由です。</div>
+        <div class="q"><b>応募前：</b>30代・未経験で、雇ってもらえるか不安だった。<br><b>入店後：</b>派閥がなく、誰も蹴落とさない。先輩が優しい。<br><b>今：</b>女性だけの職場特有のギスギスが無いのが、続く理由。</div>
         <div class="meta"><span class="ini">H</span>30代・未経験 ／ 前職 アパレル</div>
       </div>
       <div class="voice">
         <div class="qm">“</div>
-        <div class="q">ブランクも年齢も不安でした。お酒が強くない私でも、周りの支えでやっていけています。迷っている時間が、もったいない。</div>
-        <div class="meta"><span class="ini">M</span>40代・経験者 ／ 前職 別業種</div>
+        <div class="q"><b>応募前：</b>ブランクも年齢も、お酒の弱さも不安だった。<br><b>入店後：</b>無理に飲まされず、周りが支えてくれた。<br><b>今：</b>ここが最後の場所。迷っている時間がもったいない。</div>
+        <div class="meta"><span class="ini">M</span>40代 ／ 前職 別業種</div>
       </div>
     </div>
     <!-- 声を読んで気持ちが動いた地点にCTA -->
     <a class="cta" id="line-voices" href="#" target="_blank" rel="noopener" style="margin-top:24px">
-      <span class="main"><span class="dot"></span>私も話を聞いてみる</span>
-      <span class="en">Add Friend · 体験 / ご相談</span>
+      <span class="main"><span class="dot"></span>私も相談してみる</span>
+      <span class="en">Add Friend · 質問だけでもOK</span>
     </a>
     <p class="cta-note">＼ 質問だけでOK・1分で完了 ／</p>
   </section>
@@ -356,10 +409,10 @@
   <!-- CTA（中間） -->
   <section style="padding-top:24px">
     <a class="cta" id="line-mid" href="#" target="_blank" rel="noopener">
-      <span class="main"><span class="dot"></span>まずはLINEで話を聞く</span>
-      <span class="en">Add Friend · 体験 / ご相談</span>
+      <span class="main"><span class="dot"></span>まず相談する（30秒）</span>
+      <span class="en">Add Friend · 質問だけでもOK</span>
     </a>
-    <p class="cta-note">＼ 質問だけでOK・1分で完了・しつこい連絡はしません ／</p>
+    <p class="cta-note">＼ 応募じゃなくて“相談”からでOK・しつこい連絡はしません ／</p>
     <p class="cta-sub">うまく開けない方は <a href="#" id="dm-link-1">TikTok DM</a>、または「ラウンジ永遠 採用」で検索を。</p>
   </section>
 
@@ -368,7 +421,10 @@
     <span class="sec-label eyebrow">Questions</span>
     <h2 class="sec-title serif">よくあるご質問</h2>
     <div style="margin-top:22px">
+      <details><summary>ノルマはありますか。</summary><div class="a">厳しいノルマで追い込むようなことはありません。あなたのペースに合わせて、役職が一緒に目標を考えます。</div></details>
+      <details><summary>未経験でも稼げますか。</summary><div class="a">お客様が多く集客力があるため、未経験からでも着実に伸ばせます。3ヶ月の給与保証もあるので、安心してスタートできます。</div></details>
       <details><summary>未経験ですが、大丈夫でしょうか。</summary><div class="a">はい。今いる先輩の多くが未経験からの出発です。役職・お姉さんが基本から丁寧にお教えします。</div></details>
+      <details><summary>人間関係は厳しいですか。</summary><div class="a">派閥はありません。「入って一番驚いたのが仲の良さ」という声が多数。困ったときは役職にいつでも相談できます。</div></details>
       <details><summary>30代・ブランクがあっても働けますか。</summary><div class="a">もちろんです。30代・40代で活躍する先輩も多数。年齢より、踏み出す気持ちを大切にしています。</div></details>
       <details><summary>お酒が強くありません。</summary><div class="a">無理にお飲みいただくことはありません。周りの支えのなかで、長く続けていただけます。</div></details>
       <details><summary>昼のお仕事と両立できますか。</summary><div class="a">自由出勤のため両立されている方もいます。【—：最低出勤日数など】</div></details>
@@ -377,8 +433,8 @@
     </div>
     <!-- 疑問が解消した地点にCTA -->
     <a class="cta" id="line-faq" href="#" target="_blank" rel="noopener" style="margin-top:28px">
-      <span class="main"><span class="dot"></span>不安が消えたら、LINEへ</span>
-      <span class="en">Add Friend · 体験 / ご相談</span>
+      <span class="main"><span class="dot"></span>不安が消えたら、まず相談</span>
+      <span class="en">Add Friend · 質問だけでもOK</span>
     </a>
     <p class="cta-note">＼ 質問だけでOK・しつこい連絡はしません ／</p>
   </section>
@@ -405,8 +461,8 @@
 <!-- 追従CTA -->
 <div id="sticky">
   <a class="cta" id="line-sticky" href="#" target="_blank" rel="noopener">
-    <span class="main"><span class="dot"></span>まずはLINEで話を聞く</span>
-    <span class="en">Add Friend · 体験 / ご相談</span>
+    <span class="main"><span class="dot"></span>まず相談する（30秒）</span>
+    <span class="en">Add Friend · 質問だけでもOK</span>
   </a>
 </div>
 

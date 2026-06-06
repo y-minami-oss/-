@@ -275,6 +275,25 @@
   .cmp .ours{background:rgba(212,175,55,.07)}
   .cmp .o{color:var(--gold);font-weight:700}
   .cmp .x{color:var(--muted)}
+
+  /* ===== 視覚的メリハリ（セクション色分け・大型数字・CTA帯） ===== */
+  section.tint{background:var(--paper);border-top:1px solid var(--hair-soft);border-bottom:1px solid var(--hair-soft)}
+  section.white{background:#fff;border-top:1px solid var(--hair-soft);border-bottom:1px solid var(--hair-soft)}
+  /* セクションラベルをピル化（視線の起点） */
+  .sec-label.eyebrow{display:table;margin:0 auto 16px;border:1px solid var(--hair);
+    border-radius:999px;padding:6px 16px;background:var(--bg2)}
+  /* 数字を主役級に大きく */
+  .stats b{font-size:clamp(34px,10vw,42px);line-height:1}
+  .info .kpi b{font-size:clamp(28px,8.5vw,36px);line-height:1}
+  /* CTAアクセント帯（CVを視覚的に最強調） */
+  .cta-band{background:linear-gradient(165deg,#3a0a0f,#5C0F18);padding:52px 26px;text-align:center}
+  .cta-band h3{font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;font-weight:300;
+    color:#F8F4EC;font-size:clamp(20px,6vw,23px);line-height:1.85;letter-spacing:.06em;margin-bottom:10px}
+  .cta-band .lead2{color:rgba(248,244,236,.72);font-size:12.5px;line-height:1.9;margin-bottom:24px}
+  .cta-band .cta{border:1px solid rgba(212,175,55,.55)}
+  .cta-band .cta-note{color:rgba(248,244,236,.6)}
+  .cta-band .cta-sub{color:rgba(248,244,236,.6)}
+  .cta-band .cta-sub a{color:var(--gold)}
 </style>
 </head>
 <body>
@@ -321,7 +340,7 @@
   </header>
 
   <!-- 共感・問題提起（情報設計：共感→問題提起） -->
-  <section>
+  <section class="tint">
     <span class="sec-label eyebrow">Are you worried?</span>
     <h2 class="sec-title serif">こんな不安、<br>ありませんか？</h2>
     <div class="pains">
@@ -350,7 +369,7 @@
   </section>
 
   <!-- 他社比較（情報設計：他社比較で優位性を可視化） -->
-  <section>
+  <section class="white">
     <span class="sec-label eyebrow">Why 永遠</span>
     <h2 class="sec-title serif">他のお店と、<br>ここが違います</h2>
     <div class="cmp">
@@ -365,7 +384,7 @@
   </section>
 
   <!-- 待遇 -->
-  <section>
+  <section class="tint">
     <span class="sec-label eyebrow">Conditions</span>
     <h2 class="sec-title serif">働く条件</h2>
     <p class="sec-sub">条件は、入ってから—ではなく。<br>はじめに、すべてお伝えします。</p>
@@ -381,7 +400,7 @@
   </section>
 
   <!-- 不安解消：みんな最初は同じでした -->
-  <section>
+  <section class="white">
     <span class="sec-label eyebrow">You are not alone</span>
     <h2 class="sec-title serif">みんな、最初は同じでした</h2>
     <p class="sec-sub">いま活躍している先輩も、はじめは不安だらけ。<br>あなたの「できるかな」は、ちゃんと超えられます。</p>
@@ -400,7 +419,7 @@
   <!-- 【画像②】店内ビジュアル：用意でき次第ここに <div class="frame r43"><img ...></div> を挿入 -->
 
   <!-- 声 -->
-  <section>
+  <section class="tint">
     <span class="sec-label eyebrow">Voices</span>
     <h2 class="sec-title serif">先輩の言葉</h2>
     <p class="sec-sub">応募前の不安 → 入店後の変化 → 今の働き方。</p>
@@ -441,8 +460,10 @@
     </div>
   </section>
 
-  <!-- CTA（中間） -->
-  <section style="padding-top:24px">
+  <!-- CTAアクセント帯（CVを視覚的に最強調） -->
+  <section class="cta-band">
+    <h3>迷っているなら、<br>まず“相談”だけしてみませんか。</h3>
+    <p class="lead2">応募じゃなくて大丈夫。<br>あなたの「私の場合は？」に、恭子ママがお答えします。</p>
     <a class="cta" id="line-mid" href="#" target="_blank" rel="noopener">
       <span class="main"><span class="dot"></span>まず相談する（30秒）</span>
       <span class="en">Add Friend · 質問だけでもOK</span>
@@ -452,7 +473,7 @@
   </section>
 
   <!-- FAQ -->
-  <section>
+  <section class="white">
     <span class="sec-label eyebrow">Questions</span>
     <h2 class="sec-title serif">よくあるご質問</h2>
     <div style="margin-top:22px">

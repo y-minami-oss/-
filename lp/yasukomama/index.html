@@ -4,6 +4,10 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="robots" content="noindex" />
+<!-- Webフォント：Shippori Mincho(和文明朝) / Cormorant Garamond(欧文) / Zen Kaku Gothic New(本文) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Shippori+Mincho:wght@400;500;600&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap" rel="stylesheet">
 <title>Lounge 永遠 ｜ Members Recruit — 大阪ミナミ</title>
 <meta name="description" content="大阪ミナミ・会員制ラウンジ永遠／クラブエタニティ 採用。品格と安心の場所で、長く働く。" />
 <!--
@@ -35,18 +39,18 @@
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
   body{
-    font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",system-ui,sans-serif;
+    font-family:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN","Yu Gothic",system-ui,sans-serif;
     font-weight:300;color:var(--ink);background:var(--bg);line-height:1.9;
     letter-spacing:.03em;-webkit-font-smoothing:antialiased}
-  .serif{font-family:"Hiragino Mincho ProN","Yu Mincho",serif}
+  .serif{font-family:"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",serif}
   .wrap{max-width:480px;margin:0 auto;background:var(--bg);min-height:100vh;
     overflow:hidden;padding-bottom:104px;box-shadow:0 0 60px rgba(120,95,50,.12)}
   img{max-width:100%;display:block}
-  .en{font-family:"Times New Roman",serif;letter-spacing:.28em;text-transform:uppercase}
+  .en{font-family:"Cormorant Garamond","Times New Roman",serif;letter-spacing:.28em;text-transform:uppercase}
 
   /* 小キャプション（small caps label） */
   .eyebrow{font-size:10.5px;letter-spacing:.3em;color:var(--gold);font-weight:600;
-    text-transform:uppercase;font-family:"Times New Roman",serif}
+    text-transform:uppercase;font-family:"Cormorant Garamond","Times New Roman",serif}
 
   /* 区切りの極細ゴールド罫 */
   .rule{width:40px;height:1px;background:var(--gold);opacity:.8;margin:22px auto}
@@ -57,9 +61,9 @@
     display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:var(--shadow)}
   .frame::after{content:"";position:absolute;inset:8px;border:1px solid var(--hair);opacity:.5;pointer-events:none}
   .frame .mark{text-align:center;color:var(--gold);padding:20px}
-  .frame .mark .mono{font-family:"Hiragino Mincho ProN",serif;font-size:34px;font-weight:300;letter-spacing:.1em}
+  .frame .mark .mono{font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;font-size:34px;font-weight:300;letter-spacing:.1em}
   .frame .mark .cap{font-size:9px;letter-spacing:.3em;color:var(--muted);margin-top:8px;
-    font-family:"Times New Roman",serif;text-transform:uppercase}
+    font-family:"Cormorant Garamond","Times New Roman",serif;text-transform:uppercase}
   .frame img{width:100%;height:100%;object-fit:cover}
   .r916{aspect-ratio:9/16}
   .r43{aspect-ratio:4/3}
@@ -75,16 +79,16 @@
 
   /* ---- ヘッダー ---- */
   .top{padding:22px 0 18px;text-align:center;border-bottom:1px solid var(--hair-soft)}
-  .top .mono{font-family:"Hiragino Mincho ProN",serif;font-size:22px;letter-spacing:.34em;
+  .top .mono{font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;font-size:22px;letter-spacing:.34em;
     color:var(--ink);font-weight:300;padding-left:.34em}
   .top .sub{font-size:9px;letter-spacing:.34em;color:var(--gold);margin-top:6px;
-    font-family:"Times New Roman",serif;text-transform:uppercase;font-weight:600}
+    font-family:"Cormorant Garamond","Times New Roman",serif;text-transform:uppercase;font-weight:600}
 
   /* ---- ヒーロー（タイポグラフィ主導・余白多用） ---- */
   .hero{padding:64px 26px 56px;text-align:center;
     background:radial-gradient(120% 70% at 50% 0%,#FFFDF8 0%,var(--bg) 70%)}
   .hero .eyebrow{display:block;margin-bottom:26px}
-  .hero h1{font-family:"Hiragino Mincho ProN",serif;font-weight:300;font-size:33px;
+  .hero h1{font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;font-weight:300;font-size:33px;
     line-height:1.7;letter-spacing:.06em;color:var(--ink)}
   .hero h1 .g{color:var(--wine)}
   .hero .lead{margin-top:26px;font-size:13.5px;color:var(--muted);line-height:2.1}
@@ -94,14 +98,14 @@
   section{padding:60px 26px}
   .center{text-align:center}
   .sec-label{display:block;text-align:center;margin-bottom:14px}
-  .sec-title{font-family:"Hiragino Mincho ProN",serif;font-weight:300;font-size:23px;
+  .sec-title{font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;font-weight:300;font-size:23px;
     letter-spacing:.1em;color:var(--ink);text-align:center;line-height:1.6}
   .sec-sub{color:var(--muted);font-size:12.5px;text-align:center;margin-top:14px;line-height:2}
 
   /* コンセプト */
   .concept{padding:74px 30px;text-align:center;background:var(--paper);
     border-top:1px solid var(--hair-soft);border-bottom:1px solid var(--hair-soft)}
-  .concept p{font-family:"Hiragino Mincho ProN",serif;font-weight:300;font-size:21px;
+  .concept p{font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;font-weight:300;font-size:21px;
     line-height:2.4;letter-spacing:.12em;color:var(--ink)}
   .concept .small{font-size:12.5px;color:var(--muted);margin-top:28px;line-height:2.1;font-family:inherit;letter-spacing:.04em}
 
@@ -111,27 +115,27 @@
     padding:18px 2px;border-bottom:1px solid var(--hair-soft)}
   .term:first-child{border-top:1px solid var(--hair-soft)}
   .term .k{font-size:13px;color:var(--muted);letter-spacing:.08em;white-space:nowrap}
-  .term .v{font-family:"Hiragino Mincho ProN",serif;font-size:16px;color:var(--ink);text-align:right;font-weight:300}
+  .term .v{font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;font-size:16px;color:var(--ink);text-align:right;font-weight:300}
   .term .v .g{color:var(--gold);font-weight:600}
 
   /* 声（引用） — 温かみのため白カード化 */
   .voice{background:var(--bg2);border:1px solid var(--hair-soft);border-radius:14px;
     padding:22px 20px;margin-bottom:14px;box-shadow:var(--shadow)}
-  .voice .qm{font-family:"Times New Roman",serif;font-size:40px;color:var(--gold);opacity:.55;line-height:.6}
-  .voice .q{font-family:"Hiragino Mincho ProN",serif;font-size:15.5px;line-height:2.1;
+  .voice .qm{font-family:"Cormorant Garamond","Times New Roman",serif;font-size:40px;color:var(--gold);opacity:.55;line-height:.6}
+  .voice .q{font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;font-size:15.5px;line-height:2.1;
     color:var(--ink);margin-top:10px;font-weight:300;letter-spacing:.05em}
   .voice .meta{margin-top:16px;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:12px;letter-spacing:.06em}
   .voice .ini{width:38px;height:38px;border-radius:50%;border:1px solid var(--gold);background:var(--paper);
     display:flex;align-items:center;justify-content:center;color:var(--gold);
-    font-family:"Times New Roman",serif;font-size:13px;letter-spacing:.05em;flex:0 0 auto}
+    font-family:"Cormorant Garamond","Times New Roman",serif;font-size:13px;letter-spacing:.05em;flex:0 0 auto}
 
   /* 流れ */
   .steps{margin-top:20px}
   .step{display:flex;gap:20px;padding:22px 0;border-bottom:1px solid var(--hair-soft)}
   .step:last-child{border-bottom:none}
-  .step .n{font-family:"Times New Roman",serif;font-size:15px;color:var(--gold);
+  .step .n{font-family:"Cormorant Garamond","Times New Roman",serif;font-size:15px;color:var(--gold);
     letter-spacing:.1em;flex:0 0 auto;padding-top:3px;min-width:34px;font-weight:600}
-  .step b{font-family:"Hiragino Mincho ProN",serif;font-weight:300;font-size:16px;color:var(--ink);letter-spacing:.06em}
+  .step b{font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;font-weight:300;font-size:16px;color:var(--ink);letter-spacing:.06em}
   .step p{font-size:12.5px;color:var(--muted);margin-top:6px;line-height:1.95}
 
   /* FAQ */
@@ -139,7 +143,7 @@
   summary{padding:20px 2px;font-size:14px;color:var(--ink);cursor:pointer;list-style:none;
     display:flex;justify-content:space-between;align-items:center;gap:14px;letter-spacing:.05em;font-weight:400}
   summary::-webkit-details-marker{display:none}
-  summary::after{content:"+";color:var(--gold);font-family:"Times New Roman",serif;font-size:18px}
+  summary::after{content:"+";color:var(--gold);font-family:"Cormorant Garamond","Times New Roman",serif;font-size:18px}
   details[open] summary::after{content:"–"}
   details .a{padding:0 2px 22px;font-size:12.5px;color:var(--muted);line-height:2}
 
@@ -149,7 +153,7 @@
     padding:20px;letter-spacing:.16em;border-radius:12px;box-shadow:0 8px 22px rgba(168,130,43,.34);
     transition:transform .15s,box-shadow .15s}
   .cta:active{transform:translateY(1px);box-shadow:0 4px 14px rgba(168,130,43,.3)}
-  .cta .main{font-family:"Hiragino Mincho ProN",serif;font-size:17px;font-weight:400;letter-spacing:.16em}
+  .cta .main{font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;font-size:17px;font-weight:400;letter-spacing:.16em}
   .cta .en{font-size:9px;color:rgba(255,255,255,.85)}
   .cta .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#fff;
     box-shadow:0 0 0 2px rgba(6,199,85,.9) inset;margin-right:8px;vertical-align:middle}
@@ -158,13 +162,13 @@
 
   /* 信頼・インフォ */
   .info{text-align:center}
-  .info .mono{font-family:"Hiragino Mincho ProN",serif;font-size:20px;letter-spacing:.2em;color:var(--ink);font-weight:300}
+  .info .mono{font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;font-size:20px;letter-spacing:.2em;color:var(--ink);font-weight:300}
   .info .addr{font-size:12.5px;color:var(--muted);margin-top:16px;line-height:2.1}
   .info .kpi{display:flex;justify-content:center;gap:0;margin-top:34px;border-top:1px solid var(--hair-soft);border-bottom:1px solid var(--hair-soft)}
   .info .kpi div{flex:1;padding:22px 6px;border-right:1px solid var(--hair-soft)}
   .info .kpi div:last-child{border-right:none}
-  .info .kpi b{display:block;font-family:"Hiragino Mincho ProN",serif;font-size:22px;color:var(--gold);font-weight:400}
-  .info .kpi span{font-size:9.5px;letter-spacing:.2em;color:var(--muted);margin-top:8px;display:block;font-family:"Times New Roman",serif;text-transform:uppercase}
+  .info .kpi b{display:block;font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;font-size:22px;color:var(--gold);font-weight:400}
+  .info .kpi span{font-size:9.5px;letter-spacing:.2em;color:var(--muted);margin-top:8px;display:block;font-family:"Cormorant Garamond","Times New Roman",serif;text-transform:uppercase}
   .info .warn{font-size:11px;color:var(--muted);margin-top:26px;line-height:1.9;letter-spacing:.04em}
   .info .warn b{color:var(--wine);font-weight:600}
 
@@ -173,7 +177,7 @@
     background:rgba(247,242,233,.95);backdrop-filter:blur(10px);border-top:1px solid var(--hair);
     padding:14px 22px calc(14px + env(safe-area-inset-bottom))}
   footer{padding:40px 26px 30px;text-align:center;border-top:1px solid var(--hair-soft);background:var(--paper)}
-  footer .mono{font-family:"Hiragino Mincho ProN",serif;font-size:15px;letter-spacing:.3em;color:var(--ink);font-weight:300}
+  footer .mono{font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;font-size:15px;letter-spacing:.3em;color:var(--ink);font-weight:300}
   footer p{font-size:10px;color:var(--muted);margin-top:14px;line-height:1.9;letter-spacing:.06em}
 
   /* ベネフィット・チップ（FVで価値を即提示） */
@@ -184,7 +188,7 @@
   /* CTA補足（心理障壁の除去文言） */
   .cta-note{text-align:center;font-size:11px;color:var(--muted);margin-top:10px;letter-spacing:.04em}
   /* 実績（社会的証明） */
-  .proof{font-family:"Times New Roman",serif;font-size:12.5px;letter-spacing:.1em;
+  .proof{font-family:"Cormorant Garamond","Times New Roman",serif;font-size:12.5px;letter-spacing:.1em;
     color:var(--gold);margin-top:24px;text-align:center}
 
   /* =========================================================
@@ -203,7 +207,7 @@
     -webkit-backdrop-filter:blur(16px) saturate(1.3);border-bottom:1px solid var(--hair);
     transform:translateY(-101%);opacity:0;transition:transform .4s ease,opacity .4s ease}
   .appbar.show{transform:none;opacity:1}
-  .appbar .bar-b{font-family:"Hiragino Mincho ProN",serif;letter-spacing:.3em;font-size:15px;color:var(--ink);padding-left:.3em}
+  .appbar .bar-b{font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;letter-spacing:.3em;font-size:15px;color:var(--ink);padding-left:.3em}
   .appbar a{font-size:11.5px;letter-spacing:.06em;color:#fff;text-decoration:none;white-space:nowrap;
     background:linear-gradient(135deg,#c9a64a,#a8822b);padding:9px 16px;border-radius:999px;
     box-shadow:0 6px 18px rgba(168,130,43,.34);transition:transform .2s ease,box-shadow .2s ease}

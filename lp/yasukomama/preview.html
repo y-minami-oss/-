@@ -257,6 +257,24 @@
     border-radius:999px;padding:4px 12px;letter-spacing:.06em;margin-bottom:12px}
   .same .ln{font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;font-size:15px;color:var(--ink);line-height:1.9}
   .same .ln .ar{color:var(--gold);margin:0 7px;font-family:"Cormorant Garamond",serif}
+
+  /* 共感・問題提起チェックリスト */
+  .pains{margin-top:24px;display:flex;flex-direction:column;gap:10px}
+  .pains .p{display:flex;gap:13px;align-items:flex-start;background:var(--bg2);
+    border:1px solid var(--hair-soft);border-radius:12px;padding:15px 16px;box-shadow:var(--shadow)}
+  .pains .ck{color:var(--gold);font-family:"Cormorant Garamond",serif;font-size:17px;flex:0 0 auto;line-height:1.6}
+  .pains .p span:last-child{font-size:14px;color:var(--ink);line-height:1.75}
+  /* 他社比較表 */
+  .cmp{margin-top:24px;border:1px solid var(--hair);border-radius:14px;overflow:hidden;box-shadow:var(--shadow)}
+  .cmp .row{display:grid;grid-template-columns:1.25fr .9fr 1.1fr;border-bottom:1px solid var(--hair-soft)}
+  .cmp .row:last-child{border-bottom:none}
+  .cmp .row>div{padding:14px 8px;font-size:12px;text-align:center;line-height:1.5;color:var(--ink)}
+  .cmp .row>div:first-child{text-align:left;color:var(--muted)}
+  .cmp .head>div{background:var(--paper);font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;font-size:12.5px}
+  .cmp .head .ours{color:var(--gold);font-weight:600}
+  .cmp .ours{background:rgba(212,175,55,.07)}
+  .cmp .o{color:var(--gold);font-weight:700}
+  .cmp .x{color:var(--muted)}
 </style>
 </head>
 <body>
@@ -302,6 +320,20 @@
     <!-- 【画像①】メインビジュアル：素材が用意でき次第ここに <div class="frame r916"><img ...></div> を挿入 -->
   </header>
 
+  <!-- 共感・問題提起（情報設計：共感→問題提起） -->
+  <section>
+    <span class="sec-label eyebrow">Are you worried?</span>
+    <h2 class="sec-title serif">こんな不安、<br>ありませんか？</h2>
+    <div class="pains">
+      <div class="p"><span class="ck">✓</span><span>今の仕事に、将来が見えない</span></div>
+      <div class="p"><span class="ck">✓</span><span>夜の仕事に興味はあるけど、未経験で怖い</span></div>
+      <div class="p"><span class="ck">✓</span><span>30代から始められる場所が、無い気がする</span></div>
+      <div class="p"><span class="ck">✓</span><span>ノルマ・お酒・人間関係が不安</span></div>
+      <div class="p"><span class="ck">✓</span><span>「私なんかが」と、一歩が踏み出せない</span></div>
+    </div>
+    <p class="sec-sub" style="margin-top:22px">——その不安、ぜんぶ分かります。<br>だから永遠は、こう考えています。</p>
+  </section>
+
   <!-- 恭子ママより（写真を使わず、言葉を主役に） -->
   <section class="mama">
     <div class="role">Message from Owner</div>
@@ -314,6 +346,21 @@
       <div><b>20<small>名+</small></b><span>年間の入店実績</span></div>
       <div><b>11.7<small>万</small></b><span>SNSフォロワー</span></div>
       <div><b>3<small>ヶ月</small></b><span>給与保証あり</span></div>
+    </div>
+  </section>
+
+  <!-- 他社比較（情報設計：他社比較で優位性を可視化） -->
+  <section>
+    <span class="sec-label eyebrow">Why 永遠</span>
+    <h2 class="sec-title serif">他のお店と、<br>ここが違います</h2>
+    <div class="cmp">
+      <div class="row head"><div>&nbsp;</div><div>よくある<br>夜のお店</div><div class="ours">ラウンジ永遠</div></div>
+      <div class="row"><div>未経験サポート</div><div class="x">乏しい</div><div class="ours o">○ 基礎から指導</div></div>
+      <div class="row"><div>ノルマ</div><div class="x">ありがち</div><div class="ours o">○ なし</div></div>
+      <div class="row"><div>人間関係</div><div class="x">派閥も</div><div class="ours o">○ 派閥なし</div></div>
+      <div class="row"><div>給与保証</div><div class="x">なし</div><div class="ours o">○ 3ヶ月保証</div></div>
+      <div class="row"><div>体験だけ</div><div class="x">しづらい</div><div class="ours o">○ OK</div></div>
+      <div class="row"><div>ドレス</div><div class="x">自前</div><div class="ours o">○ 無料貸出</div></div>
     </div>
   </section>
 

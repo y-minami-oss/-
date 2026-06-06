@@ -186,6 +186,47 @@
   /* 実績（社会的証明） */
   .proof{font-family:"Times New Roman",serif;font-size:12.5px;letter-spacing:.1em;
     color:var(--gold);margin-top:24px;text-align:center}
+
+  /* =========================================================
+   * 2026 SaaS-grade polish（高級感・先進性・没入感）
+   * =======================================================*/
+  /* スクロール・リビール（reduced-motion尊重） */
+  @media (prefers-reduced-motion: no-preference){
+    [data-reveal]{opacity:0;transform:translateY(20px);
+      transition:opacity .8s cubic-bezier(.22,.61,.36,1),transform .8s cubic-bezier(.22,.61,.36,1)}
+    [data-reveal].in{opacity:1;transform:none}
+  }
+  /* グラス・アップバー（スクロールで出現） */
+  .appbar{position:fixed;top:0;left:0;right:0;z-index:45;max-width:480px;margin:0 auto;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 20px;
+    background:rgba(248,244,236,.70);backdrop-filter:blur(16px) saturate(1.3);
+    -webkit-backdrop-filter:blur(16px) saturate(1.3);border-bottom:1px solid var(--hair);
+    transform:translateY(-101%);opacity:0;transition:transform .4s ease,opacity .4s ease}
+  .appbar.show{transform:none;opacity:1}
+  .appbar .bar-b{font-family:"Hiragino Mincho ProN",serif;letter-spacing:.3em;font-size:15px;color:var(--ink);padding-left:.3em}
+  .appbar a{font-size:11.5px;letter-spacing:.06em;color:#fff;text-decoration:none;white-space:nowrap;
+    background:linear-gradient(135deg,#c9a64a,#a8822b);padding:9px 16px;border-radius:999px;
+    box-shadow:0 6px 18px rgba(168,130,43,.34);transition:transform .2s ease,box-shadow .2s ease}
+  .appbar a:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(168,130,43,.45)}
+  /* CTA：hoverリフト＋グロウ＋シーン（光沢） */
+  .cta{position:relative;overflow:hidden;will-change:transform}
+  .cta::before{content:"";position:absolute;top:0;left:-130%;width:65%;height:100%;
+    background:linear-gradient(100deg,transparent,rgba(255,255,255,.38),transparent);
+    transform:skewX(-18deg);transition:left .85s ease;pointer-events:none}
+  .cta:hover{transform:translateY(-2px);box-shadow:0 16px 38px rgba(168,130,43,.42)}
+  .cta:hover::before{left:135%}
+  /* 階層的なソフトシャドウ＋hoverリフト */
+  .voice,.frame{transition:transform .45s cubic-bezier(.22,.61,.36,1),box-shadow .45s ease}
+  .voice:hover,.frame:hover{transform:translateY(-3px);box-shadow:0 20px 44px rgba(90,68,30,.16)}
+  .chip{transition:transform .25s ease,box-shadow .25s ease}
+  .chip:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(90,68,30,.12)}
+  /* ヒーロー直下CTA */
+  .hero .cta{margin-top:30px}
+  /* 流れる極細グラデ罫 */
+  .rule{background:linear-gradient(90deg,transparent,var(--gold),transparent);height:1px;width:80px;opacity:.9}
+  /* 可変タイポ（端末幅で最適化） */
+  .hero h1{font-size:clamp(28px,8.6vw,36px)}
+  .sec-title{font-size:clamp(21px,6vw,24px)}
 </style>
 </head>
 <body>
@@ -195,6 +236,12 @@
   <div id="ext-banner">
     <b>LINEがうまく開けない場合</b>　右上「︙ / …」→「ブラウザで開く」よりご覧ください。
     <button onclick="copyUrl()">PAGE URL をコピー</button>
+  </div>
+
+  <!-- グラス・アップバー（スクロールで出現） -->
+  <div class="appbar" id="appbar">
+    <span class="bar-b">永 遠</span>
+    <a id="line-bar" href="#" target="_blank" rel="noopener">LINEで話を聞く</a>
   </div>
 
   <!-- ヘッダー -->
@@ -216,6 +263,12 @@
       <span class="chip">ドレス <b>無料</b></span>
       <span class="chip">体験 <b>だけOK</b></span>
     </div>
+    <!-- FV直下CTA（離脱前にCV機会） -->
+    <a class="cta" id="line-hero" href="#" target="_blank" rel="noopener">
+      <span class="main"><span class="dot"></span>まずはLINEで話を聞く</span>
+      <span class="en">Add Friend · 体験 / ご相談</span>
+    </a>
+    <p class="cta-note">＼ 質問だけでOK・1分・しつこい連絡はしません ／</p>
     <!-- 【画像①】縦9:16 ／ ★恭子ママの顔写真 推奨（人柄ドリブンの磁石）。無くても額装として成立 -->
     <div class="frame r916">
       <div class="mark"><div class="mono">永</div><div class="cap">Main Visual</div></div>
@@ -367,7 +420,7 @@
   (function(){
     var C = window.LP_CONFIG || {};
     var ok = C.LINE_URL && C.LINE_URL.indexOf("#REPLACE") === -1;
-    ["line-mid","line-sticky","line-voices","line-faq"].forEach(function(id){
+    ["line-hero","line-mid","line-sticky","line-voices","line-faq","line-bar"].forEach(function(id){
       var el=document.getElementById(id); if(!el) return;
       if(ok){ el.href=C.LINE_URL; }
       else{ el.addEventListener("click",function(e){e.preventDefault();
@@ -390,5 +443,7 @@
 
 <!-- ===== GA4 計測基盤 ===== -->
 <script src="analytics.js" defer></script>
+<!-- ===== UI体験（リビール・グラスバー・マイクロインタラクション） ===== -->
+<script src="ui.js" defer></script>
 </body>
 </html>

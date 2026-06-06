@@ -120,10 +120,12 @@
   }
   // DOM構築後にバインド（defer読み込み前提だが念のため）
   function init() {
+    bindClick("line-hero",   "line_add_click", { location: "hero" });
     bindClick("line-mid",    "line_add_click", { location: "mid" });
     bindClick("line-sticky", "line_add_click", { location: "sticky" });
     bindClick("line-voices", "line_add_click", { location: "voices" });
     bindClick("line-faq",    "line_add_click", { location: "faq" });
+    bindClick("line-bar",    "line_add_click", { location: "appbar" });
     bindClick("dm-link-1",   "dm_click",       {});
   }
   if (document.readyState === "loading") {

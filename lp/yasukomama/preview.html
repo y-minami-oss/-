@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex" />
+<!-- Webフォント：Shippori Mincho(和文明朝) / Cormorant Garamond(欧文) / Zen Kaku Gothic New(本文) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Shippori+Mincho:wght@400;500;600&family=Zen+Kaku+Gothic+New:wght@300;400;500&display=swap" rel="stylesheet">
+<title>Lounge 永遠 ｜ Members Recruit — 大阪ミナミ</title>
+<meta name="description" content="大阪ミナミ・会員制ラウンジ永遠／クラブエタニティ 採用。品格と安心の場所で、長く働く。" />
+<!--
+  ============================================================
+  Lounge 永遠 採用LP  ── Luxury / Minimal edition
+  Palette: BG #0A0A0A / BG2 #161616 / Gold #D4AF37 / Text #F5F1E8 / Wine #5C0F18
+  方針: 黒基調・ゴールド10%以下・余白多用・細フォント・写真主役（ただし写真なしでも成立）
+  差し替え点:
+    ① LINE URL → <script id="config"> の LINE_URL
+    ② 画像     → .frame の中に <img> を入れるだけ（無くても額装として成立）
+    ③ 数字/店舗 → 【—】の箇所
+  ============================================================
+-->
+<style>
+  :root{
+    --bg:#F7F2E9;        /* 生成り（メイン背景・温かいオフ白） */
+    --bg2:#FFFFFF;       /* カード（クリーン） */
+    --paper:#FBF6EC;     /* 額装/補助面 */
+    --gold:#A8822B;      /* ゴールド（文字・罫線：明背景でも視認可な深め） */
+    --gold-bright:#C9A227;/* 装飾アクセント */
+    --ink:#2C2620;       /* 文字（温かみのある黒に近い茶） */
+    --wine:#5C0F18; --wine-2:#7d1622;
+    --hair:rgba(168,130,43,.30);     /* ゴールド極細罫 */
+    --hair-soft:rgba(44,38,32,.12);
+    --muted:#5f5448;     /* 本文（可読性向上のため濃いめに調整） */
+    --line:#06c755;
+    --shadow:0 12px 32px rgba(90,68,30,.10);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN","Yu Gothic",system-ui,sans-serif;
+    font-weight:300;color:var(--ink);background:var(--bg);line-height:1.9;
+    letter-spacing:.03em;-webkit-font-smoothing:antialiased}
+  .serif{font-family:"Shippori Mincho","Hiragino Mincho ProN","Yu Mincho",serif}
+  .wrap{max-width:480px;margin:0 auto;background:var(--bg);min-height:100vh;
+    overflow:hidden;padding-bottom:104px;box-shadow:0 0 60px rgba(120,95,50,.12)}
+  img{max-width:100%;display:block}
+  .en{font-family:"Cormorant Garamond","Times New Roman",serif;letter-spacing:.28em;text-transform:uppercase}
+
+  /* 小キャプション（small caps label） */
+  .eyebrow{font-size:10.5px;letter-spacing:.3em;color:var(--gold);font-weight:600;
+    text-transform:uppercase;font-family:"Cormorant Garamond","Times New Roman",serif}
+
+  /* 区切りの極細ゴールド罫 */
+  .rule{width:40px;height:1px;background:var(--gold);opacity:.8;margin:22px auto}
+  .rule.l{margin-left:0}
+
+  /* ---- 額装フレーム（写真の有無どちらでも成立） ---- */
+  .frame{position:relative;background:var(--paper);border:1px solid var(--hair);
+    display:flex;align-items:center;justify-content:center;overflow:hidden;box-shadow:var(--shadow)}
+  .frame::after{content:"";position:absolute;inset:8px;border:1px solid var(--hair);opacity:.5;pointer-events:none}
+  .frame .mark{text-align:center;color:var(--gold);padding:20px}
+  .frame .mark .mono{font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;font-size:34px;font-weight:300;letter-spacing:.1em}
+  .frame .mark .cap{font-size:9px;letter-spacing:.3em;color:var(--muted);margin-top:8px;
+    font-family:"Cormorant Garamond","Times New Roman",serif;text-transform:uppercase}
+  .frame img{width:100%;height:100%;object-fit:cover}
+  .r916{aspect-ratio:9/16}
+  .r43{aspect-ratio:4/3}
+  .r11{aspect-ratio:1/1}
+
+  /* ---- アプリ内ブラウザ誘導（控えめに） ---- */
+  #ext-banner{display:none;position:sticky;top:0;z-index:50;background:rgba(251,246,236,.97);
+    backdrop-filter:blur(6px);border-bottom:1px solid var(--hair);padding:11px 18px;
+    font-size:12px;color:var(--ink);letter-spacing:.02em}
+  #ext-banner b{color:var(--wine);font-weight:600}
+  #ext-banner button{margin-top:8px;width:100%;border:1px solid var(--gold);background:transparent;
+    color:var(--gold);border-radius:2px;padding:8px;font-size:11px;letter-spacing:.1em;font-weight:600}
+
+  /* ---- ヘッダー ---- */
+  .top{padding:22px 0 18px;text-align:center;border-bottom:1px solid var(--hair-soft)}
+  .top .mono{font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;font-size:22px;letter-spacing:.34em;
+    color:var(--ink);font-weight:300;padding-left:.34em}
+  .top .sub{font-size:9px;letter-spacing:.34em;color:var(--gold);margin-top:6px;
+    font-family:"Cormorant Garamond","Times New Roman",serif;text-transform:uppercase;font-weight:600}
+
+  /* ---- ヒーロー（タイポグラフィ主導・余白多用） ---- */
+  .hero{padding:64px 26px 56px;text-align:center;
+    background:radial-gradient(120% 70% at 50% 0%,#FFFDF8 0%,var(--bg) 70%)}
+  .hero .eyebrow{display:block;margin-bottom:26px}
+  .hero h1{font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;font-weight:300;font-size:33px;
+    line-height:1.7;letter-spacing:.06em;color:var(--ink)}
+  .hero h1 .g{color:var(--wine)}
+  .hero .lead{margin-top:26px;font-size:13.5px;color:var(--muted);line-height:2.1}
+  .hero .frame{margin:44px 0 0}
+
+  /* ---- セクション ---- */
+  section{padding:60px 26px}
+  .center{text-align:center}
+  .sec-label{display:block;text-align:center;margin-bottom:14px}
+  .sec-title{font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;font-weight:300;font-size:23px;
+    letter-spacing:.1em;color:var(--ink);text-align:center;line-height:1.6}
+  .sec-sub{color:var(--muted);font-size:12.5px;text-align:center;margin-top:14px;line-height:2}
+
+  /* コンセプト */
+  .concept{padding:74px 30px;text-align:center;background:var(--paper);
+    border-top:1px solid var(--hair-soft);border-bottom:1px solid var(--hair-soft)}
+  .concept p{font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;font-weight:300;font-size:21px;
+    line-height:2.4;letter-spacing:.12em;color:var(--ink)}
+  .concept .small{font-size:12.5px;color:var(--muted);margin-top:28px;line-height:2.1;font-family:inherit;letter-spacing:.04em}
+
+  /* 待遇（ミニマルな定義リスト） */
+  .terms{margin-top:30px}
+  .term{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+    padding:18px 2px;border-bottom:1px solid var(--hair-soft)}
+  .term:first-child{border-top:1px solid var(--hair-soft)}
+  .term .k{font-size:13px;color:var(--muted);letter-spacing:.08em;white-space:nowrap}
+  .term .v{font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;font-size:16px;color:var(--ink);text-align:right;font-weight:300}
+  .term .v .g{color:var(--gold);font-weight:600}
+
+  /* 声（引用） — 温かみのため白カード化 */
+  .voice{background:var(--bg2);border:1px solid var(--hair-soft);border-radius:14px;
+    padding:22px 20px;margin-bottom:14px;box-shadow:var(--shadow)}
+  .voice .qm{font-family:"Cormorant Garamond","Times New Roman",serif;font-size:40px;color:var(--gold);opacity:.55;line-height:.6}
+  .voice .q{font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;font-size:15.5px;line-height:2.1;
+    color:var(--ink);margin-top:10px;font-weight:300;letter-spacing:.05em}
+  .voice .meta{margin-top:16px;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:12px;letter-spacing:.06em}
+  .voice .ini{width:38px;height:38px;border-radius:50%;border:1px solid var(--gold);background:var(--paper);
+    display:flex;align-items:center;justify-content:center;color:var(--gold);
+    font-family:"Cormorant Garamond","Times New Roman",serif;font-size:13px;letter-spacing:.05em;flex:0 0 auto}
+
+  /* 流れ */
+  .steps{margin-top:20px}
+  .step{display:flex;gap:20px;padding:22px 0;border-bottom:1px solid var(--hair-soft)}
+  .step:last-child{border-bottom:none}
+  .step .n{font-family:"Cormorant Garamond","Times New Roman",serif;font-size:15px;color:var(--gold);
+    letter-spacing:.1em;flex:0 0 auto;padding-top:3px;min-width:34px;font-weight:600}
+  .step b{font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;font-weight:300;font-size:16px;color:var(--ink);letter-spacing:.06em}
+  .step p{font-size:12.5px;color:var(--muted);margin-top:6px;line-height:1.95}
+
+  /* FAQ */
+  details{border-bottom:1px solid var(--hair-soft)}
+  summary{padding:20px 2px;font-size:14px;color:var(--ink);cursor:pointer;list-style:none;
+    display:flex;justify-content:space-between;align-items:center;gap:14px;letter-spacing:.05em;font-weight:400}
+  summary::-webkit-details-marker{display:none}
+  summary::after{content:"+";color:var(--gold);font-family:"Cormorant Garamond","Times New Roman",serif;font-size:18px}
+  details[open] summary::after{content:"–"}
+  details .a{padding:0 2px 22px;font-size:12.5px;color:var(--muted);line-height:2}
+
+  /* CTA（温かく・押しやすい・上品なゴールド面） */
+  .cta{display:flex;flex-direction:column;align-items:center;gap:6px;text-decoration:none;
+    border:none;background:linear-gradient(135deg,#c9a64a,#a8822b);color:#fff;
+    padding:20px;letter-spacing:.16em;border-radius:12px;box-shadow:0 8px 22px rgba(168,130,43,.34);
+    transition:transform .15s,box-shadow .15s}
+  .cta:active{transform:translateY(1px);box-shadow:0 4px 14px rgba(168,130,43,.3)}
+  .cta .main{font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;font-size:17px;font-weight:400;letter-spacing:.16em}
+  .cta .en{font-size:9px;color:rgba(255,255,255,.85)}
+  .cta .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#fff;
+    box-shadow:0 0 0 2px rgba(6,199,85,.9) inset;margin-right:8px;vertical-align:middle}
+  .cta-sub{text-align:center;font-size:11.5px;color:var(--muted);margin-top:16px;line-height:2}
+  .cta-sub a{color:var(--gold);text-decoration:none;border-bottom:1px solid var(--hair);font-weight:600}
+
+  /* 信頼・インフォ */
+  .info{text-align:center}
+  .info .mono{font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;font-size:20px;letter-spacing:.2em;color:var(--ink);font-weight:300}
+  .info .addr{font-size:12.5px;color:var(--muted);margin-top:16px;line-height:2.1}
+  .info .kpi{display:flex;justify-content:center;gap:0;margin-top:34px;border-top:1px solid var(--hair-soft);border-bottom:1px solid var(--hair-soft)}
+  .info .kpi div{flex:1;padding:22px 6px;border-right:1px solid var(--hair-soft)}
+  .info .kpi div:last-child{border-right:none}
+  .info .kpi b{display:block;font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;font-size:22px;color:var(--gold);font-weight:400}
+  .info .kpi span{font-size:9.5px;letter-spacing:.2em;color:var(--muted);margin-top:8px;display:block;font-family:"Cormorant Garamond","Times New Roman",serif;text-transform:uppercase}
+  .info .warn{font-size:11px;color:var(--muted);margin-top:26px;line-height:1.9;letter-spacing:.04em}
+  .info .warn b{color:var(--wine);font-weight:600}
+
+  /* 追従CTA */
+  #sticky{position:fixed;left:0;right:0;bottom:0;z-index:40;max-width:480px;margin:0 auto;
+    background:rgba(247,242,233,.95);backdrop-filter:blur(10px);border-top:1px solid var(--hair);
+    padding:14px 22px calc(14px + env(safe-area-inset-bottom))}
+  footer{padding:40px 26px 30px;text-align:center;border-top:1px solid var(--hair-soft);background:var(--paper)}
+  footer .mono{font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;font-size:15px;letter-spacing:.3em;color:var(--ink);font-weight:300}
+  footer p{font-size:10px;color:var(--muted);margin-top:14px;line-height:1.9;letter-spacing:.06em}
+
+  /* ベネフィット・チップ（FVで価値を即提示） */
+  .benefits{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:26px}
+  .chip{font-size:11.5px;letter-spacing:.05em;color:var(--ink);background:var(--bg2);
+    border:1px solid var(--hair);border-radius:999px;padding:7px 14px;box-shadow:var(--shadow)}
+  .chip b{color:var(--gold);font-weight:600}
+  /* CTA補足（心理障壁の除去文言） */
+  .cta-note{text-align:center;font-size:11px;color:var(--muted);margin-top:10px;letter-spacing:.04em}
+  /* 実績（社会的証明） */
+  .proof{font-family:"Cormorant Garamond","Times New Roman",serif;font-size:12.5px;letter-spacing:.1em;
+    color:var(--gold);margin-top:24px;text-align:center}
+
+  /* =========================================================
+   * 2026 SaaS-grade polish（高級感・先進性・没入感）
+   * =======================================================*/
+  /* スクロール・リビール（reduced-motion尊重） */
+  @media (prefers-reduced-motion: no-preference){
+    [data-reveal]{opacity:0;transform:translateY(20px);
+      transition:opacity .8s cubic-bezier(.22,.61,.36,1),transform .8s cubic-bezier(.22,.61,.36,1)}
+    [data-reveal].in{opacity:1;transform:none}
+  }
+  /* グラス・アップバー（スクロールで出現） */
+  .appbar{position:fixed;top:0;left:0;right:0;z-index:45;max-width:480px;margin:0 auto;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 20px;
+    background:rgba(248,244,236,.70);backdrop-filter:blur(16px) saturate(1.3);
+    -webkit-backdrop-filter:blur(16px) saturate(1.3);border-bottom:1px solid var(--hair);
+    transform:translateY(-101%);opacity:0;transition:transform .4s ease,opacity .4s ease}
+  .appbar.show{transform:none;opacity:1}
+  .appbar .bar-b{font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;letter-spacing:.3em;font-size:15px;color:var(--ink);padding-left:.3em}
+  .appbar a{font-size:11.5px;letter-spacing:.06em;color:#fff;text-decoration:none;white-space:nowrap;
+    background:linear-gradient(135deg,#c9a64a,#a8822b);padding:9px 16px;border-radius:999px;
+    box-shadow:0 6px 18px rgba(168,130,43,.34);transition:transform .2s ease,box-shadow .2s ease}
+  .appbar a:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(168,130,43,.45)}
+  /* CTA：hoverリフト＋グロウ＋シーン（光沢） */
+  .cta{position:relative;overflow:hidden;will-change:transform}
+  .cta::before{content:"";position:absolute;top:0;left:-130%;width:65%;height:100%;
+    background:linear-gradient(100deg,transparent,rgba(255,255,255,.38),transparent);
+    transform:skewX(-18deg);transition:left .85s ease;pointer-events:none}
+  .cta:hover{transform:translateY(-2px);box-shadow:0 16px 38px rgba(168,130,43,.42)}
+  .cta:hover::before{left:135%}
+  /* 階層的なソフトシャドウ＋hoverリフト */
+  .voice,.frame{transition:transform .45s cubic-bezier(.22,.61,.36,1),box-shadow .45s ease}
+  .voice:hover,.frame:hover{transform:translateY(-3px);box-shadow:0 20px 44px rgba(90,68,30,.16)}
+  .chip{transition:transform .25s ease,box-shadow .25s ease}
+  .chip:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(90,68,30,.12)}
+  /* ヒーロー直下CTA */
+  .hero .cta{margin-top:30px}
+  /* 流れる極細グラデ罫 */
+  .rule{background:linear-gradient(90deg,transparent,var(--gold),transparent);height:1px;width:80px;opacity:.9}
+  /* 可変タイポ（端末幅で最適化） */
+  .hero h1{font-size:clamp(28px,8.6vw,36px)}
+  .sec-title{font-size:clamp(21px,6vw,24px)}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- アプリ内ブラウザ対策 -->
+  <div id="ext-banner">
+    <b>LINEがうまく開けない場合</b>　右上「︙ / …」→「ブラウザで開く」よりご覧ください。
+    <button onclick="copyUrl()">PAGE URL をコピー</button>
+  </div>
+
+  <!-- グラス・アップバー（スクロールで出現） -->
+  <div class="appbar" id="appbar">
+    <span class="bar-b">永 遠</span>
+    <a id="line-bar" href="#" target="_blank" rel="noopener">LINEで話を聞く</a>
+  </div>
+
+  <!-- ヘッダー -->
+  <div class="top">
+    <div class="mono">永 遠</div>
+    <div class="sub">Lounge Eien &nbsp;·&nbsp; Club Eternity</div>
+  </div>
+
+  <!-- ヒーロー -->
+  <header class="hero">
+    <span class="eyebrow">大阪ミナミ ｜ ラウンジ求人・未経験歓迎</span>
+    <h1 class="serif">ここにいれば、<br><span class="g">大丈夫。</span></h1>
+    <p class="lead">大阪ミナミの会員制ラウンジ「永遠」。<br>未経験から、長く。あなたの再出発を応援します。</p>
+    <!-- ベネフィット即提示（FVで価値を3秒で） -->
+    <div class="benefits">
+      <span class="chip"><b>未経験</b> OK</span>
+      <span class="chip"><b>30代</b> 活躍中</span>
+      <span class="chip"><b>3ヶ月</b> 保証</span>
+      <span class="chip">ドレス <b>無料</b></span>
+      <span class="chip">体験 <b>だけOK</b></span>
+    </div>
+    <!-- FV直下CTA（離脱前にCV機会） -->
+    <a class="cta" id="line-hero" href="#" target="_blank" rel="noopener">
+      <span class="main"><span class="dot"></span>まずはLINEで話を聞く</span>
+      <span class="en">Add Friend · 体験 / ご相談</span>
+    </a>
+    <p class="cta-note">＼ 質問だけでOK・1分・しつこい連絡はしません ／</p>
+    <!-- 【画像①】縦9:16 ／ ★恭子ママの顔写真 推奨（人柄ドリブンの磁石）。無くても額装として成立 -->
+    <div class="frame r916">
+      <div class="mark"><div class="mono">永</div><div class="cap">Main Visual</div></div>
+    </div>
+  </header>
+
+  <!-- コンセプト（余白多用・写真なしでも主役級） -->
+  <div class="concept">
+    <p class="serif">一生、<br>働きたいと思える場所へ。</p>
+    <p class="small">夜の仕事に、品格を。<br>未経験でも、長く。誰かの“第二の家”のように。<br>ここは、大人のための場所です。</p>
+    <!-- ★実績は実数値で更新可（出典：採用実績）。社会的証明として有効 -->
+    <p class="proof">この一年で、20名以上が新たに永遠へ。</p>
+  </div>
+
+  <!-- 待遇 -->
+  <section>
+    <span class="sec-label eyebrow">Conditions</span>
+    <h2 class="sec-title serif">働く条件</h2>
+    <p class="sec-sub">条件は、入ってから—ではなく。<br>はじめに、すべてお伝えします。</p>
+    <div class="terms">
+      <!-- ★実数が出せ次第、.v を「◯,◯◯◯円〜」等に差し替え。空欄(【—】)は離脱要因のため掲載しない -->
+      <div class="term"><span class="k">時給</span><span class="v"><span class="g">高水準</span>・ご面接時にご案内</span></div>
+      <div class="term"><span class="k">給与保証</span><span class="v">3ヶ月保証あり</span></div>
+      <div class="term"><span class="k">バック・賞与</span><span class="v">充実（同伴・アフター等）</span></div>
+      <div class="term"><span class="k">体験入店</span><span class="v">時給保証あり</span></div>
+      <div class="term"><span class="k">ドレス・小物</span><span class="v">無料貸出・手ぶらOK</span></div>
+      <div class="term"><span class="k">出勤</span><span class="v">自由出勤・昼職両立可</span></div>
+    </div>
+  </section>
+
+  <!-- 額装ビジュアル帯（店内/雰囲気） -->
+  <div style="padding:0 26px 8px">
+    <!-- 【画像②】4:3 ／ 店内・内装の写真 -->
+    <div class="frame r43">
+      <div class="mark"><div class="mono">永</div><div class="cap">Interior</div></div>
+    </div>
+  </div>
+
+  <!-- 声 -->
+  <section>
+    <span class="sec-label eyebrow">Voices</span>
+    <h2 class="sec-title serif">先輩の言葉</h2>
+    <p class="sec-sub">動画を見て、ここを選んだ先輩たちより。</p>
+    <div style="margin-top:24px">
+      <div class="voice">
+        <div class="qm">“</div>
+        <div class="q">未経験でも全然いける。新しいことをたくさん知れて、毎日が楽しい。夜の仕事が初めてで怖いという人ほど、来てほしい。</div>
+        <div class="meta"><span class="ini">R</span>20代・未経験 ／ 前職 居酒屋</div>
+      </div>
+      <div class="voice">
+        <div class="qm">“</div>
+        <div class="q">派閥がなく、誰かを蹴落とす空気もない。最初は緊張したけれど、どの先輩も品があって、優しい。それが続けられる理由です。</div>
+        <div class="meta"><span class="ini">H</span>30代・未経験 ／ 前職 アパレル</div>
+      </div>
+      <div class="voice">
+        <div class="qm">“</div>
+        <div class="q">ブランクも年齢も不安でした。お酒が強くない私でも、周りの支えでやっていけています。迷っている時間が、もったいない。</div>
+        <div class="meta"><span class="ini">M</span>40代・経験者 ／ 前職 別業種</div>
+      </div>
+    </div>
+    <!-- 声を読んで気持ちが動いた地点にCTA -->
+    <a class="cta" id="line-voices" href="#" target="_blank" rel="noopener" style="margin-top:24px">
+      <span class="main"><span class="dot"></span>私も話を聞いてみる</span>
+      <span class="en">Add Friend · 体験 / ご相談</span>
+    </a>
+    <p class="cta-note">＼ 質問だけでOK・1分で完了 ／</p>
+  </section>
+
+  <!-- 流れ -->
+  <section>
+    <span class="sec-label eyebrow">Process</span>
+    <h2 class="sec-title serif">ご応募の流れ</h2>
+    <div class="steps">
+      <div class="step"><span class="n en">Ⅰ</span><div><b>LINEを追加</b><p>下のボタンから。ご質問だけでも構いません。</p></div></div>
+      <div class="step"><span class="n en">Ⅱ</span><div><b>日程の調整</b><p>給与・条件・持ち物も、お会いする前にお伝えします。</p></div></div>
+      <div class="step"><span class="n en">Ⅲ</span><div><b>面接 ・ 体験入店</b><p>まずは体験だけでも。空気を確かめてから、お決めください。</p></div></div>
+      <div class="step"><span class="n en">Ⅳ</span><div><b>ご入店</b><p>3ヶ月の保証とともに。合わなければ、退いていただいて構いません。</p></div></div>
+    </div>
+  </section>
+
+  <!-- CTA（中間） -->
+  <section style="padding-top:24px">
+    <a class="cta" id="line-mid" href="#" target="_blank" rel="noopener">
+      <span class="main"><span class="dot"></span>まずはLINEで話を聞く</span>
+      <span class="en">Add Friend · 体験 / ご相談</span>
+    </a>
+    <p class="cta-note">＼ 質問だけでOK・1分で完了・しつこい連絡はしません ／</p>
+    <p class="cta-sub">うまく開けない方は <a href="#" id="dm-link-1">TikTok DM</a>、または「ラウンジ永遠 採用」で検索を。</p>
+  </section>
+
+  <!-- FAQ -->
+  <section>
+    <span class="sec-label eyebrow">Questions</span>
+    <h2 class="sec-title serif">よくあるご質問</h2>
+    <div style="margin-top:22px">
+      <details><summary>未経験ですが、大丈夫でしょうか。</summary><div class="a">はい。今いる先輩の多くが未経験からの出発です。役職・お姉さんが基本から丁寧にお教えします。</div></details>
+      <details><summary>30代・ブランクがあっても働けますか。</summary><div class="a">もちろんです。30代・40代で活躍する先輩も多数。年齢より、踏み出す気持ちを大切にしています。</div></details>
+      <details><summary>お酒が強くありません。</summary><div class="a">無理にお飲みいただくことはありません。周りの支えのなかで、長く続けていただけます。</div></details>
+      <details><summary>昼のお仕事と両立できますか。</summary><div class="a">自由出勤のため両立されている方もいます。【—：最低出勤日数など】</div></details>
+      <details><summary>ドレスや持ち物は必要ですか。</summary><div class="a">ドレス・小物は無料で貸し出します。手ぶらで体験へお越しいただけます。</div></details>
+      <details><summary>応募したら、すぐ働く必要がありますか。</summary><div class="a">いいえ。まずはお話・体験だけでも結構です。合わなければ、ご無理はなさらず。</div></details>
+    </div>
+    <!-- 疑問が解消した地点にCTA -->
+    <a class="cta" id="line-faq" href="#" target="_blank" rel="noopener" style="margin-top:28px">
+      <span class="main"><span class="dot"></span>不安が消えたら、LINEへ</span>
+      <span class="en">Add Friend · 体験 / ご相談</span>
+    </a>
+    <p class="cta-note">＼ 質問だけでOK・しつこい連絡はしません ／</p>
+  </section>
+
+  <!-- 信頼・インフォ -->
+  <section class="info">
+    <div class="rule"></div>
+    <div class="mono">永 遠 ・ 永 遠 ２nd</div>
+    <p class="addr">大阪・ミナミ ／ 心斎橋エリア<br>【— 住所 ・ 最寄り ・ 営業時間 ・ TEL】<br>運営：株式会社TOWA</p>
+    <div class="kpi">
+      <div><b>11.7<span style="font-size:13px">万</span></b><span>Followers</span></div>
+      <div><b>3<span style="font-size:13px">年</span></b><span>SNS History</span></div>
+      <div><b>3<span style="font-size:13px">ヶ月</span></b><span>Guarantee</span></div>
+    </div>
+    <p class="warn"><b>偽アカウントにご注意ください。</b><br>ご応募の受付は、この公式LINEのみです。</p>
+  </section>
+
+  <footer>
+    <div class="mono">永 遠</div>
+    <p>Lounge Eien ・ Club Eternity<br>株式会社TOWA ／ 【— 所在地 ・ 許可番号】<br>© TOWA inc. All Rights Reserved.</p>
+  </footer>
+</div>
+
+<!-- 追従CTA -->
+<div id="sticky">
+  <a class="cta" id="line-sticky" href="#" target="_blank" rel="noopener">
+    <span class="main"><span class="dot"></span>まずはLINEで話を聞く</span>
+    <span class="en">Add Friend · 体験 / ご相談</span>
+  </a>
+</div>
+
+<!-- ===== 設定（ここだけ差し替えれば動く） ===== -->
+<script id="config">
+  window.LP_CONFIG = {
+    LINE_URL: "https://lin.ee/6VX0gci",            // 公式LINE友だち追加URL
+    DM_URL:   "https://www.tiktok.com/@towamembers",// TikTok DM導線
+    GA_ID:    "G-XXXXXXXXXX"                         // ★【要差し替え】GA4 測定ID（未設定時は計測無効）
+  };
+</script>
+
+<!-- ===== LP機能（リンク反映・アプリ内ブラウザ誘導・URLコピー）。計測は analytics.js ===== -->
+<script>
+  (function(){
+    var C = window.LP_CONFIG || {};
+    var ok = C.LINE_URL && C.LINE_URL.indexOf("#REPLACE") === -1;
+    ["line-hero","line-mid","line-sticky","line-voices","line-faq","line-bar"].forEach(function(id){
+      var el=document.getElementById(id); if(!el) return;
+      if(ok){ el.href=C.LINE_URL; }
+      else{ el.addEventListener("click",function(e){e.preventDefault();
+        alert("【設定待ち】公式LINEのURLを LP_CONFIG.LINE_URL に設定してください。");});}
+    });
+    var dm=document.getElementById("dm-link-1"); if(dm && C.DM_URL) dm.href=C.DM_URL;
+
+    // TikTok等アプリ内ブラウザ検知 → 外部ブラウザ誘導バナー
+    var ua=(navigator.userAgent||"").toLowerCase();
+    if(/bytedancewebview|musical_ly|tiktok|trill|bytelo|instagram|fb_iab|fbav|line\//.test(ua)){
+      var b=document.getElementById("ext-banner"); if(b) b.style.display="block";
+    }
+  })();
+  function copyUrl(){
+    var u=location.href.split("#")[0];
+    if(navigator.clipboard){navigator.clipboard.writeText(u).then(function(){alert("URLをコピーしました。ブラウザで開いてください。");});}
+    else{prompt("このURLをコピーしてブラウザで開いてください：",u);}
+  }
+</script>
+
+<!-- ===== GA4 計測基盤 ===== -->
+<script>
+/* =============================================================================
+ * analytics.js — 恭子ママ採用LP GA4計測基盤
+ * -----------------------------------------------------------------------------
+ * 計測イベント:
+ *   page_view     … LP表示（GA4標準＋明示送信）
+ *   first_visit   … 初回訪問（localStorageで判定。GA4標準first_visitも併走）
+ *   scroll_50     … 50%スクロール到達
+ *   scroll_90     … 90%スクロール到達
+ *   line_add_click… LINE追加ボタン押下（★主要コンバージョン）
+ *   dm_click      … TikTok DM導線の押下
+ *
+ * 設計方針:
+ *   - 測定ID（LP_CONFIG.GA_ID）未設定時は一切読み込まず無効化（誤計測・エラー防止）
+ *   - UTM等の流入パラメータをlocalStorageに保存し、全イベントに付与
+ *   - 各イベントは重複発火を防止
+ * ===========================================================================*/
+(function () {
+  "use strict";
+
+  var C = window.LP_CONFIG || {};
+  var GA_ID = C.GA_ID || "";
+  var ENABLED = GA_ID && GA_ID.indexOf("XXXX") === -1; // 未設定(プレースホルダ)なら無効
+
+  // ---- gtag 基盤 ----
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { window.dataLayer.push(arguments); }
+
+  // ---- 流入パラメータ（UTM等）の取得・保存 ----
+  // 初回流入時のUTMを保存し、以降のセッションでも参照できるようにする（アトリビューション用）
+  function captureAttribution() {
+    var p = new URLSearchParams(location.search);
+    var keys = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "v"];
+    var current = {};
+    var hasNew = false;
+    keys.forEach(function (k) {
+      var val = p.get(k);
+      if (val) { current[k] = val; hasNew = true; }
+    });
+    var stored = {};
+    try { stored = JSON.parse(localStorage.getItem("lp_attr") || "{}"); } catch (e) {}
+    if (hasNew) {
+      try { localStorage.setItem("lp_attr", JSON.stringify(current)); } catch (e) {}
+      return current;
+    }
+    return stored; // 今回パラメータが無ければ保存済みを使用
+  }
+  var ATTR = captureAttribution();
+
+  // landing_video … TikTok動画別の流入計測（?v=動画ID 形式で付与）
+  var attrParams = {
+    utm_source:   ATTR.utm_source   || "(direct)",
+    utm_medium:   ATTR.utm_medium   || "",
+    utm_campaign: ATTR.utm_campaign || "",
+    utm_content:  ATTR.utm_content  || "",
+    landing_video: ATTR.v           || ""
+  };
+
+  // ---- 共通送信関数 ----
+  function track(name, params) {
+    if (!ENABLED) {
+      // 開発/未設定時：コンソールに出すだけ（実送信しない）
+      if (window.console) console.info("[analytics:disabled]", name, params || {});
+      return;
+    }
+    var merged = Object.assign({}, attrParams, params || {});
+    gtag("event", name, merged);
+  }
+  window.lpTrack = track; // 外部からも利用可
+
+  // ---- GA4 初期化 ----
+  if (ENABLED) {
+    var s = document.createElement("script");
+    s.async = true;
+    s.src = "https://www.googletagmanager.com/gtag/js?id=" + GA_ID;
+    document.head.appendChild(s);
+    gtag("js", new Date());
+    // send_page_view:true → page_view を自動送信
+    gtag("config", GA_ID, { send_page_view: true });
+    // 流入元をユーザープロパティとして保持（探索レポートのディメンションに使用）
+    gtag("set", "user_properties", {
+      first_utm_source:   attrParams.utm_source,
+      first_utm_campaign: attrParams.utm_campaign,
+      landing_video:      attrParams.landing_video
+    });
+  }
+
+  // ---- page_view（明示）----
+  // GA4標準でも送信されるが、attrParams付きで明示送信し動画別分析を確実にする
+  track("page_view", { page_location: location.href });
+
+  // ---- first_visit（初回訪問）----
+  // GA4標準のfirst_visitに加え、localStorageで独自判定したフラグも送る
+  try {
+    if (!localStorage.getItem("lp_visited")) {
+      localStorage.setItem("lp_visited", "1");
+      track("first_visit", {});
+    }
+  } catch (e) {}
+
+  // ---- scroll_50 / scroll_90 ----
+  var fired = { 50: false, 90: false };
+  function onScroll() {
+    var doc = document.documentElement;
+    var scrollable = doc.scrollHeight - window.innerHeight;
+    if (scrollable <= 0) return;
+    var pct = (window.scrollY || doc.scrollTop) / scrollable * 100;
+    if (!fired[50] && pct >= 50) { fired[50] = true; track("scroll_50", {}); }
+    if (!fired[90] && pct >= 90) { fired[90] = true; track("scroll_90", {}); cleanup(); }
+  }
+  function cleanup() { window.removeEventListener("scroll", onScroll); }
+  window.addEventListener("scroll", onScroll, { passive: true });
+
+  // ---- line_add_click（主要CV）/ dm_click ----
+  function bindClick(id, eventName, extra) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener("click", function () {
+      track(eventName, extra || {});
+    });
+  }
+  // DOM構築後にバインド（defer読み込み前提だが念のため）
+  function init() {
+    bindClick("line-hero",   "line_add_click", { location: "hero" });
+    bindClick("line-mid",    "line_add_click", { location: "mid" });
+    bindClick("line-sticky", "line_add_click", { location: "sticky" });
+    bindClick("line-voices", "line_add_click", { location: "voices" });
+    bindClick("line-faq",    "line_add_click", { location: "faq" });
+    bindClick("line-bar",    "line_add_click", { location: "appbar" });
+    bindClick("dm-link-1",   "dm_click",       {});
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
+
+</script>
+<!-- ===== UI体験（リビール・グラスバー・マイクロインタラクション） ===== -->
+<script>
+/* =============================================================================
+ * ui.js — UI体験レイヤー（計測とは分離）
+ *   - スクロール・リビール（IntersectionObserver、段階表示）
+ *   - グラス・アップバーのスクロール出現
+ *   - prefers-reduced-motion を尊重（動きを無効化）
+ * ===========================================================================*/
+(function () {
+  "use strict";
+  var reduce = window.matchMedia &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function ready(fn) {
+    if (document.readyState === "loading")
+      document.addEventListener("DOMContentLoaded", fn);
+    else fn();
+  }
+
+  ready(function () {
+    /* ---- 1. スクロール・リビール ---- */
+    // 主要ブロックに data-reveal を付与（HTMLを汚さずJSで適用）
+    var sel = [
+      ".hero .eyebrow", ".hero h1", ".hero .lead", ".benefits", ".hero .cta",
+      ".concept p", ".proof", ".sec-label", ".sec-title", ".sec-sub",
+      ".term", ".voice", ".step", "details", "section > .cta", ".frame",
+      ".info .mono", ".info .addr", ".info .kpi", ".info .warn"
+    ].join(",");
+    var nodes = Array.prototype.slice.call(document.querySelectorAll(sel));
+
+    if (reduce || !("IntersectionObserver" in window)) {
+      // モーション無効環境：即表示（属性を付けない）
+      return;
+    }
+
+    nodes.forEach(function (el) { el.setAttribute("data-reveal", ""); });
+
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var el = e.target;
+        // 同一グループ内での軽いスタッガー（隣接順にディレイ）
+        var sibs = el.parentNode ? el.parentNode.children : [el];
+        var idx = Array.prototype.indexOf.call(sibs, el);
+        el.style.transitionDelay = Math.min(idx, 6) * 60 + "ms";
+        el.classList.add("in");
+        io.unobserve(el);
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -8% 0px" });
+
+    nodes.forEach(function (el) { io.observe(el); });
+
+    /* ---- 2. グラス・アップバー出現（ヒーローを過ぎたら） ---- */
+    var bar = document.getElementById("appbar");
+    var hero = document.querySelector(".hero");
+    if (bar && hero) {
+      var trigger = hero.offsetTop + hero.offsetHeight * 0.6;
+      var onScroll = function () {
+        if ((window.scrollY || document.documentElement.scrollTop) > trigger)
+          bar.classList.add("show");
+        else bar.classList.remove("show");
+      };
+      window.addEventListener("scroll", onScroll, { passive: true });
+      onScroll();
+    }
+  });
+})();
+
+</script>
+</body>
+</html>

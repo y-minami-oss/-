@@ -122,6 +122,8 @@
   function init() {
     bindClick("line-mid",    "line_add_click", { location: "mid" });
     bindClick("line-sticky", "line_add_click", { location: "sticky" });
+    bindClick("line-voices", "line_add_click", { location: "voices" });
+    bindClick("line-faq",    "line_add_click", { location: "faq" });
     bindClick("dm-link-1",   "dm_click",       {});
   }
   if (document.readyState === "loading") {

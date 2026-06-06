@@ -28,7 +28,7 @@
     --wine:#5C0F18; --wine-2:#7d1622;
     --hair:rgba(168,130,43,.30);     /* ゴールド極細罫 */
     --hair-soft:rgba(44,38,32,.12);
-    --muted:#8a7c69;     /* 温かいグレー */
+    --muted:#5f5448;     /* 本文（可読性向上のため濃いめに調整） */
     --line:#06c755;
     --shadow:0 12px 32px rgba(90,68,30,.10);
   }
@@ -175,6 +175,17 @@
   footer{padding:40px 26px 30px;text-align:center;border-top:1px solid var(--hair-soft);background:var(--paper)}
   footer .mono{font-family:"Hiragino Mincho ProN",serif;font-size:15px;letter-spacing:.3em;color:var(--ink);font-weight:300}
   footer p{font-size:10px;color:var(--muted);margin-top:14px;line-height:1.9;letter-spacing:.06em}
+
+  /* ベネフィット・チップ（FVで価値を即提示） */
+  .benefits{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:26px}
+  .chip{font-size:11.5px;letter-spacing:.05em;color:var(--ink);background:var(--bg2);
+    border:1px solid var(--hair);border-radius:999px;padding:7px 14px;box-shadow:var(--shadow)}
+  .chip b{color:var(--gold);font-weight:600}
+  /* CTA補足（心理障壁の除去文言） */
+  .cta-note{text-align:center;font-size:11px;color:var(--muted);margin-top:10px;letter-spacing:.04em}
+  /* 実績（社会的証明） */
+  .proof{font-family:"Times New Roman",serif;font-size:12.5px;letter-spacing:.1em;
+    color:var(--gold);margin-top:24px;text-align:center}
 </style>
 </head>
 <body>
@@ -194,10 +205,18 @@
 
   <!-- ヒーロー -->
   <header class="hero">
-    <span class="eyebrow">Osaka Minami &nbsp;|&nbsp; Members Lounge</span>
+    <span class="eyebrow">大阪ミナミ ｜ ラウンジ求人・未経験歓迎</span>
     <h1 class="serif">ここにいれば、<br><span class="g">大丈夫。</span></h1>
-    <p class="lead">品格と、安心と。<br>あなたの再出発を、永遠で。</p>
-    <!-- 【画像①】縦9:16 ／ ママ or 店内のメインビジュアル（無くても額装として成立） -->
+    <p class="lead">大阪ミナミの会員制ラウンジ「永遠」。<br>未経験から、長く。あなたの再出発を応援します。</p>
+    <!-- ベネフィット即提示（FVで価値を3秒で） -->
+    <div class="benefits">
+      <span class="chip"><b>未経験</b> OK</span>
+      <span class="chip"><b>30代</b> 活躍中</span>
+      <span class="chip"><b>3ヶ月</b> 保証</span>
+      <span class="chip">ドレス <b>無料</b></span>
+      <span class="chip">体験 <b>だけOK</b></span>
+    </div>
+    <!-- 【画像①】縦9:16 ／ ★恭子ママの顔写真 推奨（人柄ドリブンの磁石）。無くても額装として成立 -->
     <div class="frame r916">
       <div class="mark"><div class="mono">永</div><div class="cap">Main Visual</div></div>
     </div>
@@ -207,6 +226,8 @@
   <div class="concept">
     <p class="serif">一生、<br>働きたいと思える場所へ。</p>
     <p class="small">夜の仕事に、品格を。<br>未経験でも、長く。誰かの“第二の家”のように。<br>ここは、大人のための場所です。</p>
+    <!-- ★実績は実数値で更新可（出典：採用実績）。社会的証明として有効 -->
+    <p class="proof">この一年で、20名以上が新たに永遠へ。</p>
   </div>
 
   <!-- 待遇 -->
@@ -215,11 +236,12 @@
     <h2 class="sec-title serif">働く条件</h2>
     <p class="sec-sub">条件は、入ってから—ではなく。<br>はじめに、すべてお伝えします。</p>
     <div class="terms">
-      <div class="term"><span class="k">時給</span><span class="v"><span class="g">【—】</span> 円〜</span></div>
-      <div class="term"><span class="k">保証</span><span class="v">【—】</span></div>
-      <div class="term"><span class="k">バック</span><span class="v">【—】</span></div>
+      <!-- ★実数が出せ次第、.v を「◯,◯◯◯円〜」等に差し替え。空欄(【—】)は離脱要因のため掲載しない -->
+      <div class="term"><span class="k">時給</span><span class="v"><span class="g">高水準</span>・ご面接時にご案内</span></div>
+      <div class="term"><span class="k">給与保証</span><span class="v">3ヶ月保証あり</span></div>
+      <div class="term"><span class="k">バック・賞与</span><span class="v">充実（同伴・アフター等）</span></div>
       <div class="term"><span class="k">体験入店</span><span class="v">時給保証あり</span></div>
-      <div class="term"><span class="k">ドレス・小物</span><span class="v">無料貸出</span></div>
+      <div class="term"><span class="k">ドレス・小物</span><span class="v">無料貸出・手ぶらOK</span></div>
       <div class="term"><span class="k">出勤</span><span class="v">自由出勤・昼職両立可</span></div>
     </div>
   </section>
@@ -254,6 +276,12 @@
         <div class="meta"><span class="ini">M</span>40代・経験者 ／ 前職 別業種</div>
       </div>
     </div>
+    <!-- 声を読んで気持ちが動いた地点にCTA -->
+    <a class="cta" id="line-voices" href="#" target="_blank" rel="noopener" style="margin-top:24px">
+      <span class="main"><span class="dot"></span>私も話を聞いてみる</span>
+      <span class="en">Add Friend · 体験 / ご相談</span>
+    </a>
+    <p class="cta-note">＼ 質問だけでOK・1分で完了 ／</p>
   </section>
 
   <!-- 流れ -->
@@ -271,9 +299,10 @@
   <!-- CTA（中間） -->
   <section style="padding-top:24px">
     <a class="cta" id="line-mid" href="#" target="_blank" rel="noopener">
-      <span class="main"><span class="dot"></span>LINEで承ります</span>
+      <span class="main"><span class="dot"></span>まずはLINEで話を聞く</span>
       <span class="en">Add Friend · 体験 / ご相談</span>
     </a>
+    <p class="cta-note">＼ 質問だけでOK・1分で完了・しつこい連絡はしません ／</p>
     <p class="cta-sub">うまく開けない方は <a href="#" id="dm-link-1">TikTok DM</a>、または「ラウンジ永遠 採用」で検索を。</p>
   </section>
 
@@ -289,6 +318,12 @@
       <details><summary>ドレスや持ち物は必要ですか。</summary><div class="a">ドレス・小物は無料で貸し出します。手ぶらで体験へお越しいただけます。</div></details>
       <details><summary>応募したら、すぐ働く必要がありますか。</summary><div class="a">いいえ。まずはお話・体験だけでも結構です。合わなければ、ご無理はなさらず。</div></details>
     </div>
+    <!-- 疑問が解消した地点にCTA -->
+    <a class="cta" id="line-faq" href="#" target="_blank" rel="noopener" style="margin-top:28px">
+      <span class="main"><span class="dot"></span>不安が消えたら、LINEへ</span>
+      <span class="en">Add Friend · 体験 / ご相談</span>
+    </a>
+    <p class="cta-note">＼ 質問だけでOK・しつこい連絡はしません ／</p>
   </section>
 
   <!-- 信頼・インフォ -->
@@ -313,7 +348,7 @@
 <!-- 追従CTA -->
 <div id="sticky">
   <a class="cta" id="line-sticky" href="#" target="_blank" rel="noopener">
-    <span class="main"><span class="dot"></span>LINEで承ります</span>
+    <span class="main"><span class="dot"></span>まずはLINEで話を聞く</span>
     <span class="en">Add Friend · 体験 / ご相談</span>
   </a>
 </div>
@@ -332,7 +367,7 @@
   (function(){
     var C = window.LP_CONFIG || {};
     var ok = C.LINE_URL && C.LINE_URL.indexOf("#REPLACE") === -1;
-    ["line-mid","line-sticky"].forEach(function(id){
+    ["line-mid","line-sticky","line-voices","line-faq"].forEach(function(id){
       var el=document.getElementById(id); if(!el) return;
       if(ok){ el.href=C.LINE_URL; }
       else{ el.addEventListener("click",function(e){e.preventDefault();

@@ -87,11 +87,16 @@
   /* ---- ヒーロー（タイポグラフィ主導・余白多用） ---- */
   .hero{padding:64px 26px 56px;text-align:center;
     background:radial-gradient(120% 70% at 50% 0%,#FFFDF8 0%,var(--bg) 70%)}
-  .hero .eyebrow{display:block;margin-bottom:26px}
-  .hero h1{font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;font-weight:300;font-size:33px;
-    line-height:1.7;letter-spacing:.06em;color:var(--ink)}
-  .hero h1 .g{color:var(--wine)}
-  .hero .lead{margin-top:26px;font-size:13.5px;color:var(--muted);line-height:2.1}
+  .hero .eyebrow{display:table;margin:0 auto 24px;border:1px solid var(--hair);
+    border-radius:999px;padding:6px 16px;background:var(--bg2)}
+  .hero h1{font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;font-weight:500;font-size:33px;
+    line-height:1.6;letter-spacing:.04em;color:var(--ink)}
+  .hero h1 .g{color:var(--wine);font-weight:600;position:relative}
+  /* 強調語に淡いゴールドのマーカー（視線誘導） */
+  .hero h1 .g::after{content:"";position:absolute;left:-2%;right:-2%;bottom:.12em;height:.32em;
+    background:rgba(212,175,55,.28);z-index:-1;border-radius:2px}
+  .hero .lead{margin-top:24px;font-size:13.5px;color:var(--ink);line-height:2.05}
+  .hero .lead .em{color:var(--wine);font-weight:600}
   .hero .frame{margin:44px 0 0}
 
   /* ---- セクション ---- */
@@ -295,6 +300,33 @@
   .cta-band .cta-note{color:rgba(248,244,236,.6)}
   .cta-band .cta-sub{color:rgba(248,244,236,.6)}
   .cta-band .cta-sub a{color:var(--gold)}
+
+  /* ===== 指摘反映：可読性・整理 ===== */
+  /* 文節の途中で折り返さない */
+  .nb{display:inline-block;white-space:nowrap}
+  /* 声カード：応募前→入店後→今を整理 */
+  .voice .qm{display:none}
+  .voice .vrow{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--hair-soft)}
+  .voice .vrow:last-of-type{border-bottom:none}
+  .voice .vlabel{flex:0 0 54px;font-size:10.5px;letter-spacing:.02em;color:var(--gold);
+    border:1px solid var(--hair);border-radius:6px;padding:4px 0;text-align:center;
+    font-family:"Zen Kaku Gothic New",sans-serif;line-height:1.4}
+  .voice .vlabel.now{background:var(--wine);color:#fff;border-color:var(--wine)}
+  .voice .vrow p{margin:0;font-size:13.5px;line-height:1.75;color:var(--ink)}
+  /* 比較表：自社列を強調・視認性UP */
+  .cmp .row{grid-template-columns:1.05fr .8fr 1.25fr;align-items:center}
+  .cmp .row>div{padding:15px 9px;font-size:12.5px}
+  .cmp .row>div:first-child{color:var(--ink)}
+  .cmp .head>div{font-size:12.5px}
+  .cmp .ours{background:rgba(92,15,24,.05)}
+  .cmp .head .ours{background:var(--wine);color:#fff;font-weight:700}
+  .cmp .o{color:var(--ink);font-weight:600;text-align:left}
+  .cmp .o::before{content:"✓";color:var(--gold);font-weight:800;margin-right:5px}
+  /* CTA帯：細文字の可読性UP */
+  .cta-band h3{font-weight:400;color:#fff}
+  .cta-band .lead2{color:rgba(248,244,236,.92);font-size:13px}
+  .cta-band .cta-note{color:rgba(248,244,236,.85);font-size:11.5px}
+  .cta-band .cta-sub{color:rgba(248,244,236,.85)}
 </style>
 </head>
 <body>
@@ -321,8 +353,8 @@
   <!-- ヒーロー -->
   <header class="hero">
     <span class="eyebrow">大阪ミナミ 会員制ラウンジ「永遠」｜未経験歓迎</span>
-    <h1 class="serif"><span class="ln">未経験でも、大丈夫。</span><br><span class="ln">30代からでも、<span class="g">遅くない。</span></span></h1>
-    <p class="lead">夜の仕事が初めてでも。お酒が弱くても。ひとりが不安でも。<br>——まずは恭子ママに、話を聞いてみませんか。</p>
+    <h1 class="serif"><span class="ln">未経験でも、<span class="g">大丈夫。</span></span><br><span class="ln">30代からでも、<span class="g">遅くない。</span></span></h1>
+    <p class="lead">夜の仕事が初めてでも。お酒が弱くても。ひとりが不安でも。<br>——まずは恭子ママに、<span class="em">話を聞いてみませんか。</span></p>
     <!-- ベネフィット即提示（不安に直接答える） -->
     <div class="benefits">
       <span class="chip"><b>未経験</b> 歓迎</span>
@@ -343,7 +375,7 @@
   <!-- 共感・問題提起（情報設計：共感→問題提起） -->
   <section class="tint">
     <span class="sec-label eyebrow">Are you worried?</span>
-    <h2 class="sec-title serif">こんな不安、<br>ありませんか？</h2>
+    <h2 class="sec-title serif"><span class="nb">こんな不安、</span><span class="nb">ありませんか？</span></h2>
     <div class="pains">
       <div class="p"><span class="ck">✓</span><span>今の仕事に、将来が見えない</span></div>
       <div class="p"><span class="ck">✓</span><span>夜の仕事に興味はあるけど、未経験で怖い</span></div>
@@ -354,33 +386,19 @@
     <p class="sec-sub" style="margin-top:22px">——その不安、ぜんぶ分かります。<br>だから永遠は、こう考えています。</p>
   </section>
 
-  <!-- 恭子ママより（写真を使わず、言葉を主役に） -->
-  <section class="mama">
-    <div class="role">Message from Owner</div>
-    <div class="qmark">“</div>
-    <p class="msg">うちは、技術より“人”やと思てる。<br>未経験でも、30代でも、お酒が弱くても——<br>大事なんは、続けたいって気持ちだけ。<br>あとは、私らが全部教えるから。<br>ひとりにはせえへんよ。</p>
-    <p class="sign">— <b>恭子ママ</b> ／ ラウンジ永遠 オーナー</p>
-    <!-- ★実績は実数で更新可。社会的証明 -->
-    <div class="stats">
-      <div><b>9<small>割</small></b><span>未経験スタート</span></div>
-      <div><b>20<small>名+</small></b><span>年間の入店実績</span></div>
-      <div><b>11.7<small>万</small></b><span>SNSフォロワー</span></div>
-      <div><b>3<small>ヶ月</small></b><span>給与保証あり</span></div>
-    </div>
-  </section>
-
   <!-- 他社比較（情報設計：他社比較で優位性を可視化） -->
   <section class="white">
     <span class="sec-label eyebrow">Why 永遠</span>
-    <h2 class="sec-title serif">他のお店と、<br>ここが違います</h2>
+    <h2 class="sec-title serif"><span class="nb">他のお店と、</span><span class="nb">ここが違います</span></h2>
     <div class="cmp">
-      <div class="row head"><div>&nbsp;</div><div>よくある<br>夜のお店</div><div class="ours">ラウンジ永遠</div></div>
-      <div class="row"><div>未経験サポート</div><div class="x">乏しい</div><div class="ours o">○ 基礎から指導</div></div>
-      <div class="row"><div>ノルマ</div><div class="x">ありがち</div><div class="ours o">○ なし</div></div>
-      <div class="row"><div>人間関係</div><div class="x">派閥も</div><div class="ours o">○ 派閥なし</div></div>
-      <div class="row"><div>給与保証</div><div class="x">なし</div><div class="ours o">○ 3ヶ月保証</div></div>
-      <div class="row"><div>体験だけ</div><div class="x">しづらい</div><div class="ours o">○ OK</div></div>
-      <div class="row"><div>ドレス</div><div class="x">自前</div><div class="ours o">○ 無料貸出</div></div>
+      <div class="row head"><div>&nbsp;</div><div>よくある<br>夜のお店</div><div class="ours">ラウンジ<br>永遠</div></div>
+      <div class="row"><div>未経験サポート</div><div class="x">乏しい</div><div class="ours o">役職が基礎から指導</div></div>
+      <div class="row"><div>ノルマ</div><div class="x">ありがち</div><div class="ours o">ノルマなし</div></div>
+      <div class="row"><div>人間関係</div><div class="x">派閥あり</div><div class="ours o">派閥なし・仲が良い</div></div>
+      <div class="row"><div>給与保証</div><div class="x">なし</div><div class="ours o">3ヶ月の給与保証</div></div>
+      <div class="row"><div>集客・客層</div><div class="x">不安定</div><div class="ours o">客数が多く稼ぎやすい</div></div>
+      <div class="row"><div>体験入店</div><div class="x">しづらい</div><div class="ours o">体験だけでもOK</div></div>
+      <div class="row"><div>ドレス</div><div class="x">自前</div><div class="ours o">無料貸出・手ぶら</div></div>
     </div>
   </section>
 
@@ -388,7 +406,7 @@
   <section class="tint">
     <span class="sec-label eyebrow">Conditions</span>
     <h2 class="sec-title serif">働く条件</h2>
-    <p class="sec-sub">条件は、入ってから—ではなく。<br>はじめに、すべてお伝えします。</p>
+    <p class="sec-sub"><span class="nb">条件は、入ってからではなく。</span><br><span class="nb">はじめに、すべてお伝えします。</span></p>
     <div class="terms">
       <!-- ★実数が出せ次第、.v を「◯,◯◯◯円〜」等に差し替え。空欄(【—】)は離脱要因のため掲載しない -->
       <div class="term"><span class="k">時給</span><span class="v"><span class="g">高水準</span>・ご面接時にご案内</span></div>
@@ -426,18 +444,21 @@
     <p class="sec-sub">応募前の不安 → 入店後の変化 → 今の働き方。</p>
     <div style="margin-top:24px">
       <div class="voice">
-        <div class="qm">“</div>
-        <div class="q"><b>応募前：</b>夜の仕事が初めてで、ただただ怖かった。<br><b>入店後：</b>ママもお姉さんも黒服さんも、みんな優しかった。<br><b>今：</b>覚えることは多いけど毎日が楽しい。来て良かった。</div>
+        <div class="vrow"><span class="vlabel">応募前</span><p>夜の仕事が初めてで、ただただ怖かった。</p></div>
+        <div class="vrow"><span class="vlabel">入店後</span><p>ママもお姉さんも黒服さんも、みんな優しかった。</p></div>
+        <div class="vrow"><span class="vlabel now">今</span><p>覚えることは多いけど、毎日が楽しい。来て良かった。</p></div>
         <div class="meta"><span class="ini">R</span>20代・未経験 ／ 前職 居酒屋バイト</div>
       </div>
       <div class="voice">
-        <div class="qm">“</div>
-        <div class="q"><b>応募前：</b>30代・未経験で、雇ってもらえるか不安だった。<br><b>入店後：</b>派閥がなく、誰も蹴落とさない。先輩が優しい。<br><b>今：</b>女性だけの職場特有のギスギスが無いのが、続く理由。</div>
+        <div class="vrow"><span class="vlabel">応募前</span><p>30代・未経験で、雇ってもらえるか不安だった。</p></div>
+        <div class="vrow"><span class="vlabel">入店後</span><p>派閥がなく、誰も蹴落とさない。先輩が優しい。</p></div>
+        <div class="vrow"><span class="vlabel now">今</span><p>ギスギスが無いのが、続けられている理由です。</p></div>
         <div class="meta"><span class="ini">H</span>30代・未経験 ／ 前職 アパレル</div>
       </div>
       <div class="voice">
-        <div class="qm">“</div>
-        <div class="q"><b>応募前：</b>ブランクも年齢も、お酒の弱さも不安だった。<br><b>入店後：</b>無理に飲まされず、周りが支えてくれた。<br><b>今：</b>ここが最後の場所。迷っている時間がもったいない。</div>
+        <div class="vrow"><span class="vlabel">応募前</span><p>ブランクも年齢も、お酒の弱さも不安だった。</p></div>
+        <div class="vrow"><span class="vlabel">入店後</span><p>無理に飲まされず、周りが支えてくれた。</p></div>
+        <div class="vrow"><span class="vlabel now">今</span><p>ここが最後の場所。迷う時間がもったいない。</p></div>
         <div class="meta"><span class="ini">M</span>40代 ／ 前職 別業種</div>
       </div>
     </div>
@@ -501,11 +522,6 @@
     <div class="rule"></div>
     <div class="mono">ラウンジ永遠</div>
     <p class="addr">大阪・ミナミ ／ 心斎橋エリア<br>【— 住所 ・ 最寄り ・ 営業時間 ・ TEL】<br>運営：株式会社TOWA</p>
-    <div class="kpi">
-      <div><b>11.7<span style="font-size:13px">万</span></b><span>Followers</span></div>
-      <div><b>3<span style="font-size:13px">年</span></b><span>SNS History</span></div>
-      <div><b>3<span style="font-size:13px">ヶ月</span></b><span>Guarantee</span></div>
-    </div>
     <p class="warn"><b>偽アカウントにご注意ください。</b><br>ご応募の受付は、この公式LINEのみです。</p>
   </section>
 

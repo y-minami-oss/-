@@ -335,6 +335,18 @@
   .work .wi{flex:0 0 60px;color:var(--gold);font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;font-size:13.5px}
   .note-strong{text-align:center;font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;
     font-size:15px;color:var(--wine);margin-top:20px;letter-spacing:.04em}
+
+  /* 代表メッセージ動画 */
+  .video-wrap{position:relative;width:100%;aspect-ratio:16/9;border-radius:14px;overflow:hidden;
+    background:#0f0f0f;border:1px solid var(--hair);box-shadow:var(--shadow)}
+  .video-wrap.vertical{aspect-ratio:9/16;max-width:300px;margin:0 auto}
+  .video-wrap iframe,.video-wrap video{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
+  .video-wrap video{object-fit:cover;background:#000}
+  .video-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:12px;color:var(--gold);font-size:12px;letter-spacing:.12em;
+    background:repeating-linear-gradient(45deg,#141414,#141414 12px,#191919 12px,#191919 24px)}
+  .video-ph .pl{width:54px;height:54px;border-radius:50%;border:1px solid var(--hair);
+    display:flex;align-items:center;justify-content:center;font-size:18px}
 </style>
 </head>
 <body>
@@ -394,11 +406,15 @@
     <p class="sec-sub" style="margin-top:22px">——その不安、ぜんぶ分かります。<br>だから永遠は、こう考えています。</p>
   </section>
 
-  <!-- 恭子ママより（応募理由の核・写真なし／言葉を主役に） -->
+  <!-- 恭子ママより（代表メッセージ動画） -->
   <section class="mama">
     <div class="role">Message from Owner</div>
-    <div class="qmark">“</div>
-    <p class="msg">うちは、技術より“人”やと思てる。<br>未経験でも、30代でも、お酒が弱くても——<br>大事なんは、続けたいって気持ちだけ。<br>あとは、私らが全部教えるから。<br>ひとりには、せえへんよ。</p>
+    <h2 class="sec-title serif" style="margin-bottom:18px">代表メッセージ</h2>
+    <!-- 動画：LP_CONFIG.OWNER_VIDEO に YouTube ID / 動画URL / mp4 を設定すると自動表示。縦型なら class に vertical を付与 -->
+    <div class="video-wrap" id="owner-video">
+      <div class="video-ph"><span class="pl">▶</span>代表メッセージ（動画準備中）</div>
+    </div>
+    <p class="msg" style="font-size:14.5px;line-height:2.2;margin-top:22px">うちは、技術より“人”やと思てる。未経験でも、30代でも、お酒が弱くても——大事なんは、続けたいって気持ちだけ。あとは、私らが全部教えるから。ひとりには、せえへんよ。</p>
     <p class="sign">— <b>恭子ママ</b> ／ ラウンジ永遠 オーナー</p>
   </section>
 
@@ -595,7 +611,9 @@
   window.LP_CONFIG = {
     LINE_URL: "https://lin.ee/6VX0gci",            // 公式LINE友だち追加URL
     DM_URL:   "https://www.tiktok.com/@towamembers",// TikTok DM導線
-    GA_ID:    "G-XXXXXXXXXX"                         // ★【要差し替え】GA4 測定ID（未設定時は計測無効）
+    GA_ID:    "G-XXXXXXXXXX",                        // ★【要差し替え】GA4 測定ID（未設定時は計測無効）
+    OWNER_VIDEO: "",                                 // ★代表メッセージ動画：YouTube URL/ID か mp4のURL。空なら準備中表示
+    OWNER_VIDEO_VERTICAL: false                      // 縦型(9:16)動画なら true
   };
 </script>
 
@@ -623,6 +641,23 @@
     if(navigator.clipboard){navigator.clipboard.writeText(u).then(function(){alert("URLをコピーしました。ブラウザで開いてください。");});}
     else{prompt("このURLをコピーしてブラウザで開いてください：",u);}
   }
+
+  // 代表メッセージ動画のレンダリング（YouTube ID/URL または mp4）
+  (function(){
+    var C=window.LP_CONFIG||{}, v=(C.OWNER_VIDEO||"").trim(), box=document.getElementById("owner-video");
+    if(!box||!v) return;
+    if(C.OWNER_VIDEO_VERTICAL) box.classList.add("vertical");
+    var html="", id="";
+    if(/^[\w-]{11}$/.test(v)) id=v;                                   // YouTube ID
+    else { var m=v.match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([\w-]{11})/); if(m) id=m[1]; }
+    if(id){
+      html='<iframe src="https://www.youtube.com/embed/'+id+'?rel=0&playsinline=1" title="代表メッセージ" '
+         +'allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe>';
+    } else if(/\.mp4(\?|$)/i.test(v)){
+      html='<video controls playsinline preload="metadata"><source src="'+v+'" type="video/mp4"></video>';
+    }
+    if(html) box.innerHTML=html;
+  })();
 </script>
 
 <!-- ===== GA4 計測基盤 ===== -->

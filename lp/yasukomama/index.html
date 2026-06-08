@@ -327,6 +327,14 @@
   .cta-band .lead2{color:rgba(248,244,236,.92);font-size:13px}
   .cta-band .cta-note{color:rgba(248,244,236,.85);font-size:11.5px}
   .cta-band .cta-sub{color:rgba(248,244,236,.85)}
+
+  /* お仕事内容リスト */
+  .work{display:flex;flex-direction:column;gap:0;margin:6px 0 22px}
+  .work .w{display:flex;gap:14px;align-items:baseline;font-size:13.5px;color:var(--ink);
+    line-height:1.75;border-bottom:1px solid var(--hair-soft);padding:13px 0}
+  .work .wi{flex:0 0 60px;color:var(--gold);font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;font-size:13.5px}
+  .note-strong{text-align:center;font-family:"Shippori Mincho","Hiragino Mincho ProN",serif;
+    font-size:15px;color:var(--wine);margin-top:20px;letter-spacing:.04em}
 </style>
 </head>
 <body>
@@ -391,14 +399,14 @@
     <span class="sec-label eyebrow">Why 永遠</span>
     <h2 class="sec-title serif"><span class="nb">他のお店と、</span><span class="nb">ここが違います</span></h2>
     <div class="cmp">
-      <div class="row head"><div>&nbsp;</div><div>よくある<br>夜のお店</div><div class="ours">ラウンジ<br>永遠</div></div>
-      <div class="row"><div>未経験サポート</div><div class="x">乏しい</div><div class="ours o">役職が基礎から指導</div></div>
-      <div class="row"><div>ノルマ</div><div class="x">ありがち</div><div class="ours o">ノルマなし</div></div>
-      <div class="row"><div>人間関係</div><div class="x">派閥あり</div><div class="ours o">派閥なし・仲が良い</div></div>
-      <div class="row"><div>給与保証</div><div class="x">なし</div><div class="ours o">3ヶ月の給与保証</div></div>
-      <div class="row"><div>集客・客層</div><div class="x">不安定</div><div class="ours o">客数が多く稼ぎやすい</div></div>
-      <div class="row"><div>体験入店</div><div class="x">しづらい</div><div class="ours o">体験だけでもOK</div></div>
-      <div class="row"><div>ドレス</div><div class="x">自前</div><div class="ours o">無料貸出・手ぶら</div></div>
+      <div class="row head"><div>&nbsp;</div><div>一般的な<br>お店</div><div class="ours">ラウンジ<br>永遠</div></div>
+      <div class="row"><div>未経験サポート</div><div class="x">店による</div><div class="ours o">役職が基礎から指導</div></div>
+      <div class="row"><div>ノルマ</div><div class="x">ある場合も</div><div class="ours o">ノルマなし</div></div>
+      <div class="row"><div>人間関係</div><div class="x">店による</div><div class="ours o">派閥なし・仲が良い</div></div>
+      <div class="row"><div>給与保証</div><div class="x">ない場合も</div><div class="ours o">3ヶ月の給与保証</div></div>
+      <div class="row"><div>集客・客層</div><div class="x">まちまち</div><div class="ours o">客数が多く稼ぎやすい</div></div>
+      <div class="row"><div>体験入店</div><div class="x">要確認</div><div class="ours o">体験だけでもOK</div></div>
+      <div class="row"><div>ドレス</div><div class="x">自前の場合も</div><div class="ours o">無料貸出・手ぶら</div></div>
     </div>
   </section>
 
@@ -418,11 +426,29 @@
     </div>
   </section>
 
+  <!-- お仕事と1日の流れ（課題5） -->
+  <section>
+    <span class="sec-label eyebrow">Your work</span>
+    <h2 class="sec-title serif">お仕事と、1日の流れ</h2>
+    <p class="sec-sub">むずかしいことは、ありません。</p>
+    <div class="work">
+      <div class="w"><span class="wi">会話</span>お客様と楽しくお話しするのが、いちばんの仕事です。</div>
+      <div class="w"><span class="wi">ドリンク</span>飲み物を作る・お席を整える、簡単なサポート。</div>
+      <div class="w"><span class="wi">フォロー</span>役職・お姉さんが隣でサポート。ひとりにしません。</div>
+    </div>
+    <div class="steps">
+      <div class="step"><span class="n">出勤</span><div><b>準備</b><p>着替え（ドレスは無料貸出）・かんたんな身支度。</p></div></div>
+      <div class="step"><span class="n">接客</span><div><b>先輩と一緒に</b><p>最初は隣で見るだけでもOK。少しずつ慣れていけます。</p></div></div>
+      <div class="step"><span class="n">退勤</span><div><b>お疲れさま</b><p>自由出勤で、無理なく。送りのご相談も可能です。</p></div></div>
+    </div>
+    <p class="note-strong">ノルマ・罰金は、ありません。</p>
+  </section>
+
   <!-- 不安解消：みんな最初は同じでした -->
   <section class="white">
     <span class="sec-label eyebrow">You are not alone</span>
     <h2 class="sec-title serif">みんな、最初は同じでした</h2>
-    <p class="sec-sub">いま活躍している先輩も、はじめは不安だらけ。<br>あなたの「できるかな」は、ちゃんと超えられます。</p>
+    <p class="sec-sub">いま活躍している先輩も、はじめは不安だらけ。<br>特別な経験も、容姿の自信も要りません。<br>保育・接客・主婦からの転身も歓迎です。</p>
     <div class="same">
       <div class="c"><span class="tag">未経験だった</span>
         <p class="ln">「夜の仕事、初めてで怖い」<span class="ar">→</span>役職とお姉さんが基本から指導。今は毎日が楽しい。</p></div>
@@ -464,10 +490,22 @@
     </div>
     <!-- 声を読んで気持ちが動いた地点にCTA -->
     <a class="cta" id="line-voices" href="#" target="_blank" rel="noopener" style="margin-top:24px">
-      <span class="main"><span class="dot"></span>私も相談してみる</span>
+      <span class="main"><span class="dot"></span>先輩のこと、質問してみる</span>
       <span class="en">Add Friend · 質問だけでもOK</span>
     </a>
     <p class="cta-note">＼ 質問だけでOK・1分で完了 ／</p>
+  </section>
+
+  <!-- 安心の約束（課題4：身バレ配慮） -->
+  <section class="white">
+    <span class="sec-label eyebrow">Privacy &amp; Safety</span>
+    <h2 class="sec-title serif">安心の約束</h2>
+    <p class="sec-sub">「バレないか」が不安な方へ。</p>
+    <div class="same">
+      <div class="c"><span class="tag">顔出し</span><p class="ln">動画・SNSへの出演は<b>希望者のみ</b>。顔出しなしでも働けます。</p></div>
+      <div class="c"><span class="tag">プライバシー</span><p class="ln">在籍は非公開。個人情報は厳重に管理します。</p></div>
+      <div class="c"><span class="tag">無理なく</span><p class="ln">合わなければ、続けなくて大丈夫。退店も自由です。</p></div>
+    </div>
   </section>
 
   <!-- 流れ -->
@@ -480,6 +518,7 @@
       <div class="step"><span class="n en">Ⅲ</span><div><b>面接 ・ 体験入店</b><p>まずは体験だけでも。空気を確かめてから、お決めください。</p></div></div>
       <div class="step"><span class="n en">Ⅳ</span><div><b>ご入店</b><p>3ヶ月の保証とともに。合わなければ、退いていただいて構いません。</p></div></div>
     </div>
+    <p class="sec-sub" style="margin-top:18px">ご返信はスタッフが順次。<br>“応募”ではなく“相談”からで大丈夫。しつこい連絡はしません。</p>
   </section>
 
   <!-- CTAアクセント帯（CVを視覚的に最強調） -->
@@ -511,7 +550,7 @@
     </div>
     <!-- 疑問が解消した地点にCTA -->
     <a class="cta" id="line-faq" href="#" target="_blank" rel="noopener" style="margin-top:28px">
-      <span class="main"><span class="dot"></span>不安が消えたら、まず相談</span>
+      <span class="main"><span class="dot"></span>条件を詳しく聞いてみる</span>
       <span class="en">Add Friend · 質問だけでもOK</span>
     </a>
     <p class="cta-note">＼ 質問だけでOK・しつこい連絡はしません ／</p>
@@ -521,7 +560,9 @@
   <section class="info">
     <div class="rule"></div>
     <div class="mono">ラウンジ永遠</div>
-    <p class="addr">大阪・ミナミ ／ 心斎橋エリア<br>【— 住所 ・ 最寄り ・ 営業時間 ・ TEL】<br>運営：株式会社TOWA</p>
+    <p class="addr">大阪ミナミ・宗右衛門町（なんば／心斎橋エリア）<br>〒542-0084 大阪府大阪市中央区宗右衛門町5-3 1F<br>運営：株式会社TOWA</p>
+    <p class="addr" style="margin-top:12px"><a href="https://www.google.com/maps/search/?api=1&amp;query=%E5%A4%A7%E9%98%AA%E5%BA%9C%E5%A4%A7%E9%98%AA%E5%B8%82%E4%B8%AD%E5%A4%AE%E5%8C%BA%E5%AE%97%E5%8F%B3%E8%A1%9B%E9%96%80%E7%94%BA5-3" target="_blank" rel="noopener" style="color:var(--gold);border-bottom:1px solid var(--hair);text-decoration:none">Googleマップで見る ↗</a></p>
+    <p class="addr" style="margin-top:14px">TikTok <b style="color:var(--ink)">@towamembers</b> ／ フォロワー 11.7万人</p>
   </section>
 
   <footer>
@@ -533,7 +574,7 @@
 <!-- 追従CTA -->
 <div id="sticky">
   <a class="cta" id="line-sticky" href="#" target="_blank" rel="noopener">
-    <span class="main"><span class="dot"></span>まず相談する（30秒）</span>
+    <span class="main"><span class="dot"></span>LINEで相談する（30秒）</span>
     <span class="en">Add Friend · 質問だけでもOK</span>
   </a>
 </div>

@@ -18,6 +18,11 @@ processed/*
 *.jpeg
 *.pdf
 
+# 採用LPの店舗画像は公開用素材のため管理対象に含める
+!lp/yasukomama/images/*.jpg
+!lp/yasukomama/images/*.jpeg
+!lp/yasukomama/images/*.png
+
 # Playwright が保存するログイン状態(セッション)
 .auth/
 storage_state.json

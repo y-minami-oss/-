@@ -69,6 +69,10 @@
   .r43{aspect-ratio:4/3}
   .r11{aspect-ratio:1/1}
 
+  /* ---- 店内ギャラリー ---- */
+  .gallery{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:24px}
+  .gallery .g-hero{grid-column:1 / -1;aspect-ratio:16/10}
+
   /* ---- アプリ内ブラウザ誘導（控えめに） ---- */
   #ext-banner{display:none;position:sticky;top:0;z-index:50;background:rgba(251,246,236,.97);
     backdrop-filter:blur(6px);border-bottom:1px solid var(--hair);padding:11px 18px;
@@ -494,7 +498,20 @@
     </div>
   </section>
 
-  <!-- 【画像②】店内ビジュアル：用意でき次第ここに <div class="frame r43"><img ...></div> を挿入 -->
+  <!-- 店内ギャラリー（写真は images/store-1〜5.jpg。未配置時は額装プレースホルダーを表示） -->
+  <section class="white">
+    <span class="sec-label eyebrow">Interior</span>
+    <h2 class="sec-title serif">お店の雰囲気</h2>
+    <p class="sec-sub">シャンデリアの灯る、上質で落ち着いた空間。<br>あなたが過ごし、働く場所です。</p>
+    <div class="gallery">
+      <div class="frame r43 g-hero"><img src="images/store-1.jpg" alt="ラウンジ永遠の店内" loading="lazy" onerror="this.remove();this.parentElement.querySelector('.mark').hidden=false"><span class="mark" hidden><span class="mono">永遠</span><span class="cap">Interior</span></span></div>
+      <div class="frame r43"><img src="images/store-2.jpg" alt="落ち着いたボックス席" loading="lazy" onerror="this.remove();this.parentElement.querySelector('.mark').hidden=false"><span class="mark" hidden><span class="mono">永遠</span><span class="cap">Interior</span></span></div>
+      <div class="frame r43"><img src="images/store-3.jpg" alt="プライベート感のある半個室" loading="lazy" onerror="this.remove();this.parentElement.querySelector('.mark').hidden=false"><span class="mark" hidden><span class="mono">永遠</span><span class="cap">Interior</span></span></div>
+      <div class="frame r43"><img src="images/store-4.jpg" alt="シャンデリアのメインフロア" loading="lazy" onerror="this.remove();this.parentElement.querySelector('.mark').hidden=false"><span class="mark" hidden><span class="mono">永遠</span><span class="cap">Interior</span></span></div>
+      <div class="frame r43"><img src="images/store-5.jpg" alt="ゆったりとしたソファ席" loading="lazy" onerror="this.remove();this.parentElement.querySelector('.mark').hidden=false"><span class="mark" hidden><span class="mono">永遠</span><span class="cap">Interior</span></span></div>
+    </div>
+    <p class="cta-note" style="margin-top:14px">＼ 写真はほんの一部。雰囲気はLINEでも質問できます ／</p>
+  </section>
 
   <!-- 声 -->
   <section class="tint">

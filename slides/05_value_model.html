@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>合同会社PN ｜ Slide 05 ｜ 企業価値向上モデル</title>
+<style>
+  /* ===================================================================
+     合同会社PN 経営者向け営業資料 / Slide 05
+     企業価値向上モデル（発信の経営モデル）
+     Design language: IR-grade — minimal, premium, trustworthy
+     Navy #1A2A40 (信頼) / Gold #B8860B (価値)
+  ==================================================================== */
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap');
+
+  :root{
+    --navy:#1A2A40;          /* 信頼の濃紺 */
+    --navy-soft:#2C4263;     /* 補助ネイビー */
+    --gold:#B8860B;          /* 価値のゴールド */
+    --gold-soft:#D4AF37;     /* ハイライト */
+    --ink:#1A2A40;
+    --sub:#5C6B7E;           /* 補助テキスト */
+    --line:#E3E7EC;          /* 罫線・区切り */
+    --bg:#FFFFFF;
+    --bg-alt:#F7F8FA;        /* 微妙な面 */
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{background:#4a4f57;}
+  body{
+    font-family:"Noto Sans JP",sans-serif;
+    color:var(--ink);
+    display:flex;justify-content:center;align-items:center;
+    min-height:100vh;padding:24px;
+  }
+
+  /* 16:9 canvas (1280 x 720) */
+  .slide{
+    position:relative;
+    width:1280px;height:720px;
+    background:var(--bg);
+    overflow:hidden;
+    box-shadow:0 30px 80px rgba(0,0,0,.35);
+  }
+
+  /* 上部の細いゴールドライン（高級感の演出） */
+  .slide::before{
+    content:"";position:absolute;top:0;left:0;right:0;height:5px;
+    background:linear-gradient(90deg,var(--navy) 0%,var(--navy) 55%,var(--gold) 55%,var(--gold-soft) 100%);
+  }
+
+  /* ---------- ヘッダー ---------- */
+  .header{padding:30px 56px 0;}
+  .eyebrow{
+    display:flex;align-items:center;gap:12px;
+    font-size:12px;letter-spacing:.32em;color:var(--gold);
+    font-weight:700;text-transform:uppercase;margin-bottom:10px;
+  }
+  .eyebrow .no{color:var(--navy);}
+  .eyebrow .bar{width:26px;height:1px;background:var(--gold);}
+  .title{
+    font-family:"Noto Serif JP",serif;font-weight:700;
+    font-size:30px;line-height:1.32;color:var(--navy);
+    letter-spacing:.01em;
+  }
+  .title .accent{color:var(--gold);}
+
+  /* メッセージ帯 */
+  .message{
+    margin-top:14px;padding:13px 20px 13px 18px;
+    background:var(--bg-alt);border-left:4px solid var(--gold);
+    font-size:14.5px;line-height:1.7;color:var(--navy);font-weight:500;
+    max-width:1168px;
+  }
+  .message b{color:var(--gold);font-weight:700;}
+
+  /* ---------- 本体 2カラム ---------- */
+  .body{
+    display:grid;grid-template-columns:1fr 1fr;
+    gap:0;padding:22px 56px 0;height:430px;
+  }
+  .col-left{padding-right:34px;border-right:1px solid var(--line);
+    display:flex;flex-direction:column;align-items:center;}
+  .col-right{padding-left:38px;display:flex;flex-direction:column;}
+
+  .col-label{
+    align-self:flex-start;font-size:11px;letter-spacing:.28em;
+    color:var(--sub);font-weight:700;margin-bottom:6px;
+  }
+  .col-left .col-label{align-self:center;}
+
+  /* ---------- 循環スパイラル図 ---------- */
+  .cycle-wrap{position:relative;width:430px;height:360px;}
+  .cycle-svg{position:absolute;inset:0;}
+  .node{
+    position:absolute;width:96px;height:96px;border-radius:50%;
+    display:flex;flex-direction:column;justify-content:center;align-items:center;
+    background:#fff;border:1.5px solid var(--line);
+    box-shadow:0 6px 16px rgba(26,42,64,.08);
+    transform:translate(-50%,-50%);text-align:center;
+  }
+  .node .step{font-size:9px;letter-spacing:.18em;color:var(--gold);font-weight:700;}
+  .node .lbl{font-size:14px;font-weight:700;color:var(--navy);margin-top:2px;}
+  .node .en{font-size:8px;color:var(--sub);letter-spacing:.1em;margin-top:1px;}
+
+  /* 最終ノード=企業価値向上 を強調 */
+  .node.goal{
+    background:var(--navy);border:none;width:104px;height:104px;
+    box-shadow:0 10px 24px rgba(26,42,64,.28);
+  }
+  .node.goal .step{color:var(--gold-soft);}
+  .node.goal .lbl{color:#fff;font-size:13px;}
+  .node.goal .en{color:#9FB0C4;}
+
+  .cycle-center{
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    width:128px;height:128px;border-radius:50%;
+    background:radial-gradient(circle at 50% 38%,#fff 0%,var(--bg-alt) 100%);
+    border:1px dashed var(--gold);
+    display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;
+  }
+  .cycle-center .c-sub{font-size:9px;letter-spacing:.2em;color:var(--gold);font-weight:700;}
+  .cycle-center .c-main{font-family:"Noto Serif JP",serif;font-size:16px;font-weight:700;color:var(--navy);line-height:1.3;margin-top:3px;}
+  .cycle-center .c-loop{font-size:8px;color:var(--sub);margin-top:4px;letter-spacing:.12em;}
+
+  .cycle-caption{margin-top:6px;font-size:11px;color:var(--sub);text-align:center;line-height:1.6;}
+  .cycle-caption b{color:var(--gold);}
+
+  /* ---------- 右：経営的意義 ---------- */
+  .meaning{list-style:none;margin-top:2px;}
+  .meaning li{display:flex;gap:13px;padding:11px 0;border-bottom:1px solid var(--line);}
+  .meaning li:last-child{border-bottom:none;}
+  .m-ic{
+    flex:none;width:30px;height:30px;border-radius:7px;
+    background:var(--navy);color:var(--gold-soft);
+    font-family:"Noto Serif JP",serif;font-weight:700;font-size:14px;
+    display:flex;justify-content:center;align-items:center;margin-top:1px;
+  }
+  .m-txt .m-h{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:2px;}
+  .m-txt .m-d{font-size:11.5px;line-height:1.62;color:var(--sub);}
+  .m-txt .m-d b{color:var(--gold);font-weight:700;}
+
+  /* 相関データ */
+  .data{
+    margin-top:14px;background:var(--bg-alt);border:1px solid var(--line);
+    border-radius:8px;padding:13px 16px 12px;display:flex;gap:16px;align-items:center;
+  }
+  .data .chart{flex:none;}
+  .data .d-body{flex:1;}
+  .data .d-cap{font-size:10px;letter-spacing:.16em;color:var(--gold);font-weight:700;}
+  .data .d-h{font-size:12.5px;font-weight:700;color:var(--navy);line-height:1.5;margin:3px 0 7px;}
+  .data .d-stats{display:flex;gap:18px;}
+  .data .stat .v{font-family:"Noto Serif JP",serif;font-size:22px;font-weight:700;color:var(--navy);line-height:1;}
+  .data .stat .v small{font-size:12px;color:var(--gold);}
+  .data .stat .k{font-size:9.5px;color:var(--sub);margin-top:3px;line-height:1.4;}
+
+  /* ---------- フッター ---------- */
+  .footer{
+    position:absolute;bottom:0;left:0;right:0;height:34px;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:0 56px;border-top:1px solid var(--line);
+    font-size:10px;color:var(--sub);letter-spacing:.06em;
+  }
+  .footer .brand{font-weight:700;color:var(--navy);letter-spacing:.1em;}
+  .footer .brand span{color:var(--gold);}
+  .note{font-size:9px;color:#9AA6B4;}
+
+  @media print{
+    @page{size:1280px 720px;margin:0;}
+    html,body{background:#fff;padding:0;}
+    .slide{box-shadow:none;}
+  }
+</style>
+</head>
+<body>
+  <section class="slide">
+
+    <!-- ===== Header ===== -->
+    <header class="header">
+      <div class="eyebrow"><span class="bar"></span><span class="no">05</span>&nbsp;VALUE CREATION MODEL</div>
+      <h1 class="title">採用・認知のその先へ：企業価値を循環させる<br><span class="accent">「発信の経営モデル」</span></h1>
+      <div class="message">
+        発信とは、一時的なプロモーションではない。組織の資産を磨き上げ、恒常的な企業価値向上へと繋げる<b>「経営インフラ」</b>である。
+      </div>
+    </header>
+
+    <!-- ===== Body ===== -->
+    <div class="body">
+
+      <!-- 左：循環モデル図 -->
+      <div class="col-left">
+        <div class="col-label">THE VALUE SPIRAL ／ 永久循環モデル</div>
+        <div class="cycle-wrap">
+          <!-- 循環の矢印（リング） -->
+          <svg class="cycle-svg" viewBox="0 0 430 360" fill="none">
+            <defs>
+              <marker id="arw" markerWidth="9" markerHeight="9" refX="5" refY="4.5" orient="auto">
+                <path d="M0,0 L9,4.5 L0,9 Z" fill="#B8860B"/>
+              </marker>
+              <linearGradient id="ring" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#B8860B"/>
+                <stop offset="100%" stop-color="#D4AF37"/>
+              </linearGradient>
+            </defs>
+            <!-- 6ステップを結ぶ循環リング（時計回り、上=企業価値向上から開始） -->
+            <circle cx="215" cy="180" r="118" stroke="url(#ring)" stroke-width="1.4"
+                    stroke-dasharray="5 6" opacity="0.55"/>
+            <!-- 進行方向の矢印（リング上に4箇所） -->
+            <g marker-end="url(#arw)" stroke="#B8860B" stroke-width="2.2">
+              <path d="M300 96 A118 118 0 0 1 333 180"/>
+              <path d="M333 180 A118 118 0 0 1 215 298"/>
+              <path d="M215 298 A118 118 0 0 1 97 180"/>
+              <path d="M97 180 A118 118 0 0 1 130 96"/>
+            </g>
+            <!-- 上昇スパイラル（企業価値が積み上がる示唆） -->
+            <path d="M215 62 q34 -22 4 -40" stroke="#1A2A40" stroke-width="2" fill="none" marker-end="url(#arw)"/>
+          </svg>
+
+          <!-- 中心 -->
+          <div class="cycle-center">
+            <div class="c-sub">PERPETUAL LOOP</div>
+            <div class="c-main">企業価値の<br>自己増幅</div>
+            <div class="c-loop">↻ 回すほど資産が厚くなる</div>
+          </div>
+
+          <!-- ノード（時計回り：上→右上→右下→下→左下→左上） -->
+          <!-- 上：企業価値向上（GOAL） -->
+          <div class="node goal" style="left:215px;top:62px;">
+            <div class="step">STEP 06</div><div class="lbl">企業価値向上</div><div class="en">ENTERPRISE VALUE</div>
+          </div>
+          <!-- 右上：認知 -->
+          <div class="node" style="left:317px;top:121px;">
+            <div class="step">STEP 01</div><div class="lbl">認知</div><div class="en">AWARENESS</div>
+          </div>
+          <!-- 右下：共感 -->
+          <div class="node" style="left:317px;top:239px;">
+            <div class="step">STEP 02</div><div class="lbl">共感</div><div class="en">EMPATHY</div>
+          </div>
+          <!-- 下：応募 -->
+          <div class="node" style="left:215px;top:298px;">
+            <div class="step">STEP 03</div><div class="lbl">応募</div><div class="en">ATTRACT</div>
+          </div>
+          <!-- 左下：採用 -->
+          <div class="node" style="left:113px;top:239px;">
+            <div class="step">STEP 04</div><div class="lbl">採用</div><div class="en">HIRE</div>
+          </div>
+          <!-- 左上：定着 -->
+          <div class="node" style="left:113px;top:121px;">
+            <div class="step">STEP 05</div><div class="lbl">定着</div><div class="en">RETENTION</div>
+          </div>
+        </div>
+        <div class="cycle-caption">
+          一巡ごとに認知・信頼・人的資本が積み増され、<b>次の一周の効率が上がる</b>。<br>＝ 広告のような「使い切り」ではなく、<b>複利で効く経営資産</b>。
+        </div>
+      </div>
+
+      <!-- 右：経営的意義 -->
+      <div class="col-right">
+        <div class="col-label">WHY IT MATTERS ／ 経営的意義</div>
+        <ul class="meaning">
+          <li>
+            <div class="m-ic">壱</div>
+            <div class="m-txt">
+              <div class="m-h">「費用」から「資産」への転換</div>
+              <div class="m-d">発信で蓄積される認知・信頼・コンテンツは消えない。広告費が<b>P/Lの費用</b>なら、発信は<b>B/Sに積み上がる無形資産</b>です。</div>
+            </div>
+          </li>
+          <li>
+            <div class="m-ic">弐</div>
+            <div class="m-txt">
+              <div class="m-h">採用コストの構造的な逓減</div>
+              <div class="m-d">認知と共感が母集団を育て、<b>一人あたり採用単価と離職率を低減</b>。回すほど採用・定着の生産性が高まります。</div>
+            </div>
+          </li>
+          <li>
+            <div class="m-ic">参</div>
+            <div class="m-txt">
+              <div class="m-h">社内に「発信する力」が残る</div>
+              <div class="m-d">代行して終わりではなく、<b>仕組みと人材を組織内に実装</b>。外注依存を脱し、企業価値を生む内製エンジンになります。</div>
+            </div>
+          </li>
+        </ul>
+
+        <!-- 相関データ（想定） -->
+        <div class="data">
+          <div class="chart">
+            <svg width="118" height="98" viewBox="0 0 118 98">
+              <!-- 軸 -->
+              <line x1="20" y1="8" x2="20" y2="82" stroke="#C7CFD8" stroke-width="1"/>
+              <line x1="20" y1="82" x2="112" y2="82" stroke="#C7CFD8" stroke-width="1"/>
+              <!-- 回帰線（右肩上がり） -->
+              <line x1="24" y1="74" x2="108" y2="18" stroke="#B8860B" stroke-width="2.4"/>
+              <!-- 散布点 -->
+              <g fill="#1A2A40">
+                <circle cx="30" cy="70" r="3"/><circle cx="42" cy="66" r="3"/>
+                <circle cx="52" cy="55" r="3"/><circle cx="63" cy="50" r="3"/>
+                <circle cx="74" cy="40" r="3"/><circle cx="86" cy="33" r="3"/>
+                <circle cx="98" cy="24" r="3"/>
+              </g>
+              <!-- 軸ラベル -->
+              <text x="6" y="14" font-size="7" fill="#5C6B7E" transform="rotate(-90 6 14)" text-anchor="end">企業価値→</text>
+              <text x="64" y="94" font-size="7" fill="#5C6B7E" text-anchor="middle">人的資本・発信投資 →</text>
+            </svg>
+          </div>
+          <div class="d-body">
+            <div class="d-cap">EVIDENCE ／ 相関データ（想定値）</div>
+            <div class="d-h">人的資本・発信への投資は、中長期の市場価値と正の相関を示す</div>
+            <div class="d-stats">
+              <div class="stat"><div class="v">+18<small>%</small></div><div class="k">投資上位群の<br>売上成長率（年）</div></div>
+              <div class="stat"><div class="v">0.7<small>＋</small></div><div class="k">投資額と時価<br>総額の相関係数</div></div>
+              <div class="stat"><div class="v">-30<small>%</small></div><div class="k">採用単価の<br>逓減（3年）</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Footer ===== -->
+    <footer class="footer">
+      <span class="brand">合同会社<span>PN</span></span>
+      <span class="note">※相関データは公開研究・各種調査をもとにした想定モデルであり、実数値を保証するものではありません。</span>
+      <span>05 / 18</span>
+    </footer>
+  </section>
+</body>
+</html>

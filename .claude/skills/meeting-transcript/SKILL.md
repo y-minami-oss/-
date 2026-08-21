@@ -28,16 +28,27 @@ Google カレンダー → Drive の文字起こしドキュメント → クラ
 | `... - Gemini によるメモ` | Google Meet の Gemini メモ。**前半が要約・後半に全文文字起こし** |
 | `... ～Recording` | 録画（mp4）。文字起こしは取れないので対象外 |
 
+**注意: 添付タイトルは途中で切れることがある。**
+`【お打ち合わせ】イデアコンサルティング 企画打ち合わせ - 2026/08/` のように
+末尾の `～Transcript` が落ちるため、タイトルの文字列一致だけで判定すると取りこぼす。
+`fileUrl` が `docs.google.com/document/` のものは種別不明でも候補に含め、
+中身の先頭（`# 文字起こし` / `# メモ` の見出し）で判定する。
+`drive.google.com/file/` は録画なので除外してよい。
+
 `fileUrl` から Drive のファイルIDを抜く:
 
 ```bash
+# docs.google.com/document/ の添付を全部拾う(タイトルが切れていても取りこぼさない)
 jq -r '
  .events[] | select(.attachments != null) | . as $e | .attachments[]
- | select(.title|test("Transcript|Gemini"))
+ | select(.fileUrl|test("docs.google.com/document/"))
  | [ ($e.start.dateTime // $e.start.date), $e.summary,
-     (.title|if test("Transcript") then "TRANSCRIPT" else "GEMINI" end),
-     (.fileUrl|capture("/(d|file/d)/(?<id>[A-Za-z0-9_-]{20,})").id) ] | @tsv' "$F"
+     (.title|if test("Transcript") then "TRANSCRIPT"
+             elif test("Gemini") then "GEMINI" else "UNKNOWN" end),
+     (.fileUrl|capture("/d/(?<id>[A-Za-z0-9_-]{20,})").id) ] | @tsv' "$F"
 ```
+
+`UNKNOWN` は中身を読んで判定する。
 
 ### 2. クライアントを判定する
 

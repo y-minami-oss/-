@@ -33,3 +33,6 @@ config.yaml
 .DS_Store
 .vscode/
 .idea/
+
+# 会議の文字起こし(クライアントの会議内容なのでコミットしない)
+transcripts/

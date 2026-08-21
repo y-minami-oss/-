@@ -38,3 +38,4 @@ config.yaml
 knowledge/PRIVATE/
 knowledge/work/google_doc_body.*
 knowledge/work/calendar_*.tsv
+knowledge/work/docparts/

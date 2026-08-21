@@ -36,3 +36,4 @@ config.yaml
 
 # ナレッジ抽出の社内限定ファイル(実名・実額を含むためコミットしない)
 knowledge/PRIVATE/
+knowledge/work/google_doc_body.*

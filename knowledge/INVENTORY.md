@@ -12,6 +12,12 @@
 | `knowledge-base.html` | 全ノートを1ページに統合した読み物版（章内目次＋キーワード検索） | 1.8MB |
 | `build.py` | `notes/*.md` から `knowledge-base.html` を生成するスクリプト | 13KB |
 | `work/memo.py` | Geminiメモ部分だけを取り出す補助スクリプト | 1KB |
+| `docs/google_doc_body.md` | Googleドキュメント用のまとめ本文（リスキリング／助成金は除外） | 163KB |
+| `docs/google_doc_body.json` | 同上をApps Script用に段落単位へ変換したもの | 197KB |
+| `docs/匿名ラベル一覧.md` | クライアントの記号と照合の手掛かり（実名は含まない） | 3KB |
+| `docs/週次更新の仕組み.md` | 週次自動更新の全体像とセットアップ手順 | 3KB |
+| `tools/build_doc.py` | `notes/*.md` → `docs/google_doc_body.*` を生成 | 9KB |
+| `tools/sync_doc.gs` | Googleドキュメント側のApps Script（毎週日曜23時に本文を全置換） | 4KB |
 
 ## リポジトリに含まれないもの（`PRIVATE/`・`.gitignore` 済み）
 | パス | なぜ含めないか |
@@ -26,8 +32,12 @@
 ## 再生成の手順
 ```bash
 cd knowledge
-python3 build.py            # notes/*.md -> knowledge-base.html
+python3 build.py                        # notes/*.md -> knowledge-base.html
+python3 tools/build_doc.py $(date +%F)  # notes/*.md -> Googleドキュメント用の本文
+cp work/google_doc_body.json work/google_doc_body.md docs/
 ```
+
+週次自動更新の仕組みは `docs/週次更新の仕組み.md` を参照。
 
 ## 匿名化のかけ方
 ```bash

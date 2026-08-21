@@ -237,7 +237,7 @@ doc = f"""<title>社内ナレッジ台帳</title>
   </nav>
   <main>
     <div class="finder">
-      <input id="q" type="search" placeholder="キーワードで絞り込む（例：継続 / 失注 / 助成金 / インタビュー）" aria-label="キーワード検索">
+      <input id="q" type="search" placeholder="キーワードで絞り込む（例：継続 / 失注 / 撮影 / インタビュー）" aria-label="キーワード検索">
       <p class="count" id="qc"></p>
     </div>
     {''.join(sections)}

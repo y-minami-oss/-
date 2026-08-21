@@ -149,3 +149,23 @@ python -m unittest tests.test_logic -v
   その場合は手動でログインし、`storage_state.json` にセッションを保存して
   再利用する運用に切り替えます(相談してください)。
 - TeamSpirit の画面仕様が変わると、セレクタの修正が必要になることがあります。
+
+---
+
+## AIノウハウ(検証済み)
+
+社内Notion「AIインテリジェンス・ナレッジDB」(108件)を検証し、使える形にしたもの。
+
+- **`CLAUDE.md`** — 常に効く安定ルール。Claude が毎回読む
+- **`/ai-knowhow` スキル** — プロンプトの型・業務プロンプト集・モデル選定・
+  設計チェックリスト・生成AIツール早見表。必要なときだけ読み込まれる
+- **`docs/AI_KNOWHOW_VALIDATION.md`** — 108件の検証台帳。何を確認して何が未検証かの記録
+
+生成AI系(画像・動画・音声・アバター・スライド)は APIキーが無く**未検証**。
+使う前に無料枠で1本試すこと。
+
+### web セッションの自動セットアップ
+
+`.claude/hooks/session-start.sh` が Claude Code on the web のセッション開始時に
+`requirements.txt` を install する。テストを初手から実行できる状態にするため。
+手元のMacでは何もしない(上記の venv 手順に従う)。

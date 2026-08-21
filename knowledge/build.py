@@ -15,6 +15,7 @@ NOTES = [
     ("formats",   "制作フォーマット",    "notes/11_制作フォーマット集.md"),
     ("unitecon",  "社内運営と原価構造",  "notes/12_社内運営とユニットエコノミクス.md"),
     ("ledger",    "営業台帳959商談",     "notes/13_営業台帳959商談の全量分析.md"),
+    ("internal",  "社内ナレッジ共有会",  "notes/14_社内_ナレッジ共有会と社内定例.md"),
 ]
 
 md = markdown.Markdown(extensions=["tables", "attr_list", "sane_lists"])

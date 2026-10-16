@@ -1,0 +1,10 @@
+fiscal_year,period,net_sales_mil_jpy,operating_income_mil_jpy,ordinary_income_mil_jpy,net_income_mil_jpy,note,source
+FY2021,2020-04~2021-03,35700,-2300,,,"コロナ禍。概数(億円単位)",https://www.crex-data.com/company/9083
+FY2022,2021-04~2022-03,38800,300,,,"概数。収益認識基準適用",https://edinetdb.jp/company/E04160/earnings/FY2021
+FY2023,2022-04~2023-03,44800,2400,,,概数,https://edinetdb.jp/company/E04160/earnings/FY2021
+FY2024,2023-04~2024-03,49500,3100,,,概数,https://edinetdb.jp/company/E04160/earnings/FY2021
+FY2025,2024-04~2025-03,52954,3474,3729,2471,決算短信,https://www2.jpx.co.jp/disc/90830/081220260512525826_tse-acedjpsm-90830-20260512390830-ixbrl.htm
+FY2026,2025-04~2026-03,55580,4199,4434,3158,"決算短信(2026-05-12)",https://www2.jpx.co.jp/disc/90830/081220260512525826_tse-acedjpsm-90830-20260512390830-ixbrl.htm
+FY2027 Q1,2026-04~2026-06,12989,287,314,109,"決算短信(2026-08-06)",https://www2.jpx.co.jp/disc/90830/081220260806511168_tse-qcedjpsm-90830-20260806390830-ixbrl.htm
+FY2027 会社予想,2026-04~2027-03,57000,3300,3400,,会社予想,https://kabutan.jp/stock/finance?code=9083
+FY2028 中計目標,2027-04~2028-03,59000,3700,3800,2570,"中期経営計画(2025-2027)目標",https://edinetdb.jp/company/E04160/midterm-plans/

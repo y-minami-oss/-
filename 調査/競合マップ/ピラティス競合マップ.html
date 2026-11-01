@@ -1,0 +1,194 @@
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>ピラティス競合マップ</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&display=swap">
+<style>
+  /* Layout: Swiss grid, single column; a bordered map plate above a ledger of players. Palette 白・黒・赤. */
+  :root{
+    --bg:#f4f4f2;
+    --fg:#0a0a0a;
+    --muted:#6b6b68;
+    --line:#0a0a0a;
+    --grid:rgba(10,10,10,.12);
+    --plate:#ffffff;
+    --accent:#e2231a;
+    --accent-ink:#ffffff;
+    --soft:rgba(10,10,10,.05);
+    --display:"Archivo","Helvetica Neue",Arial,sans-serif;
+    --body:"Helvetica Neue",Arial,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --bg:#0c0c0d;--fg:#f2f2ee;--muted:#9a9a95;--line:#f2f2ee;
+    --grid:rgba(242,242,238,.14);--plate:#161617;--soft:rgba(242,242,238,.06);
+    color-scheme:dark;
+  }}
+  :root[data-theme="dark"]{
+    --bg:#0c0c0d;--fg:#f2f2ee;--muted:#9a9a95;--line:#f2f2ee;
+    --grid:rgba(242,242,238,.14);--plate:#161617;--soft:rgba(242,242,238,.06);
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  body{background:var(--bg);color:var(--fg);font-family:var(--body);line-height:1.6;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1000px;margin:0 auto;
+    padding-left:max(16px,env(safe-area-inset-left,0px));
+    padding-right:max(16px,env(safe-area-inset-right,0px));
+    padding-block:40px 64px}
+  .eyebrow{font-family:var(--display);font-weight:700;letter-spacing:.22em;
+    text-transform:uppercase;font-size:.72rem;color:var(--accent);margin:0 0 10px}
+  h1{font-family:var(--display);font-weight:900;font-size:clamp(1.9rem,5vw,3rem);
+    line-height:1.02;letter-spacing:-.01em;margin:0 0 12px;text-wrap:balance}
+  .lede{font-size:1.02rem;color:var(--muted);max-width:60ch;margin:0 0 28px}
+  .rule{height:3px;background:var(--line);margin:0 0 28px}
+  .plate{background:var(--plate);border:2px solid var(--line);padding:18px}
+  .map-scroll{overflow-x:auto}
+  svg{display:block;width:100%;height:auto;min-width:560px}
+  .pt-label{font-family:var(--body);font-weight:700}
+  .pt-sub{font-family:var(--body);font-weight:500}
+  .axis-cap{font-family:var(--display);font-weight:700;letter-spacing:.12em;
+    text-transform:uppercase}
+  .quad{font-family:var(--display);font-weight:700;letter-spacing:.06em;
+    text-transform:uppercase}
+  .legend{display:flex;flex-wrap:wrap;gap:14px 24px;margin:18px 2px 0;
+    font-size:.86rem;color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:8px}
+  .dot{width:13px;height:13px;border-radius:50%;flex:none}
+  .dot.m{background:var(--accent)}
+  .dot.o{background:var(--fg)}
+  h2{font-family:var(--display);font-weight:900;font-size:1.3rem;letter-spacing:-.01em;
+    margin:48px 0 4px}
+  .sub{color:var(--muted);font-size:.92rem;margin:0 0 18px}
+  .ledger{border-top:2px solid var(--line)}
+  .row{display:grid;grid-template-columns:160px 1fr;gap:4px 22px;
+    padding:16px 2px;border-bottom:1px solid var(--grid)}
+  .row .name{font-family:var(--display);font-weight:700;font-size:1rem;min-width:0}
+  .row .name small{display:block;font-family:var(--body);font-weight:500;
+    color:var(--muted);font-size:.8rem;letter-spacing:.02em;margin-top:2px}
+  .row .desc{min-width:0;font-size:.94rem}
+  .row.me{background:var(--soft);border-left:4px solid var(--accent);
+    padding-left:14px;margin-left:-2px}
+  .row.me .name{color:var(--accent)}
+  .tag{display:inline-block;font-family:var(--display);font-weight:700;font-size:.66rem;
+    letter-spacing:.14em;text-transform:uppercase;border:1.5px solid currentColor;
+    padding:2px 7px;margin-top:8px}
+  .take{margin-top:40px;border:2px solid var(--accent);padding:22px 20px;background:var(--plate)}
+  .take h3{font-family:var(--display);font-weight:900;margin:0 0 8px;font-size:1.05rem}
+  .take p{margin:0;max-width:66ch}
+  .take strong{color:var(--accent)}
+  .foot{margin-top:30px;font-size:.78rem;color:var(--muted);max-width:66ch}
+  @media (max-width:560px){
+    .row{grid-template-columns:1fr;gap:6px}
+  }
+</style>
+
+<div class="wrap">
+  <p class="eyebrow">Positioning Map / 2026</p>
+  <h1>ピラティス市場の競合マップ</h1>
+  <p class="lede">縦軸「質・本物志向」× 横軸「規模・出店力」で各プレイヤーを配置。MOHI PILATES は<b>高品質 × 小規模</b>の象限に単独で立つ。</p>
+  <div class="rule"></div>
+
+  <div class="plate">
+    <div class="map-scroll">
+      <svg viewBox="0 0 820 600" role="img" aria-label="質と規模の2軸で描いたピラティス競合マップ">
+        <!-- quadrant tint (top-left = MOHI zone) -->
+        <rect x="90" y="50" width="335" height="245" fill="var(--accent)" opacity="0.06"/>
+
+        <!-- grid frame -->
+        <rect x="90" y="50" width="670" height="490" fill="none" stroke="var(--grid)" stroke-width="1"/>
+        <!-- mid axes -->
+        <line x1="425" y1="50" x2="425" y2="540" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 5"/>
+        <line x1="90" y1="295" x2="760" y2="295" stroke="var(--grid)" stroke-width="1" stroke-dasharray="4 5"/>
+
+        <!-- axis arrows -->
+        <line x1="90" y1="540" x2="760" y2="540" stroke="var(--line)" stroke-width="2.5"/>
+        <line x1="90" y1="540" x2="90" y2="50" stroke="var(--line)" stroke-width="2.5"/>
+        <polygon points="760,540 748,534 748,546" fill="var(--line)"/>
+        <polygon points="90,50 84,62 96,62" fill="var(--line)"/>
+
+        <!-- axis captions -->
+        <text x="425" y="578" text-anchor="middle" class="axis-cap" fill="var(--fg)" font-size="15">規模・出店力  →</text>
+        <text x="40" y="70" text-anchor="middle" class="axis-cap" fill="var(--fg)" font-size="15" transform="rotate(-90 40 295)">質・本物志向  →</text>
+        <text x="100" y="556" class="pt-sub" fill="var(--muted)" font-size="11">小規模・少店舗</text>
+        <text x="755" y="556" text-anchor="end" class="pt-sub" fill="var(--muted)" font-size="11">大量出店</text>
+
+        <!-- quadrant labels -->
+        <text x="105" y="74" class="quad" fill="var(--muted)" font-size="11">本物・職人型</text>
+        <text x="745" y="74" text-anchor="end" class="quad" fill="var(--muted)" font-size="11">高品質×大規模（空白）</text>
+        <text x="105" y="530" class="quad" fill="var(--muted)" font-size="11">個人・ニッチ</text>
+        <text x="745" y="530" text-anchor="end" class="quad" fill="var(--muted)" font-size="11">量産・利便性</text>
+
+        <!-- ===== competitors (black) ===== -->
+        <!-- 特化型 Q72 S30 -> x291 y187 -->
+        <circle cx="291" cy="187" r="8" fill="var(--fg)"/>
+        <text x="305" y="183" class="pt-label" fill="var(--fg)" font-size="14">特化型スタジオ</text>
+        <text x="305" y="200" class="pt-sub" fill="var(--muted)" font-size="11.5">産後・腰痛・ゴルフ等「◯◯専門」</text>
+
+        <!-- 見栄え型 Q42 S12 -> x170 y334 -->
+        <circle cx="170" cy="334" r="8" fill="var(--fg)"/>
+        <text x="184" y="330" class="pt-label" fill="var(--fg)" font-size="14">見栄え型・個人発信者</text>
+        <text x="184" y="347" class="pt-sub" fill="var(--muted)" font-size="11.5">リール映え・ビフォーアフター主導</text>
+
+        <!-- 近隣パーソナル Q62 S50 -> x425 y236 -->
+        <circle cx="425" cy="236" r="8" fill="var(--fg)"/>
+        <text x="439" y="232" class="pt-label" fill="var(--fg)" font-size="14">近隣パーソナル競合</text>
+        <text x="439" y="249" class="pt-sub" fill="var(--muted)" font-size="11.5">YUZU・Beat 等（港区の激戦区）</text>
+
+        <!-- 大手総合 Q50 S78 -> x613 y295 -->
+        <circle cx="613" cy="295" r="8" fill="var(--fg)"/>
+        <text x="627" y="291" class="pt-label" fill="var(--fg)" font-size="14" text-anchor="end" transform="translate(-28,0)">大手総合・養成系</text>
+        <text x="599" y="308" class="pt-sub" fill="var(--muted)" font-size="11.5" text-anchor="end">zen place 系（養成も大量輩出）</text>
+
+        <!-- 量産チェーン Q36 S90 -> x693 y364 -->
+        <circle cx="693" cy="364" r="8" fill="var(--fg)"/>
+        <text x="679" y="360" class="pt-label" fill="var(--fg)" font-size="14" text-anchor="end">量産チェーン</text>
+        <text x="679" y="377" class="pt-sub" fill="var(--muted)" font-size="11.5" text-anchor="end">Rintosull・ロイブ・CLUB 等</text>
+
+        <!-- ===== MOHI (red, highlighted) Q92 S12 -> x170 y89 ===== -->
+        <circle cx="170" cy="89" r="22" fill="none" stroke="var(--accent)" stroke-width="2" opacity="0.5"/>
+        <circle cx="170" cy="89" r="13" fill="var(--accent)"/>
+        <text x="193" y="84" class="pt-label" fill="var(--accent)" font-size="17" font-weight="900">MOHI PILATES</text>
+        <text x="193" y="103" class="pt-sub" fill="var(--fg)" font-size="12">本物志向・少人数・20年のカリスマ</text>
+      </svg>
+    </div>
+    <div class="legend">
+      <span><span class="dot m"></span>MOHI PILATES（自社）</span>
+      <span><span class="dot o"></span>競合カテゴリー</span>
+      <span>配置は定性的な相対比較（スケールは目安）</span>
+    </div>
+  </div>
+
+  <h2>各プレイヤーの読み方</h2>
+  <p class="sub">同じ「ピラティス」でも戦い方は別物。質と規模はトレードオフの関係にある。</p>
+  <div class="ledger">
+    <div class="row me">
+      <div class="name">MOHI PILATES<small>本物・職人型</small></div>
+      <div class="desc">解剖学・20年の指導歴・少人数・養成まで。「なぜそう動くか」を理解したい検討層向け。規模では広げられない代わりに、深さで選ばれる。<span class="tag">自社ポジション</span></div>
+    </div>
+    <div class="row">
+      <div class="name">量産チェーン<small>量産・利便性</small></div>
+      <div class="desc">Rintosull・ロイブ・CLUB PILATES 等。武器は店舗数・近さ・価格。標準化で質の天井は決まるが横に広げられる。「通いやすい・安い」で選ばれる。</div>
+    </div>
+    <div class="row">
+      <div class="name">大手総合・養成系<small>標準×大規模</small></div>
+      <div class="desc">zen place 系。スタジオと養成コースを大量に展開。知名度と店舗網が強み。養成は「量産モデル」でMOHIの養成コースと真っ向競合。</div>
+    </div>
+    <div class="row">
+      <div class="name">近隣パーソナル競合<small>港区の激戦区</small></div>
+      <div class="desc">YUZU・Beat Pilates 等。立地と内装・接客で勝負。広告・MEOに積極的（YUZUは「白金高輪 ピラティス」で広告出稿）。地理的に直接ぶつかる相手。</div>
+    </div>
+    <div class="row">
+      <div class="name">特化型スタジオ<small>◯◯専門</small></div>
+      <div class="desc">産後・腰痛・ゴルフ・バレエ等、課題や属性を絞る。刺さる層には強いが守備範囲が狭い。MOHIは「総合的な本物」で上位に立てる。</div>
+    </div>
+    <div class="row">
+      <div class="name">見栄え型・個人発信者<small>SNS主導</small></div>
+      <div class="desc">リール映え・ルックス・ビフォーアフターで伸ばす。再生数は強いが「誰に習うか」の権威性では勝負していない。増加中で、ノイズにもなる存在。</div>
+    </div>
+  </div>
+
+  <div class="take">
+    <h3>この地図からの結論</h3>
+    <p>右上（高品質×大規模）は構造的に<strong>両立が難しい空白地帯</strong>。MOHIが規模で量産チェーンと殴り合うのは筋が悪い。狙うべきは「大きくしない代わりに<strong>一番深いと認知される</strong>」こと＝規模戦略ではなく<strong>権威戦略</strong>。競合が増え「どこが本物か分からない」ほど、本物の基準を定義する立場の価値は上がる。</p>
+  </div>
+
+  <p class="foot">配置は公開情報と定性判断にもとづく相対マップで、軸の数値は正確な市場データではありません。カテゴリー分けは2026年時点の市場観にもとづきます。</p>
+</div>

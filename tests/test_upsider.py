@@ -250,3 +250,39 @@ class BrowserTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ChromeLoginTests(unittest.TestCase):
+    def _profile(self, root: Path, name: str, hosts: list[str]) -> None:
+        import sqlite3
+
+        prof = root / name / "Network"
+        prof.mkdir(parents=True)
+        con = sqlite3.connect(prof / "Cookies")
+        con.execute("CREATE TABLE cookies (host_key TEXT, name TEXT, value TEXT)")
+        con.executemany("INSERT INTO cookies VALUES (?, 'k', 'v')", [(h,) for h in hosts])
+        con.commit()
+        con.close()
+        (root / name / "Local Storage" / "leveldb").mkdir(parents=True)
+        (root / name / "Local Storage" / "leveldb" / "000003.log").write_text("x")
+        (root / name / "Local Storage" / "leveldb" / "LOCK").write_text("")
+
+    def test_picks_profile_with_upsider_cookie_and_copies(self):
+        from src.chrome_login import find_profile_with_login, import_login
+
+        with tempfile.TemporaryDirectory() as d:
+            src, dst = Path(d) / "chrome", Path(d) / "dst"
+            self._profile(src, "Default", ["google.com"])
+            self._profile(src, "Profile 1", [".up-sider.com", "up-sider.com"])
+            self.assertEqual(find_profile_with_login(src).name, "Profile 1")
+            self.assertEqual(import_login(dst, src), "Profile 1")
+            self.assertTrue((dst / "Default/Network/Cookies").exists())
+            self.assertTrue((dst / "Default/Local Storage/leveldb/000003.log").exists())
+            self.assertFalse((dst / "Default/Local Storage/leveldb/LOCK").exists())
+
+    def test_no_login_found(self):
+        from src.chrome_login import import_login
+
+        with tempfile.TemporaryDirectory() as d:
+            self._profile(Path(d) / "chrome", "Default", ["google.com"])
+            self.assertIsNone(import_login(Path(d) / "dst", Path(d) / "chrome"))

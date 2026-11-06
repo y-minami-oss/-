@@ -95,7 +95,9 @@ class UpsiderClient:
         list_url: str,
         show_browser: bool = True,
         selectors: dict[str, Any] | None = None,
+        import_login: bool = True,
     ):
+        self.import_login = import_login
         self.list_url = list_url
         self.show_browser = show_browser
         self.sel = {**DEFAULT_SELECTORS, **(selectors or {})}
@@ -138,6 +140,18 @@ class UpsiderClient:
     def _start_normal_chrome(self, chrome: str) -> None:
         CDP_PROFILE_DIR.mkdir(parents=True, exist_ok=True)
         if not self._cdp_alive():
+            if self.import_login:
+                from .chrome_login import import_login
+
+                try:
+                    name = import_login(CDP_PROFILE_DIR)
+                except Exception as e:
+                    name = None
+                    print(f"⚠ 普段の Chrome のログイン状態をコピーできませんでした: {e}")
+                if name:
+                    print(f"🔑 普段の Chrome(プロファイル『{name}』)の UPSIDER ログイン状態を使います。")
+                else:
+                    print("⚠ 普段の Chrome に UPSIDER のログイン状態が見つかりませんでした。")
             self._chrome_proc = subprocess.Popen(
                 [
                     chrome,
@@ -250,8 +264,8 @@ class UpsiderClient:
         if getattr(self, "_cdp_pending", False):
             # ログインが終わるまでは一切ブラウザに触らない(普通の Chrome として操作してもらう)
             input(
-                "\n🔐 Chrome が開きました。その画面で、いつも通り UPSIDER にログインしてください。\n"
-                "   (メールアドレス → パスワード → Verify you are human → ログイン)\n"
+                "\n🔐 Chrome が開きました。カード明細の一覧が出ていればそのまま Enter。\n"
+                "   ログイン画面が出ている場合は、その画面でログインしてから Enter。\n"
                 "   ※入力は Chrome の画面で。ここには何も打たないでください\n"
                 "   ※Chrome のウィンドウは最後まで閉じないでください\n"
                 "   カード明細の一覧が表示されたら、ここで Enter だけ押してください... "

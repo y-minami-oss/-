@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import tempfile
 import unittest
-from datetime import date
+from datetime import date, time
 from pathlib import Path
 
 from src.matcher import (
@@ -19,6 +19,7 @@ from src.matcher import (
     parse_amount,
     parse_date,
     parse_row_text,
+    parse_time,
     parse_year_month,
     plan_matches,
 )
@@ -27,8 +28,10 @@ from src.text_extract import parse_receipt_text
 from src.upsider_attach import months_for_receipts, url_for_month
 
 
-def receipt(d: str, amount: int, vendor: str = "GO株式会社") -> Receipt:
-    return Receipt(date=d, amount=amount, vendor=vendor, category="旅費交通費", description="")
+def receipt(d: str, amount: int, vendor: str = "GO株式会社", t: str | None = None) -> Receipt:
+    return Receipt(
+        date=d, time=t, amount=amount, vendor=vendor, category="旅費交通費", description=""
+    )
 
 
 GO_TEXT = """領収書
@@ -72,15 +75,34 @@ class ParseTests(unittest.TestCase):
         self.assertEqual(r.vendor, "GO株式会社")
         self.assertIn("小金井市", r.description)
 
+    def test_time_from_filename(self):
+        r = parse_receipt_text(GO_TEXT, filename="GO領収書_20260701_1338.pdf")
+        self.assertEqual(r.time, "13:38")
+        # ファイル名の日付が利用日と違う場合は時刻を採用しない
+        r = parse_receipt_text(GO_TEXT, filename="GO領収書_20260702_1338.pdf")
+        self.assertIsNone(r.time)
+
+    def test_time_parsing(self):
+        self.assertEqual(parse_time("2026/07/01 13:38"), time(13, 38))
+        self.assertEqual(parse_time("9時05分"), time(9, 5))
+        self.assertIsNone(parse_time("¥3,200"))
+        tx = parse_row_text(0, "07/01 13:40\nGO\n¥3,200", (2026, 7))
+        self.assertEqual((tx.time, tx.merchant), (time(13, 40), "GO"))
+
     def test_unknown_issuer_falls_back(self):
         self.assertIsNone(parse_receipt_text("領収書 ¥1,000- 利用日 2026/07/01"))
 
     def test_csv(self):
         with tempfile.TemporaryDirectory() as d:
             p = Path(d) / "m.csv"
-            p.write_text("利用日,利用先,利用金額\n2026/07/01,GO,\"3,200\"\n", encoding="cp932")
+            p.write_text(
+                "利用日,利用先,利用金額\n2026/07/01 13:40,GO,\"3,200\"\n", encoding="cp932"
+            )
             txs = load_transactions_csv(p)
-        self.assertEqual((txs[0].date, txs[0].amount, txs[0].merchant), (date(2026, 7, 1), 3200, "GO"))
+        self.assertEqual(
+            (txs[0].date, txs[0].time, txs[0].amount, txs[0].merchant),
+            (date(2026, 7, 1), time(13, 40), 3200, "GO"),
+        )
 
     def test_months_and_url(self):
         ms = months_for_receipts([receipt("2026-07-30", 1), receipt("2026-08-10", 1)], 3)
@@ -121,6 +143,33 @@ class MatchTests(unittest.TestCase):
         res = plan_matches([receipt("2026-07-21", 9999, vendor="出張宿泊")], self.txs, 3)
         self.assertIsNone(res[0].chosen)
         self.assertEqual(len(res[0].candidates), 2)
+
+    def test_time_picks_right_ride_on_same_day(self):
+        # 同日・同額のタクシー3回を、時刻で正しく振り分ける
+        txs = [
+            Transaction(0, date(2026, 10, 20), 2800, "GO", time=time(20, 58)),
+            Transaction(1, date(2026, 10, 20), 2800, "GO", time=time(14, 36)),
+            Transaction(2, date(2026, 10, 20), 2800, "GO", time=time(17, 41)),
+        ]
+        rs = [receipt("2026-10-20", 2800, t=t) for t in ("14:33", "17:38", "20:55")]
+        res = plan_matches(rs, txs)
+        self.assertEqual([r.chosen.tx.index for r in res], [1, 2, 0])
+
+    def test_time_near_midnight_crosses_date(self):
+        txs = [
+            Transaction(0, date(2026, 7, 2), 3000, "GO", time=time(0, 10)),
+            Transaction(1, date(2026, 7, 1), 3000, "GO", time=time(9, 0)),
+        ]
+        res = plan_matches([receipt("2026-07-01", 3000, t="23:55")], txs)
+        self.assertEqual(res[0].chosen.tx.index, 0)
+
+    def test_different_times_far_apart_go_to_human(self):
+        txs = [
+            Transaction(0, date(2026, 7, 1), 3000, "GO", time=time(8, 0)),
+            Transaction(1, date(2026, 7, 1), 3000, "GO", time=time(20, 0)),
+        ]
+        res = plan_matches([receipt("2026-07-01", 3000, t="14:00")], txs)
+        self.assertIsNone(res[0].chosen)
 
     def test_date_tolerance(self):
         self.assertEqual(plan_matches([receipt("2026-07-10", 3200)], self.txs)[0].candidates, [])

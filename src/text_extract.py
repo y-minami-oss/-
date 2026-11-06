@@ -29,7 +29,9 @@ KNOWN_ISSUERS = [
 _DATE = r"(\d{4})\s*[/\-年]\s*(\d{1,2})\s*[/\-月]\s*(\d{1,2})"
 
 
-def parse_receipt_text(text: str, categories: list[str] | None = None) -> Receipt | None:
+def parse_receipt_text(
+    text: str, categories: list[str] | None = None, filename: str = ""
+) -> Receipt | None:
     t = unicodedata.normalize("NFKC", text)
 
     # 金額: 「¥3,200-」の形(領収書の大きな金額表示)→ 無ければ「合計 ¥…」
@@ -53,6 +55,18 @@ def parse_receipt_text(text: str, categories: list[str] | None = None) -> Receip
     y, mo, d = (int(x) for x in m.groups()[-3:])
     date = f"{y:04d}-{mo:02d}-{d:02d}"
 
+    # 時刻: 本文の「利用日時 … 13:38」→ 無ければファイル名の「_YYYYMMDD_HHMM」
+    time_str = None
+    tm = re.search(
+        r"(?:ご?利用日時?|乗車日時?|取引日時?)\s*:?\s*" + _DATE + r"[^\d\n]*(\d{1,2}):(\d{2})", t
+    )
+    if tm:
+        time_str = f"{int(tm.group(4)):02d}:{tm.group(5)}"
+    else:
+        fm = re.search(r"_(\d{8})_(\d{2})(\d{2})(?!\d)", filename)
+        if fm and fm.group(1) == f"{y:04d}{mo:02d}{d:02d}" and int(fm.group(2)) < 24:
+            time_str = f"{fm.group(2)}:{fm.group(3)}"
+
     issuer = next((k for k in KNOWN_ISSUERS if k[0] in t), None)
     if issuer is None:
         return None  # 発行元が分からないものは Claude に任せる
@@ -67,6 +81,7 @@ def parse_receipt_text(text: str, categories: list[str] | None = None) -> Receip
 
     return Receipt(
         date=date,
+        time=time_str,
         amount=amount,
         currency="JPY",
         vendor=vendor,
@@ -84,6 +99,6 @@ def extract_from_text(path: str | Path, categories: list[str]) -> Receipt | None
     if path.suffix.lower() != ".pdf":
         return None
     try:
-        return parse_receipt_text(pdf_text(path), categories)
+        return parse_receipt_text(pdf_text(path), categories, filename=path.name)
     except Exception:
         return None

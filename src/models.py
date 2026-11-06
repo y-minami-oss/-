@@ -14,6 +14,10 @@ class Receipt(BaseModel):
     date: str = Field(
         description="領収書の日付。ISO 8601 形式 (YYYY-MM-DD)。読み取れない場合は空文字。"
     )
+    time: str | None = Field(
+        default=None,
+        description="利用時刻 HH:MM(24時間表記)。領収書に記載があれば。なければ null。",
+    )
     amount: int = Field(
         description="合計金額(税込)。通貨の最小単位ではなく、表示金額の整数。例: 1500円なら 1500。"
     )

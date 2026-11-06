@@ -14,11 +14,15 @@ import csv
 import re
 import unicodedata
 from dataclasses import dataclass, field
-from datetime import date
+from datetime import date, datetime, time
 from difflib import SequenceMatcher
 from pathlib import Path
 
 from .models import Receipt
+
+
+# 時刻照合の窓(分)。カードの計上時刻は乗車時刻から多少ずれるので幅を持たせる
+TIME_WINDOW_MIN = 180
 
 
 @dataclass
@@ -30,13 +34,15 @@ class Transaction:
     amount: int
     merchant: str
     has_receipt: bool = False
+    time: time | None = None
     raw: str = ""  # 一覧の行テキスト(画面上で同じ行を探し直すのに使う)
     source_url: str = ""  # この明細が載っている一覧ページのURL(月ごと)
 
     def label(self) -> str:
         d = self.date.isoformat() if self.date else "????-??-??"
+        t = self.time.strftime("%H:%M") if self.time else "--:--"
         mark = " [添付済]" if self.has_receipt else ""
-        return f"{d}  ¥{self.amount:>9,}  {self.merchant}{mark}"
+        return f"{d} {t}  ¥{self.amount:>9,}  {self.merchant}{mark}"
 
 
 @dataclass
@@ -44,10 +50,23 @@ class Candidate:
     tx: Transaction
     day_diff: int
     name_score: float  # 0.0〜1.0
+    minute_diff: int | None = None  # 領収書と明細の両方に時刻がある場合の差(分)
+
+    @property
+    def time_score(self) -> float:
+        """時刻が近いほど高い(0分=1.0、TIME_WINDOW_MIN 分以上離れると 0)。"""
+        if self.minute_diff is None:
+            return 0.0
+        return max(0.0, 1.0 - self.minute_diff / TIME_WINDOW_MIN)
 
     @property
     def score(self) -> float:
-        # 日付差1日ごとに減点、支払先が似ていれば加点
+        # 支払先が似ていれば加点。日時のずれは減点:
+        #   時刻が両方わかる → 実際の時間差で減点(深夜0時をまたいでも正しく比べられる)+ 近ければ加点
+        #   わからない     → 日付差1日ごとに減点
+        if self.minute_diff is not None:
+            gap = self.minute_diff / (24 * 60) * 0.5
+            return self.name_score * 2.0 - gap + self.time_score * 1.0
         return self.name_score * 2.0 - self.day_diff * 0.5
 
 
@@ -102,6 +121,12 @@ def parse_date(text: str, default_year: int | None = None) -> date | None:
         return None
 
 
+def parse_time(text: str) -> time | None:
+    t = unicodedata.normalize("NFKC", text)
+    m = re.search(r"(?<!\d)([01]?\d|2[0-3])\s*[:時]\s*([0-5]\d)(?!\d)", t)
+    return time(int(m.group(1)), int(m.group(2))) if m else None
+
+
 _AMOUNT_PATTERNS = [
     re.compile(r"[¥￥]\s*(-?[\d,]+)"),
     re.compile(r"(-?[\d,]+)\s*円"),
@@ -147,7 +172,9 @@ def parse_row_text(
         and not any(k and k in ln for k in keywords)
     ]
     merchant = max(merchant_lines, key=len) if merchant_lines else ""
-    return Transaction(index, d, amount, merchant, has_receipt, raw=text)
+    return Transaction(
+        index, d, amount, merchant, has_receipt, time=parse_time(text), raw=text
+    )
 
 
 # ----------------------------------------------------------------------
@@ -156,6 +183,7 @@ def parse_row_text(
 _CSV_COLUMNS = {
     "date": ["利用日", "日付", "決済日", "取引日", "date"],
     "amount": ["利用金額", "金額", "決済金額", "請求金額", "amount"],
+    "time": ["利用時刻", "時刻", "利用時間", "time"],
     "merchant": ["利用先", "加盟店", "加盟店名", "店舗名", "摘要", "merchant", "description"],
 }
 
@@ -187,7 +215,13 @@ def load_transactions_csv(path: str | Path) -> list[Transaction]:
         if d is None or not amt_text.lstrip("-").isdigit():
             continue
         merchant = _pick(row, _CSV_COLUMNS["merchant"])
-        txs.append(Transaction(i, d, abs(int(amt_text)), merchant, raw=merchant))
+        date_text = _pick(row, _CSV_COLUMNS["date"])
+        tm = parse_time(_pick(row, _CSV_COLUMNS["time"])) or parse_time(
+            re.sub(r"^\s*\d{4}\s*[/\-年]\s*\d{1,2}\s*[/\-月]\s*\d{1,2}日?", "", date_text)
+        )
+        txs.append(
+            Transaction(i, d, abs(int(amt_text)), merchant, time=tm, raw=merchant)
+        )
     return txs
 
 
@@ -198,6 +232,15 @@ def _receipt_date(receipt: Receipt) -> date | None:
     return parse_date(receipt.date) if receipt.date else None
 
 
+def _receipt_time(receipt: Receipt) -> time | None:
+    return parse_time(receipt.time) if receipt.time else None
+
+
+def _minute_diff(d1: date, t1: time, d2: date, t2: time) -> int:
+    delta = datetime.combine(d1, t1) - datetime.combine(d2, t2)
+    return abs(int(delta.total_seconds() // 60))
+
+
 def find_candidates(
     receipt: Receipt,
     transactions: list[Transaction],
@@ -206,6 +249,7 @@ def find_candidates(
 ) -> list[Candidate]:
     exclude = exclude or set()
     r_date = _receipt_date(receipt)
+    r_time = _receipt_time(receipt)
     out: list[Candidate] = []
     for tx in transactions:
         if tx.index in exclude or tx.has_receipt or tx.amount != receipt.amount:
@@ -216,16 +260,24 @@ def find_candidates(
                 continue
         else:
             diff = date_tolerance_days  # 日付不明なら最も遠い扱い
-        out.append(Candidate(tx, diff, name_similarity(receipt.vendor, tx.merchant)))
+        minutes = None
+        if r_date and r_time and tx.date and tx.time:
+            minutes = _minute_diff(r_date, r_time, tx.date, tx.time)
+        out.append(
+            Candidate(tx, diff, name_similarity(receipt.vendor, tx.merchant), minutes)
+        )
     out.sort(key=lambda c: c.score, reverse=True)
     return out
 
 
 def _interchangeable(a: Candidate, b: Candidate) -> bool:
+    # 時刻が両方わかっていて違うなら、区別できるので「同じ」扱いにしない
+    same_time = a.tx.time is None or b.tx.time is None or a.tx.time == b.tx.time
     return (
         a.tx.date == b.tx.date
         and a.tx.amount == b.tx.amount
         and normalize(a.tx.merchant) == normalize(b.tx.merchant)
+        and same_time
     )
 
 
@@ -260,9 +312,9 @@ def plan_matches(
         _, i, cands = best
         res = results[i]
         if len(cands) == 1:
-            res.reason = "金額・日付が一致"
+            res.reason = "金額・日時が一致"
         elif cands[0].score - cands[1].score >= 0.5:
-            res.reason = "候補複数のうち日付・支払先が最も近い"
+            res.reason = "候補複数のうち日時・支払先が最も近い"
         elif _interchangeable(cands[0], cands[1]):
             # 例: 同日に同額のタクシー2回。どれに付けても内容は同じ。
             res.reason = "同日・同額・同じ支払先の明細から順に割り当て"

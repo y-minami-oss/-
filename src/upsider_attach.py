@@ -79,7 +79,7 @@ def print_plan(
     for res in results:
         path, r = items[res.receipt_index]
         print(f"\n📄 {path.name}")
-        print(f"   領収書: {r.date}  ¥{r.amount:,}  {r.vendor}")
+        print(f"   領収書: {r.date} {r.time or '--:--'}  ¥{r.amount:,}  {r.vendor}")
         if res.chosen:
             print(f"   ✅ → {res.chosen.tx.label()}  ({res.reason})")
         elif res.candidates:
@@ -169,7 +169,7 @@ def main() -> int:
         except Exception as e:
             print(f"  ✗ 読み取り失敗: {e}")
             continue
-        print(f"   {r.date}  ¥{r.amount:,}  {r.vendor}")
+        print(f"   {r.date} {r.time or '--:--'}  ¥{r.amount:,}  {r.vendor}")
         items.append((path, r))
     if not items:
         return 1

@@ -70,6 +70,36 @@ def months_for_receipts(receipts: list[Receipt], tolerance_days: int) -> list[tu
     return sorted(months)
 
 
+def report_missing(txs: list[Transaction], results: list[MatchResult],
+                   out_path: Path = Path("領収書が足りない明細.csv")) -> list[Transaction]:
+    """領収書が無い(未添付で、今回の領収書とも対応しない)明細を一覧表示し、CSVに保存する。"""
+    import csv
+
+    used = {r.chosen.tx.index for r in results if r.chosen}
+    missing = [t for t in txs if not t.has_receipt and t.index not in used and t.amount > 0]
+    print("=" * 70)
+    print(f" 📭 領収書が足りない明細: {len(missing)} 件")
+    print("    (UPSIDER で「📄 なし」のまま、今回の領収書とも対応しなかったもの)")
+    print("=" * 70)
+    total = 0
+    for t in sorted(missing, key=lambda t: (t.date or 0, t.time or 0)):
+        print(f"   {t.label()}")
+        total += t.amount
+    print(f"   合計 ¥{total:,}")
+    with out_path.open("w", newline="", encoding="utf-8-sig") as f:
+        w = csv.writer(f)
+        w.writerow(["利用日", "時刻", "金額(円)", "利用先"])
+        for t in sorted(missing, key=lambda t: (t.date or 0, t.time or 0)):
+            w.writerow([
+                t.date.isoformat() if t.date else "",
+                t.time.strftime("%H:%M") if t.time else "",
+                t.amount,
+                t.merchant,
+            ])
+    print(f"   → 一覧を {out_path} に保存しました(Excel で開けます)\n")
+    return missing
+
+
 def print_plan(
     items: list[tuple[Path, Receipt]], results: list[MatchResult]
 ) -> None:
@@ -201,6 +231,7 @@ def main() -> int:
         print(f"\nCSV から明細 {len(txs)} 件を読み込みました。")
         results = plan_matches([r for _, r in items], txs, tolerance)
         print_plan(items, results)
+        report_missing(txs, results)
         if not args.dry_run:
             print("CSV モードはアップロードしません(--url で実行してください)。")
         return 0
@@ -235,6 +266,7 @@ def main() -> int:
 
         results = plan_matches([r for _, r in items], txs, tolerance)
         print_plan(items, results)
+        report_missing(txs, results)
         if args.dry_run:
             print("--dry-run のため、アップロードせず終了します。")
             return 0

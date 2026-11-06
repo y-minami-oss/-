@@ -85,6 +85,30 @@ python -m src.run
 
 ---
 
+## UPSIDER カード明細に領収書を添付する
+
+`inbox/` に入れた領収書を、UPSIDER の該当カード明細に1件ずつアップロードします。
+
+```bash
+source .venv/bin/activate
+pip install -r requirements.txt   # pypdf が追加されています
+python -m src.upsider_attach --url "https://up-sider.com/user-cards/<カードID>/?yearMonth=202607" --dry-run
+```
+
+1. ブラウザが開くので **手動で UPSIDER にログイン**(初回のみ。2段階認証もOK)→ ターミナルで Enter
+2. 領収書の日付から必要な月(例: 7〜10月)の明細一覧を自動で開いて読み込み
+3. **金額の完全一致 + 日付(±3日)+ 支払先名** で照合し、対応表を表示
+4. `--dry-run` を外して実行すると、1件ずつ確認しながら明細を開いて領収書をアップロード → `processed/` へ移動
+
+- GO などの文字入りPDF領収書は Claude API を使わずに読み取ります(APIキー不要)。
+- すでに領収書が添付済みの明細はスキップします。
+- 同日・同額の明細が複数ある場合は順番に割り当て、本当に区別できない場合だけ番号で選んでもらいます。
+- URL は `config.yaml` の `upsider.card_url` に書いておけば `--url` を省略できます。
+- 画面が変わって動かない場合: `python -m src.upsider_attach --inspect` で `upsider_dump.txt` を出力し、共有してください。
+- UPSIDER から明細CSVを出力できる場合、`--transactions-csv 明細.csv --dry-run` でブラウザ無しに照合だけ試せます。
+
+---
+
 ## 開発フェーズ
 
 このツールは2段階で作っています。
@@ -140,7 +164,11 @@ python -m unittest tests.test_logic -v
     ├── teamspirit.py      TeamSpirit のブラウザ自動操作
     ├── inspect_form.py    画面構造の調査ツール
     ├── config.py          設定読み込み
-    └── run.py             メイン処理(CLI)
+    ├── run.py             メイン処理(CLI)
+    ├── upsider_attach.py  UPSIDER 領収書添付(CLI)
+    ├── upsider.py         UPSIDER のブラウザ操作
+    ├── matcher.py         領収書と明細の照合ロジック
+    └── text_extract.py    文字入りPDFの読み取り(API不要)
 ```
 
 ## よくある注意点

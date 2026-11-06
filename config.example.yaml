@@ -35,3 +35,14 @@ paths:
 
 # 既定の通貨(領収書から読み取れない場合のフォールバック)
 default_currency: JPY
+
+# UPSIDER(カード明細への領収書添付: python -m src.upsider_attach)
+upsider:
+  # カード明細一覧のURL。yearMonth はどの月でもOK(領収書の日付から必要な月を自動で開きます)
+  card_url: "https://up-sider.com/user-cards/<カードID>/?yearMonth=202607"
+  # 領収書の日付とカード明細の日付が、何日までずれていても同じ取引とみなすか
+  date_tolerance_days: 3
+  # 画面が変わって動かないときだけ設定(--inspect の出力を見て調整)
+  # selectors:
+  #   row: "table tbody tr"
+  #   receipt_attached_keywords: ["添付済"]

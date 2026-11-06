@@ -11,3 +11,4 @@ playwright>=1.49.0     # ブラウザ自動操作 (TeamSpirit への入力)
 pydantic>=2.0          # 抽出結果の構造化・検証
 PyYAML>=6.0            # 設定ファイル(config.yaml)の読み込み
 python-dotenv>=1.0     # .env から認証情報を読み込む
+pypdf>=4.0            # 文字入りPDF領収書(GO等)をAPI無しで読み取る

@@ -25,6 +25,8 @@ storage_state.json
 # 調査ツール(inspect_form.py)の出力
 form_dump.txt
 form_dump.html
+upsider_dump.txt
+upsider_dump.html
 
 # 実際の設定(科目マッピング等。サンプルだけ管理)
 config.yaml

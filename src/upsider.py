@@ -11,8 +11,13 @@ UPSIDER の画面が変わって動かなくなったら、`--inspect` で画面
 
 from __future__ import annotations
 
+import json
 import os
 import re
+import subprocess
+import sys
+import time
+import urllib.request
 from pathlib import Path
 from typing import Any
 
@@ -21,6 +26,19 @@ from playwright.sync_api import Locator, Page, sync_playwright
 from .matcher import Transaction, parse_row_text
 
 PROFILE_DIR = Path(".auth/upsider")
+CDP_PROFILE_DIR = Path(".auth/upsider-chrome")
+CDP_PORT = 9223
+
+MAC_CHROME_PATHS = [
+    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    str(Path.home() / "Applications/Google Chrome.app/Contents/MacOS/Google Chrome"),
+]
+
+
+def find_mac_chrome() -> str | None:
+    if sys.platform != "darwin":
+        return None
+    return next((p for p in MAC_CHROME_PATHS if Path(p).exists()), None)
 
 DEFAULT_SELECTORS: dict[str, Any] = {
     # 明細一覧の1行。上から順に試し、見つかったものを使う。
@@ -89,12 +107,69 @@ class UpsiderClient:
     def __enter__(self) -> "UpsiderClient":
         PROFILE_DIR.mkdir(parents=True, exist_ok=True)
         self._pw = sync_playwright().start()
+        self._chrome_proc = None
+        self._browser = None
+        # Mac に Google Chrome があれば「普通の Chrome」を起動し、ログイン後に接続する方式。
+        # 自動操作用ブラウザだとログイン時の「Verify you are human」で止まることがあるため。
+        chrome = None if os.environ.get("UPSIDER_NO_CDP") else find_mac_chrome()
+        if chrome:
+            self._start_normal_chrome(chrome)
+            return self
         # 永続プロファイル: ログイン状態(Cookie等)がフォルダに残る
         self._context = self._launch()
         self.page = (
             self._context.pages[0] if self._context.pages else self._context.new_page()
         )
         return self
+
+    # ------------------------------------------------------------------
+    # 普通の Chrome を起動 → ログイン後に接続(Mac)
+    # ------------------------------------------------------------------
+    def _cdp_alive(self) -> bool:
+        try:
+            with urllib.request.urlopen(
+                f"http://127.0.0.1:{CDP_PORT}/json/version", timeout=1
+            ) as r:
+                json.load(r)
+            return True
+        except Exception:
+            return False
+
+    def _start_normal_chrome(self, chrome: str) -> None:
+        CDP_PROFILE_DIR.mkdir(parents=True, exist_ok=True)
+        if not self._cdp_alive():
+            self._chrome_proc = subprocess.Popen(
+                [
+                    chrome,
+                    f"--remote-debugging-port={CDP_PORT}",
+                    f"--user-data-dir={CDP_PROFILE_DIR.resolve()}",
+                    "--no-first-run",
+                    "--no-default-browser-check",
+                    self.list_url,
+                ],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+            for _ in range(40):
+                if self._cdp_alive():
+                    break
+                time.sleep(0.5)
+        self._cdp_pending = True
+
+    def _connect_cdp(self) -> None:
+        assert self._pw is not None
+        if not self._cdp_alive():
+            raise RuntimeError(
+                "Chrome が閉じられたようです。Chrome のウィンドウは最後まで閉じずに、"
+                "もう一度実行し直してください。"
+            )
+        self._browser = self._pw.chromium.connect_over_cdp(f"http://127.0.0.1:{CDP_PORT}")
+        self._context = self._browser.contexts[0]
+        pages = [p for p in self._context.pages if "up-sider.com" in p.url]
+        self.page = pages[0] if pages else (
+            self._context.pages[0] if self._context.pages else self._context.new_page()
+        )
+        self._cdp_pending = False
 
     def _launch(self):
         """ブラウザを起動する。
@@ -130,8 +205,15 @@ class UpsiderClient:
         )
 
     def __exit__(self, *exc) -> None:
-        if self._context is not None:
+        if getattr(self, "_browser", None) is not None:
+            try:
+                self._browser.close()  # 接続を切るだけ
+            except Exception:
+                pass
+        elif self._context is not None:
             self._context.close()
+        if getattr(self, "_chrome_proc", None) is not None:
+            self._chrome_proc.terminate()
         if self._pw is not None:
             self._pw.stop()
 
@@ -165,6 +247,16 @@ class UpsiderClient:
 
     def ensure_logged_in(self) -> None:
         """明細一覧が表示されるまで、手動ログインを待つ。"""
+        if getattr(self, "_cdp_pending", False):
+            # ログインが終わるまでは一切ブラウザに触らない(普通の Chrome として操作してもらう)
+            input(
+                "\n🔐 Chrome が開きました。その画面で、いつも通り UPSIDER にログインしてください。\n"
+                "   (メールアドレス → パスワード → Verify you are human → ログイン)\n"
+                "   ※入力は Chrome の画面で。ここには何も打たないでください\n"
+                "   ※Chrome のウィンドウは最後まで閉じないでください\n"
+                "   カード明細の一覧が表示されたら、ここで Enter だけ押してください... "
+            )
+            self._connect_cdp()
         self.open_list()
         while self._find_row_selector() is None:
             input(

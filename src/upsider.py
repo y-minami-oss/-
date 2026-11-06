@@ -461,6 +461,8 @@ class UpsiderClient:
 
     def attach_receipt(self, tx: Transaction, file_path: Path) -> None:
         """明細を開いて領収書ファイルをアップロードする。"""
+        if getattr(self, "_list_page", None) is not None:
+            self.close_detail()  # 前回の詳細タブが残っていれば閉じる
         assert self.page is not None
         page = self.page
 
@@ -506,11 +508,13 @@ class UpsiderClient:
             except Exception:
                 return False
 
-        row.click()
+        # UPSIDER は明細をクリックすると「決済詳細」が新しいタブで開く
+        if self._click_maybe_new_tab(lambda: row.click()):
+            return
         if moved(6000):
             return
         # クリックできる親要素(cursor:pointer / role=button|link / onclick)を探してクリック
-        row.evaluate(
+        if self._click_maybe_new_tab(lambda: row.evaluate(
             """el => {
               let n = el;
               for (let i = 0; i < 6 && n; i++, n = n.parentElement) {
@@ -520,7 +524,8 @@ class UpsiderClient:
               }
               el.click();
             }"""
-        )
+        )):
+            return
         if moved(6000):
             return
         # 最後の手段: 行の中の「利用先」付近(左側)をクリック
@@ -528,6 +533,21 @@ class UpsiderClient:
         if box:
             page.mouse.click(box["x"] + box["width"] * 0.25, box["y"] + box["height"] * 0.6)
             moved(6000)
+
+    def _click_maybe_new_tab(self, do_click) -> bool:
+        """クリックして、新しいタブが開いたらそちらに切り替える。開いたら True。"""
+        assert self.page is not None and self._context is not None
+        try:
+            with self._context.expect_page(timeout=6000) as info:
+                do_click()
+            new = info.value
+        except Exception:
+            return False
+        new.wait_for_load_state("domcontentloaded")
+        new.bring_to_front()
+        self._list_page = self.page
+        self.page = new
+        return True
 
     def _describe_page(self) -> str:
         """失敗時の手がかりとして、URL と画面の文字の一部を返す。"""
@@ -597,6 +617,10 @@ class UpsiderClient:
 
     def verify_attached(self, tx: Transaction, timeout_s: int = 20) -> bool:
         """一覧に戻り、その明細が「添付済み」(📄 なし 以外)になったか確かめる。"""
+        # アップロードの完了を待ってから詳細タブを閉じる
+        if self.page is not None and getattr(self, "_list_page", None) is not None:
+            self.page.wait_for_timeout(3000)
+            self.close_detail()
         assert self.page is not None
         deadline = time.time() + timeout_s
         while True:
@@ -627,6 +651,21 @@ class UpsiderClient:
 
     def close_detail(self) -> None:
         assert self.page is not None
+        # 詳細が新しいタブで開いていたら、そのタブを閉じて一覧のタブに戻る
+        list_page = getattr(self, "_list_page", None)
+        if list_page is not None:
+            self._list_page = None
+            if self.page is not list_page:
+                try:
+                    self.page.close()
+                except Exception:
+                    pass
+            self.page = list_page
+            try:
+                self.page.bring_to_front()
+            except Exception:
+                pass
+            return
         # 詳細が別ページ(UPSIDER は /transactions/<決済ID>/)なら一覧に戻る
         back = getattr(self, "_return_url", None)
         if back and self.page.url != back:

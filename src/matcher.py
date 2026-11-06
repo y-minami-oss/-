@@ -180,6 +180,8 @@ def parse_row_text(
         r"[¥￥]\s*-?[\d,]+",
         r"-?[\d,]+\s*円",
         r"申請ID\s*[:：]?\s*\+?",
+        # アイコンフォント(Material Icons)の名前が文字として混ざる場合がある
+        r"\b(receipt_long|edit_note|add|description|attach_file|check_circle)\b",
     ]
     merchant_lines = []
     for ln in lines:

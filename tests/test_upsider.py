@@ -335,3 +335,45 @@ class SlowDetailBrowserTests(unittest.TestCase):
                 self.assertTrue(client.verify_attached(go))
             finally:
                 client.__exit__(None, None, None)
+
+
+# 実際の UPSIDER と同じ構造: 行(.d-flex)の外側の div.upsidr-cursor-pointer がクリックを受け、
+# 決済詳細を「新しいタブ」で開く
+FAKE_LIST_NEWTAB = """<!doctype html><meta charset="utf-8"><div>1 件</div>
+<div role="list"><div role="listitem" class="upsidr-card-embossed">
+ <div class="d-flex flex-column"><div><div class="upsidr-cursor-pointer"><span>申請ID：</span><i>add</i></div><hr></div>
+ <div class="upsidr-cursor-pointer" style="cursor:pointer" onclick="window.open('detail.html','_blank')">
+  <div class="d-flex justify-space-between"><div><div class="caption">7月28日 19時59分</div><div>GO(TAXI APP)</div></div>
+  <div><button type="button" style="pointer-events:none"><i>receipt_long</i> <span class="st">なし</span></button>
+  <i>edit_note</i><div class="title">￥4,400</div></div></div></div></div></div></div>
+<script>if (localStorage.getItem('up_a')) document.querySelector('.st').textContent = '1';</script>"""
+
+
+class NewTabBrowserTests(unittest.TestCase):
+    def test_detail_opens_in_new_tab(self):
+        try:
+            from src import upsider
+        except ImportError:
+            self.skipTest("playwright 未導入")
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "list.html").write_text(FAKE_LIST_NEWTAB, encoding="utf-8")
+            (Path(d) / "detail.html").write_text(FAKE_DETAIL_SLOW, encoding="utf-8")
+            pdf = Path(d) / "r.pdf"
+            pdf.write_bytes(b"%PDF-1.4\n%%EOF")
+            upsider.PROFILE_DIR = Path(d) / "profile"
+            url = (Path(d) / "list.html").as_uri() + "?yearMonth=202607"
+            try:
+                client = upsider.UpsiderClient(url, show_browser=False)
+                client.__enter__()
+            except Exception as e:
+                self.skipTest(f"Chromium を起動できません: {e}")
+            try:
+                tx = client.list_transactions((2026, 7), url)[0]
+                self.assertEqual((tx.amount, tx.merchant, tx.has_receipt), (4400, "GO(TAXI APP)", False))
+                client.attach_receipt(tx, pdf)
+                self.assertIn("detail.html", client.page.url)  # 新しいタブに切り替わっている
+                self.assertTrue(client.verify_attached(tx))
+                self.assertIn("list.html", client.page.url)  # 詳細タブを閉じて一覧に戻っている
+                self.assertEqual(len(client._context.pages), 1)
+            finally:
+                client.__exit__(None, None, None)

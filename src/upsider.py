@@ -19,6 +19,7 @@ import sys
 import time
 import urllib.request
 from pathlib import Path
+from urllib.parse import urlparse
 from typing import Any
 
 from playwright.sync_api import Locator, Page, sync_playwright
@@ -276,20 +277,67 @@ class UpsiderClient:
         m = re.search(r"(?m)^\s*(\d+)\s*件\s*$", body)
         return int(m.group(1)) if m else None
 
-    def ensure_logged_in(self) -> None:
-        """明細一覧が表示されるまで、手動ログインを待つ。"""
+    def _cdp_tab_urls(self) -> list[str]:
+        """接続せずに、Chrome で開いているタブの URL 一覧を取る(ログイン操作の邪魔をしない)。"""
+        try:
+            with urllib.request.urlopen(
+                f"http://127.0.0.1:{CDP_PORT}/json/list", timeout=2
+            ) as r:
+                return [t.get("url", "") for t in json.load(r) if t.get("type") == "page"]
+        except Exception:
+            return []
+
+    def _wait_until_list_shown(self, timeout_s: int = 900) -> None:
+        """カード明細の一覧ページが開くまで(=ログイン完了まで)自動で待つ。"""
+        card_path = urlparse(self.list_url).path  # /user-cards/<ID>/
+        print(
+            "\n🔐 Chrome を開きました。ログイン画面が出たら、その画面でログインしてください。\n"
+            "   ログインが終わると自動で進みます(ターミナルの操作は不要です)。"
+        )
+        deadline = time.time() + timeout_s
+        while time.time() < deadline:
+            urls = self._cdp_tab_urls()
+            if not self._cdp_alive():
+                raise RuntimeError("Chrome が閉じられました。もう一度実行してください。")
+            if any(card_path in u and "/signin" not in u for u in urls):
+                time.sleep(3)  # 一覧の描画を待つ
+                return
+            time.sleep(2)
+        raise RuntimeError("15分待ってもログインが完了しませんでした。もう一度実行してください。")
+
+    def ensure_logged_in(self, auto: bool = False) -> None:
+        """明細一覧が表示されるまで、手動ログインを待つ。
+
+        auto=True なら Enter を待たず、一覧ページが開いた時点で自動で進む。
+        """
         if getattr(self, "_cdp_pending", False):
             # ログインが終わるまでは一切ブラウザに触らない(普通の Chrome として操作してもらう)
-            input(
-                "\n🔐 Chrome が開きました。カード明細の一覧が出ていればそのまま Enter。\n"
-                "   ログイン画面が出ている場合は、その画面でログインしてから Enter。\n"
-                "   ※入力は Chrome の画面で。ここには何も打たないでください\n"
-                "   ※Chrome のウィンドウは最後まで閉じないでください\n"
-                "   カード明細の一覧が表示されたら、ここで Enter だけ押してください... "
-            )
+            if auto:
+                self._wait_until_list_shown()
+            else:
+                input(
+                    "\n🔐 Chrome が開きました。カード明細の一覧が出ていればそのまま Enter。\n"
+                    "   ログイン画面が出ている場合は、その画面でログインしてから Enter。\n"
+                    "   ※入力は Chrome の画面で。ここには何も打たないでください\n"
+                    "   ※Chrome のウィンドウは最後まで閉じないでください\n"
+                    "   カード明細の一覧が表示されたら、ここで Enter だけ押してください... "
+                )
             self._connect_cdp()
         self.open_list()
+        waited = 0
         while self._find_row_selector() is None:
+            if auto:
+                if waited == 0:
+                    print("\n🔐 Chrome の画面で UPSIDER にログインしてください。自動で進みます。")
+                if waited > 900:
+                    raise RuntimeError("ログインが完了しませんでした。もう一度実行してください。")
+                time.sleep(3)
+                waited += 3
+                self._ensure_page()
+                assert self.page is not None
+                if "/signin" not in self.page.url and self.list_url.split("?")[0] not in self.page.url:
+                    self.open_list()
+                continue
             input(
                 "\n🔐 開いた Chrome のウィンドウで UPSIDER にログインしてください。\n"
                 "   ※メールアドレス・パスワードは Chrome の画面に入力します(ここには入力しません)\n"

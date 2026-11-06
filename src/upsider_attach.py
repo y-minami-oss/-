@@ -212,7 +212,7 @@ def main() -> int:
     with UpsiderClient(
         args.url, show_browser=show_browser, selectors=up_cfg.get("selectors")
     ) as up:
-        up.ensure_logged_in()
+        up.ensure_logged_in(auto=args.yes)
         if args.only_url_month or year_month is None:
             months = [year_month]
         else:

@@ -138,7 +138,21 @@ class UpsiderClient:
     # ------------------------------------------------------------------
     # ログイン(手動)
     # ------------------------------------------------------------------
+    def _ensure_page(self) -> None:
+        """ウィンドウ(タブ)が閉じられていたら開き直す。"""
+        assert self._context is not None
+        if self.page is None or self.page.is_closed():
+            try:
+                pages = [p for p in self._context.pages if not p.is_closed()]
+                self.page = pages[0] if pages else self._context.new_page()
+            except Exception as e:
+                raise RuntimeError(
+                    "ブラウザが閉じられました。スクリプトが開いた Chrome のウィンドウは、"
+                    "処理が終わるまで閉じずにそのままにしてください。もう一度実行し直してください。"
+                ) from e
+
     def open_list(self, url: str | None = None) -> None:
+        self._ensure_page()
         assert self.page is not None
         self.page.goto(url or self.list_url, wait_until="domcontentloaded")
         self._wait_settled()
@@ -154,9 +168,12 @@ class UpsiderClient:
         self.open_list()
         while self._find_row_selector() is None:
             input(
-                "\n🔐 ブラウザで UPSIDER にログインし、カード明細の一覧が表示されたら\n"
-                "   Enter を押してください(一覧が空の月の場合もそのまま Enter)... "
+                "\n🔐 開いた Chrome のウィンドウで UPSIDER にログインしてください。\n"
+                "   ※メールアドレス・パスワードは Chrome の画面に入力します(ここには入力しません)\n"
+                "   ※Chrome のウィンドウは最後まで閉じないでください\n"
+                "   カード明細の一覧が表示されたら、ここで Enter だけ押してください... "
             )
+            self._ensure_page()
             if self.list_url.split("?")[0] not in self.page.url:
                 self.open_list()
             if self._find_row_selector() is None:

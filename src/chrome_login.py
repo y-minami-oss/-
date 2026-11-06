@@ -21,33 +21,40 @@ SITE = "up-sider.com"
 
 
 def _cookie_count(cookies_db: Path, site: str = SITE) -> int:
+    return _cookie_stats(cookies_db, site)[0]
+
+
+def _cookie_stats(cookies_db: Path, site: str = SITE) -> tuple[int, int]:
+    """(Cookie の数, 最後に使われた時刻) を返す。時刻は Chrome 形式(大きいほど新しい)。"""
     try:
         con = sqlite3.connect(f"file:{cookies_db}?mode=ro&immutable=1", uri=True)
         try:
-            (n,) = con.execute(
-                "SELECT COUNT(*) FROM cookies WHERE host_key LIKE ?", (f"%{site}",)
+            cols = {r[1] for r in con.execute("PRAGMA table_info(cookies)")}
+            last = "MAX(last_access_utc)" if "last_access_utc" in cols else "0"
+            n, t = con.execute(
+                f"SELECT COUNT(*), {last} FROM cookies WHERE host_key LIKE ?", (f"%{site}",)
             ).fetchone()
-            return int(n)
+            return int(n or 0), int(t or 0)
         finally:
             con.close()
     except Exception:
-        return 0
+        return 0, 0
 
 
 def find_profile_with_login(user_data: Path = CHROME_USER_DATA, site: str = SITE) -> Path | None:
-    """up-sider.com の Cookie が一番多いプロファイルのフォルダを返す。"""
+    """up-sider.com に一番最近アクセスしたプロファイルのフォルダを返す。"""
     if not user_data.exists():
         return None
-    best: tuple[int, Path] | None = None
+    best: tuple[tuple[int, int], Path] | None = None
     for prof in sorted(user_data.iterdir()):
         cookies = prof / "Cookies"
         if not cookies.exists():
             cookies = prof / "Network" / "Cookies"
         if not cookies.exists():
             continue
-        n = _cookie_count(cookies, site)
-        if n and (best is None or n > best[0]):
-            best = (n, prof)
+        n, last = _cookie_stats(cookies, site)
+        if n and (best is None or (last, n) > best[0]):
+            best = ((last, n), prof)
     return best[1] if best else None
 
 
@@ -77,6 +84,17 @@ def _copy_tree(src: Path, dst: Path) -> None:
     if dst.exists():
         shutil.rmtree(dst)
     shutil.copytree(src, dst, ignore=shutil.ignore_patterns("LOCK"))
+
+
+def chrome_is_running() -> bool:
+    """普段の Google Chrome が起動しているか(Mac)。"""
+    import subprocess
+
+    try:
+        out = subprocess.run(["pgrep", "-x", "Google Chrome"], capture_output=True, text=True)
+        return out.returncode == 0
+    except Exception:
+        return False
 
 
 def import_login(dest_user_data: Path, user_data: Path = CHROME_USER_DATA, site: str = SITE) -> str | None:

@@ -144,7 +144,20 @@ class UpsiderClient:
         CDP_PROFILE_DIR.mkdir(parents=True, exist_ok=True)
         if not self._cdp_alive():
             if self.import_login:
-                from .chrome_login import import_login
+                from .chrome_login import chrome_is_running, import_login
+
+                if chrome_is_running():
+                    print(
+                        "⚠ 普段の Chrome が起動しています。最新のログイン状態を引き継ぐため、\n"
+                        "  Chrome を ⌘Q で完全に終了してください(終了を検知すると自動で進みます)..."
+                    )
+                    for _ in range(120):
+                        if not chrome_is_running():
+                            break
+                        time.sleep(1)
+                    else:
+                        print("  (終了されなかったので、このまま続けます)")
+                    time.sleep(2)
 
                 try:
                     name = import_login(CDP_PROFILE_DIR)

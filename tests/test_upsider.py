@@ -432,3 +432,26 @@ class UppyBrowserTests(unittest.TestCase):
                 self.assertTrue(client.verify_attached(tx))
             finally:
                 client.__exit__(None, None, None)
+
+
+class ChromeProfilePickTests(unittest.TestCase):
+    def test_prefers_most_recently_used_profile(self):
+        import sqlite3
+
+        from src.chrome_login import find_profile_with_login
+
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            for name, rows in {
+                # 古いプロファイル: Cookie は多いが最後のアクセスが古い
+                "Profile 1": [(".up-sider.com", 100)] * 5,
+                # 仕事用: Cookie は少ないが最近ログインし直した
+                "Profile 6": [(".up-sider.com", 999)],
+            }.items():
+                (root / name / "Network").mkdir(parents=True)
+                con = sqlite3.connect(root / name / "Network" / "Cookies")
+                con.execute("CREATE TABLE cookies (host_key TEXT, last_access_utc INTEGER)")
+                con.executemany("INSERT INTO cookies VALUES (?, ?)", rows)
+                con.commit()
+                con.close()
+            self.assertEqual(find_profile_with_login(root).name, "Profile 6")

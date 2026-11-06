@@ -470,12 +470,7 @@ class UpsiderClient:
         row.scroll_into_view_if_needed()
         before = page.url
         self._return_url = before
-        row.click()
-        # UPSIDER は明細詳細が別ページ(/transactions/<決済ID>/)。遷移を待つ
-        try:
-            page.wait_for_url(lambda u: u != before, timeout=10000)
-        except Exception:
-            pass  # 同じページ内でパネルが開く画面の場合
+        self._open_detail(row, before)
         self._wait_settled()
         page.wait_for_timeout(800)
 
@@ -484,6 +479,64 @@ class UpsiderClient:
         except Exception:
             self._save_failure_snapshot()
             raise
+
+    def _open_detail(self, row: Locator, before: str) -> None:
+        """明細行から詳細ページを開く。
+
+        1. 行(またはその中/親)のリンク先 URL が取れれば、そこへ直接移動
+        2. 取れなければ行をクリック → 遷移しなければ、クリックできる親要素/利用先の文字をクリック
+        """
+        assert self.page is not None
+        page = self.page
+        href = row.evaluate(
+            """el => {
+              const a = el.closest('a[href]') || el.querySelector('a[href*="transactions"]')
+                        || el.querySelector('a[href]');
+              return a ? a.href : null;
+            }"""
+        )
+        if href and href != before:
+            page.goto(href, wait_until="domcontentloaded")
+            return
+
+        def moved(timeout: int) -> bool:
+            try:
+                page.wait_for_url(lambda u: u != before, timeout=timeout)
+                return True
+            except Exception:
+                return False
+
+        row.click()
+        if moved(6000):
+            return
+        # クリックできる親要素(cursor:pointer / role=button|link / onclick)を探してクリック
+        row.evaluate(
+            """el => {
+              let n = el;
+              for (let i = 0; i < 6 && n; i++, n = n.parentElement) {
+                const st = getComputedStyle(n);
+                if (st.cursor === 'pointer' || n.onclick ||
+                    ['button', 'link'].includes(n.getAttribute('role'))) { n.click(); return; }
+              }
+              el.click();
+            }"""
+        )
+        if moved(6000):
+            return
+        # 最後の手段: 行の中の「利用先」付近(左側)をクリック
+        box = row.bounding_box()
+        if box:
+            page.mouse.click(box["x"] + box["width"] * 0.25, box["y"] + box["height"] * 0.6)
+            moved(6000)
+
+    def _describe_page(self) -> str:
+        """失敗時の手がかりとして、URL と画面の文字の一部を返す。"""
+        assert self.page is not None
+        try:
+            text = re.sub(r"\s+", " ", self.page.inner_text("body", timeout=3000))
+        except Exception:
+            text = "(取得できず)"
+        return f"URL: {self.page.url}\n     画面の文字: {text[:300]}"
 
     def _upload_on_detail(self, file_path: Path) -> None:
         """明細詳細ページで領収書をアップロードする。"""
@@ -500,7 +553,8 @@ class UpsiderClient:
             page.wait_for_timeout(500)
         else:
             raise RuntimeError(
-                "明細詳細に「ファイルをアップロード」が見つかりません(画面: upsider_fail.png)"
+                "明細詳細に「ファイルをアップロード」が見つかりません(画面: upsider_fail.png)\n     "
+                + self._describe_page()
             )
 
         if inputs.count() > 0:

@@ -377,3 +377,58 @@ class NewTabBrowserTests(unittest.TestCase):
                 self.assertEqual(len(client._context.pages), 1)
             finally:
                 client.__exit__(None, None, None)
+
+
+# 実画面の Uppy と同じ構成: ファイル用 input と フォルダ用 input(webkitdirectory、DOM上で後ろ)。
+# ファイルを選ぶと「アップロード」ボタンが出て、押すと送信・完了表示になる。
+FAKE_DETAIL_UPPY = """<!doctype html><meta charset="utf-8">
+<h3>証憑</h3><div class="tile">ファイルをアップロード</div>
+<div class="uppy-Dashboard">
+ <input hidden type="file" name="files[]" class="uppy-Dashboard-input" accept="application/pdf" id="fi">
+ <input hidden type="file" name="files[]" webkitdirectory class="uppy-Dashboard-input" id="di">
+ <div class="uppy-StatusBar" id="sb"></div><div id="files"></div>
+</div>
+<script>
+let picked = null;
+document.getElementById('fi').onchange = e => {
+  picked = e.target.files[0].name;
+  document.getElementById('sb').innerHTML =
+    '<button class="uppy-StatusBar-actionBtn--upload" id="up">1 個のファイルをアップロード</button>';
+  document.getElementById('up').onclick = () => {
+    const sb = document.getElementById('sb');
+    sb.className = 'uppy-StatusBar is-uploading'; sb.innerHTML = 'アップロード中';
+    setTimeout(() => {
+      sb.className = 'uppy-StatusBar is-complete'; sb.innerHTML = '完了';
+      document.getElementById('files').textContent = picked;
+      localStorage.setItem('up_a', picked);
+    }, 1500);
+  };
+};
+</script>"""
+
+
+class UppyBrowserTests(unittest.TestCase):
+    def test_uppy_file_input_and_upload_button(self):
+        try:
+            from src import upsider
+        except ImportError:
+            self.skipTest("playwright 未導入")
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "list.html").write_text(FAKE_LIST_NEWTAB, encoding="utf-8")
+            (Path(d) / "detail.html").write_text(FAKE_DETAIL_UPPY, encoding="utf-8")
+            pdf = Path(d) / "r.pdf"
+            pdf.write_bytes(b"%PDF-1.4\n%%EOF")
+            upsider.PROFILE_DIR = Path(d) / "profile"
+            url = (Path(d) / "list.html").as_uri() + "?yearMonth=202607"
+            try:
+                client = upsider.UpsiderClient(url, show_browser=False)
+                client.__enter__()
+            except Exception as e:
+                self.skipTest(f"Chromium を起動できません: {e}")
+            try:
+                tx = client.list_transactions((2026, 7), url)[0]
+                client.attach_receipt(tx, pdf)
+                self.assertEqual(client.page.locator("#files").inner_text(), "r.pdf")
+                self.assertTrue(client.verify_attached(tx))
+            finally:
+                client.__exit__(None, None, None)

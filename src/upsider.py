@@ -563,7 +563,9 @@ class UpsiderClient:
         assert self.page is not None
         page = self.page
         upload_re = re.compile(self.sel["upload_tile_text"])
-        inputs = page.locator("input[type='file']")
+        # UPSIDER(Uppy)には「ファイル用」と「フォルダ用(webkitdirectory)」の input がある。
+        # フォルダ用にファイルは渡せないので除外する。
+        inputs = page.locator("input[type='file']:not([webkitdirectory])")
         tile = page.get_by_text(upload_re)
 
         # 詳細ページの描画を待つ(SPA なので URL が変わってから中身が出るまで時間差がある)
@@ -580,6 +582,7 @@ class UpsiderClient:
         if inputs.count() > 0:
             # 非表示の input でも直接ファイルを渡せる(ファイル選択画面は開かない)
             inputs.last.set_input_files(str(file_path))
+            self._finish_upload()
             return
 
         # 「ファイルをアップロード」をクリック → ファイル選択画面にファイルを渡す
@@ -587,6 +590,7 @@ class UpsiderClient:
             with page.expect_file_chooser(timeout=8000) as fc:
                 tile.last.click()
             fc.value.set_files(str(file_path))
+            self._finish_upload()
             return
         except Exception:
             pass
@@ -601,10 +605,39 @@ class UpsiderClient:
             with page.expect_file_chooser(timeout=8000) as fc:
                 btn.last.click()
             fc.value.set_files(str(file_path))
-        page.wait_for_timeout(1000)
-        confirm = page.get_by_role("button", name=re.compile(r"^(保存|アップロード|登録|確定|OK)$"))
+        self._finish_upload()
+
+    def _finish_upload(self) -> None:
+        """ファイルを渡したあと、必要なら「アップロード」ボタンを押して完了を待つ。
+
+        UPSIDER はアップロード部品に Uppy を使っている。設定によってはファイルを
+        選んだだけでは送信されず、「アップロード」ボタンを押す必要がある。
+        """
+        assert self.page is not None
+        page = self.page
+        page.wait_for_timeout(1500)
+        upload_btn = page.locator(
+            ".uppy-StatusBar-actionBtn--upload, button.uppy-c-btn-primary"
+        ).filter(has_text=re.compile("アップロード|Upload|追加|保存"))
+        if upload_btn.count() > 0 and upload_btn.first.is_visible():
+            upload_btn.first.click()
+        # Uppy の完了表示を待つ(無ければ時間で待つ)
+        done = page.locator(
+            ".uppy-StatusBar.is-complete, .uppy-Dashboard-Item.is-complete"
+        )
+        for _ in range(40):
+            if done.count() > 0:
+                break
+            err = page.locator(".uppy-StatusBar.is-error, .uppy-Informer p")
+            if err.count() > 0 and err.first.is_visible():
+                raise RuntimeError("アップロードでエラー: " + err.first.inner_text()[:200])
+            if not page.locator(".uppy-StatusBar.is-uploading").count() and _ > 6:
+                break
+            page.wait_for_timeout(500)
+        confirm = page.get_by_role("button", name=re.compile(r"^(保存|登録|確定|OK|完了)$"))
         if confirm.count() > 0 and confirm.last.is_visible():
             confirm.last.click()
+            page.wait_for_timeout(1000)
 
     def _save_failure_snapshot(self) -> None:
         """失敗時の画面を保存(原因調査用)。"""

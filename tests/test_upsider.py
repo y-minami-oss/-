@@ -86,6 +86,7 @@ class ParseTests(unittest.TestCase):
     def test_time_parsing(self):
         self.assertEqual(parse_time("2026/07/01 13:38"), time(13, 38))
         self.assertEqual(parse_time("9時05分"), time(9, 5))
+        self.assertEqual(parse_time("9月3日 15時3分"), time(15, 3))  # UPSIDER は分が1桁のことがある
         self.assertIsNone(parse_time("¥3,200"))
         tx = parse_row_text(0, "07/01 13:40\nGO\n¥3,200", (2026, 7))
         self.assertEqual((tx.time, tx.merchant), (time(13, 40), "GO"))

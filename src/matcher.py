@@ -123,7 +123,9 @@ def parse_date(text: str, default_year: int | None = None) -> date | None:
 
 def parse_time(text: str) -> time | None:
     t = unicodedata.normalize("NFKC", text)
-    m = re.search(r"(?<!\d)([01]?\d|2[0-3])\s*[:時]\s*([0-5]\d)(?!\d)", t)
+    m = re.search(r"(?<!\d)([01]?\d|2[0-3])\s*:\s*([0-5]\d)(?!\d)", t) or re.search(
+        r"(?<!\d)([01]?\d|2[0-3])\s*時\s*([0-5]?\d)\s*分?", t
+    )
     return time(int(m.group(1)), int(m.group(2))) if m else None
 
 

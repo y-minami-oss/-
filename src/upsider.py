@@ -52,7 +52,9 @@ DEFAULT_SELECTORS: dict[str, Any] = {
         "li:has-text('¥')",
     ],
     # 明細詳細で、領収書アップロードを開くボタン(ファイル入力が隠れている場合)
-    "upload_button_text": r"領収書|証憑|アップロード|添付|ファイルを選択",
+    "upload_button_text": r"ファイルを選択|アップロード|添付",
+    # 明細詳細の「証憑」欄にある、領収書を追加するタイル
+    "upload_tile_text": r"ファイルを\s*アップ\s*ロード",
     # 一覧の行テキストにこれが含まれていれば「添付済み」とみなしてスキップ
     "receipt_attached_keywords": ["添付済", "領収書あり", "提出済"],
     # 行の中にこの文字だけの行があれば「領収書が未添付」(UPSIDER は 📄 なし と表示)。
@@ -253,11 +255,26 @@ class UpsiderClient:
         self.page.goto(url or self.list_url, wait_until="domcontentloaded")
         self._wait_settled()
         self._row_selector = None
-        # 一覧の描画を少し待つ(SPA で後から行が出てくる場合がある)
-        for _ in range(10):
-            if self._find_row_selector() is not None:
+        # 一覧の描画を待つ(SPA で後から行が出てくる)。画面の「N 件」表示と行数が揃うまで
+        for _ in range(40):
+            expected = self._expected_count()
+            if expected == 0:
+                break
+            if self._find_row_selector() is not None and (
+                expected is None or self._rows().count() > 0
+            ):
                 break
             self.page.wait_for_timeout(500)
+
+    def _expected_count(self) -> int | None:
+        """一覧上部の「11 件」の数字(読めなければ None)。"""
+        assert self.page is not None
+        try:
+            body = self.page.inner_text("body", timeout=2000)
+        except Exception:
+            return None
+        m = re.search(r"(?m)^\s*(\d+)\s*件\s*$", body)
+        return int(m.group(1)) if m else None
 
     def ensure_logged_in(self) -> None:
         """明細一覧が表示されるまで、手動ログインを待つ。"""
@@ -357,7 +374,16 @@ class UpsiderClient:
         if self._find_row_selector() is None:
             return []  # その月は明細なし
         self._load_all_rows()
+        expected = self._expected_count()
+        if expected:
+            for _ in range(20):  # 「N 件」に行数が追いつくまで待つ
+                if self._rows().count() >= expected:
+                    break
+                self.page.mouse.wheel(0, 5000)
+                self.page.wait_for_timeout(500)
         texts = self._rows().all_inner_texts()
+        if expected is not None and len(texts) < expected:
+            print(f"   ⚠ 画面には {expected} 件とありますが、{len(texts)} 件しか読めませんでした")
         txs: list[Transaction] = []
         for i, text in enumerate(texts):
             tx = parse_row_text(
@@ -405,33 +431,97 @@ class UpsiderClient:
         self._wait_settled()
         page.wait_for_timeout(800)
 
-        file_inputs = page.locator("input[type='file']")
-        if file_inputs.count() > 0:
-            # 非表示の input でも set_input_files は使える。最後に出現したもの=詳細画面のもの
-            file_inputs.last.set_input_files(str(file_path))
+        try:
+            self._upload_on_detail(file_path)
+        except Exception:
+            self._save_failure_snapshot()
+            raise
+
+    def _upload_on_detail(self, file_path: Path) -> None:
+        """明細詳細ページで領収書をアップロードする。"""
+        assert self.page is not None
+        page = self.page
+        upload_re = re.compile(self.sel["upload_tile_text"])
+        inputs = page.locator("input[type='file']")
+        tile = page.get_by_text(upload_re)
+
+        # 詳細ページの描画を待つ(SPA なので URL が変わってから中身が出るまで時間差がある)
+        for _ in range(40):
+            if inputs.count() > 0 or tile.count() > 0:
+                break
+            page.wait_for_timeout(500)
         else:
-            button = page.get_by_role(
-                "button", name=re.compile(self.sel["upload_button_text"])
+            raise RuntimeError(
+                "明細詳細に「ファイルをアップロード」が見つかりません(画面: upsider_fail.png)"
             )
-            if button.count() == 0:
-                button = page.get_by_text(re.compile(self.sel["upload_button_text"]))
-            if button.count() == 0:
-                raise RuntimeError(
-                    "領収書のアップロード欄が見つかりません。明細詳細を開いた状態で "
-                    "`--inspect` を実行し、画面構造を確認してください。"
-                )
-            with page.expect_file_chooser(timeout=10000) as fc:
-                button.first.click()
+
+        if inputs.count() > 0:
+            # 非表示の input でも直接ファイルを渡せる(ファイル選択画面は開かない)
+            inputs.last.set_input_files(str(file_path))
+            return
+
+        # 「ファイルをアップロード」をクリック → ファイル選択画面にファイルを渡す
+        try:
+            with page.expect_file_chooser(timeout=8000) as fc:
+                tile.last.click()
             fc.value.set_files(str(file_path))
-
-        self._wait_settled()
-        page.wait_for_timeout(1500)
-
-        # アップロードの確定ボタンがある画面に備える
+            return
+        except Exception:
+            pass
+        # クリックでダイアログが開くタイプ: ダイアログ内の input / ボタンを探す
+        page.wait_for_timeout(800)
+        if inputs.count() > 0:
+            inputs.last.set_input_files(str(file_path))
+        else:
+            btn = page.get_by_role("button", name=re.compile(self.sel["upload_button_text"]))
+            if btn.count() == 0:
+                raise RuntimeError("アップロード画面を開けませんでした(画面: upsider_fail.png)")
+            with page.expect_file_chooser(timeout=8000) as fc:
+                btn.last.click()
+            fc.value.set_files(str(file_path))
+        page.wait_for_timeout(1000)
         confirm = page.get_by_role("button", name=re.compile(r"^(保存|アップロード|登録|確定|OK)$"))
-        if confirm.count() > 0 and confirm.first.is_visible():
-            confirm.first.click()
-            self._wait_settled()
+        if confirm.count() > 0 and confirm.last.is_visible():
+            confirm.last.click()
+
+    def _save_failure_snapshot(self) -> None:
+        """失敗時の画面を保存(原因調査用)。"""
+        try:
+            assert self.page is not None
+            self.page.screenshot(path="upsider_fail.png", full_page=True)
+            Path("upsider_fail.html").write_text(self.page.content(), encoding="utf-8")
+        except Exception:
+            pass
+
+    def verify_attached(self, tx: Transaction, timeout_s: int = 20) -> bool:
+        """一覧に戻り、その明細が「添付済み」(📄 なし 以外)になったか確かめる。"""
+        assert self.page is not None
+        deadline = time.time() + timeout_s
+        while True:
+            # アップロード完了を待つ時間を兼ねて、少し置いてから一覧を開く
+            self.page.wait_for_timeout(2000)
+            self.open_list(tx.source_url or None)
+            self._load_all_rows()
+            texts = self._rows().all_inner_texts()
+            for i, text in enumerate(texts):
+                t = parse_row_text(
+                    i,
+                    text,
+                    (tx.date.year, tx.date.month) if tx.date else None,
+                    self.sel["receipt_attached_keywords"],
+                    self.sel.get("receipt_missing_keywords"),
+                )
+                if (
+                    t
+                    and t.date == tx.date
+                    and t.time == tx.time
+                    and t.amount == tx.amount
+                    and t.merchant == tx.merchant
+                    and t.has_receipt
+                ):
+                    return True
+            if time.time() > deadline:
+                return False
 
     def close_detail(self) -> None:
         assert self.page is not None

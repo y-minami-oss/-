@@ -271,10 +271,13 @@ def main() -> int:
                 print(f"   ✗ アップロード失敗: {e}")
                 skipped.append(path.name)
                 continue
-            print("   ✓ アップロードしました。ブラウザで反映を確認してください。")
-            if confirm_each:
-                input("   確認できたら Enter で次へ... ")
-            up.close_detail()
+            if not up.verify_attached(target):
+                print("   ⚠ アップロード操作はしましたが、一覧で「添付済み」になったことを確認できませんでした。")
+                print("     (画面を upsider_fail.png に保存しました。UPSIDER の画面でも確認してください)")
+                up._save_failure_snapshot()
+                skipped.append(path.name)
+                continue
+            print("   ✓ アップロードし、一覧で添付済みになったことを確認しました。")
 
             processed.mkdir(exist_ok=True)
             shutil.move(str(path), str(processed / path.name))

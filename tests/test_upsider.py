@@ -287,3 +287,51 @@ class ChromeLoginTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             self._profile(Path(d) / "chrome", "Default", ["google.com"])
             self.assertIsNone(import_login(Path(d) / "dst", Path(d) / "chrome"))
+
+
+# 実画面に近い詳細ページ: 2秒遅れて描画 / タイルは div / input はクリック時に動的生成
+FAKE_DETAIL_SLOW = """<!doctype html><meta charset="utf-8"><div id="root"></div>
+<script>
+setTimeout(() => {
+  document.getElementById('root').innerHTML =
+    '<h3>証憑</h3><div class="tile" id="tile"><span>ファイルをアップ</span><span>ロード</span></div>' +
+    '<div id="files"></div>';
+  document.getElementById('tile').onclick = () => {
+    const inp = document.createElement('input');
+    inp.type = 'file';
+    inp.onchange = e => {
+      document.getElementById('files').textContent = e.target.files[0].name;
+      setTimeout(() => localStorage.setItem('up_a', e.target.files[0].name), 1500);
+    };
+    inp.click();
+  };
+}, 2000);
+</script>"""
+
+
+class SlowDetailBrowserTests(unittest.TestCase):
+    def test_upload_via_tile_and_verify(self):
+        try:
+            from src import upsider
+        except ImportError:
+            self.skipTest("playwright 未導入")
+        with tempfile.TemporaryDirectory() as d:
+            (Path(d) / "list.html").write_text(FAKE_LIST, encoding="utf-8")
+            (Path(d) / "detail.html").write_text(FAKE_DETAIL_SLOW, encoding="utf-8")
+            pdf = Path(d) / "r.pdf"
+            pdf.write_bytes(b"%PDF-1.4\n%%EOF")
+            upsider.PROFILE_DIR = Path(d) / "profile"
+            url = (Path(d) / "list.html").as_uri() + "?yearMonth=202607"
+            try:
+                client = upsider.UpsiderClient(url, show_browser=False)
+                client.__enter__()
+            except Exception as e:
+                self.skipTest(f"Chromium を起動できません: {e}")
+            try:
+                go = client.list_transactions((2026, 7), url)[0]
+                self.assertFalse(go.has_receipt)
+                client.attach_receipt(go, pdf)
+                self.assertEqual(client.page.locator("#files").inner_text(), "r.pdf")
+                self.assertTrue(client.verify_attached(go))
+            finally:
+                client.__exit__(None, None, None)

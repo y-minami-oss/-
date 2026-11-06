@@ -90,18 +90,44 @@ class UpsiderClient:
         PROFILE_DIR.mkdir(parents=True, exist_ok=True)
         self._pw = sync_playwright().start()
         # 永続プロファイル: ログイン状態(Cookie等)がフォルダに残る
-        self._context = self._pw.chromium.launch_persistent_context(
-            str(PROFILE_DIR),
-            headless=not self.show_browser,
-            locale="ja-JP",
-            viewport={"width": 1400, "height": 900},
-            # 通常は不要。Playwright 同梱以外の Chromium を使う場合だけ指定
-            executable_path=os.environ.get("CHROMIUM_PATH") or None,
-        )
+        self._context = self._launch()
         self.page = (
             self._context.pages[0] if self._context.pages else self._context.new_page()
         )
         return self
+
+    def _launch(self):
+        """ブラウザを起動する。
+
+        1. 環境変数 CHROMIUM_PATH があればそれを使う
+        2. Mac/PC に入っている Google Chrome(channel="chrome")を使う
+           → 追加ダウンロード不要で、ログイン時の Cloudflare の確認も通りやすい
+        3. 無ければ Playwright 同梱の Chromium(`playwright install chromium` が必要)
+        """
+        assert self._pw is not None
+        common = dict(
+            headless=not self.show_browser,
+            locale="ja-JP",
+            viewport={"width": 1400, "height": 900},
+        )
+        path = os.environ.get("CHROMIUM_PATH")
+        if path:
+            return self._pw.chromium.launch_persistent_context(
+                str(PROFILE_DIR), executable_path=path, **common
+            )
+        errors = []
+        for opts in ({"channel": "chrome"}, {"channel": "msedge"}, {}):
+            try:
+                return self._pw.chromium.launch_persistent_context(
+                    str(PROFILE_DIR), **opts, **common
+                )
+            except Exception as e:  # そのブラウザが入っていない
+                errors.append(f"{opts or '同梱Chromium'}: {str(e).splitlines()[0]}")
+        raise RuntimeError(
+            "ブラウザを起動できませんでした。Google Chrome をインストールするか、\n"
+            "`python -m playwright install chromium` を実行してください。\n  "
+            + "\n  ".join(errors)
+        )
 
     def __exit__(self, *exc) -> None:
         if self._context is not None:

@@ -42,6 +42,10 @@ class Receipt(BaseModel):
         default=None,
         description="支払方法。例: '現金' / 'クレジットカード' / '交通系IC'。不明なら null。",
     )
+    card_last4: str | None = Field(
+        default=None,
+        description="支払いに使ったカード番号の末尾4桁(例: ****9382 → '9382')。記載がなければ null。",
+    )
     confidence: float = Field(
         default=0.0,
         description="読み取り全体の自信度を 0.0〜1.0 で。金額や日付が不鮮明なら低く。",

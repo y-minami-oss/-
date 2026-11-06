@@ -101,7 +101,8 @@ python -m src.upsider_attach --url "https://up-sider.com/user-cards/<カードID
 4. `--dry-run` を外して実行すると、1件ずつ確認しながら明細を開いて領収書をアップロード → `processed/` へ移動
 
 - GO などの文字入りPDF領収書は Claude API を使わずに読み取ります(APIキー不要)。
-- すでに領収書が添付済みの明細はスキップします。
+- すでに領収書が添付済みの明細(一覧で「📄 なし」以外)はスキップします。
+- 領収書に書かれたカード番号が `upsider.card_last4`(例: 9382)と違うものは、別カードの支払いとして対象外にします。
 - 同日・同額の明細が複数ある場合は順番に割り当て、本当に区別できない場合だけ番号で選んでもらいます。
 - URL は `config.yaml` の `upsider.card_url` に書いておけば `--url` を省略できます。
 - 画面が変わって動かない場合: `python -m src.upsider_attach --inspect` で `upsider_dump.txt` を出力し、共有してください。

@@ -79,7 +79,10 @@ def parse_receipt_text(
     if route:
         description += f" {route.group(1)}→{route.group(2)}"
 
+    card = re.search(r"(?:カード|card)[^\n*]{0,10}\*{2,}\s*(\d{4})", t, re.I)
+
     return Receipt(
+        card_last4=card.group(1) if card else None,
         date=date,
         time=time_str,
         amount=amount,

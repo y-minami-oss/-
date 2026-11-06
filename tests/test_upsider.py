@@ -74,6 +74,7 @@ class ParseTests(unittest.TestCase):
         self.assertEqual(r.tax_amount, 291)
         self.assertEqual(r.vendor, "GO株式会社")
         self.assertIn("小金井市", r.description)
+        self.assertEqual(r.card_last4, "1005")
 
     def test_time_from_filename(self):
         r = parse_receipt_text(GO_TEXT, filename="GO領収書_20260701_1338.pdf")
@@ -175,27 +176,32 @@ class MatchTests(unittest.TestCase):
         self.assertEqual(plan_matches([receipt("2026-07-10", 3200)], self.txs)[0].candidates, [])
 
 
-FAKE_PAGE = """<!doctype html><meta charset="utf-8">
-<table><tbody>
-  <tr><td>2026/07/01</td><td>GO</td><td>¥3,200</td><td class="st"></td></tr>
-  <tr><td>2026/07/02</td><td>Amazon</td><td>¥1,500</td><td class="st">添付済</td></tr>
-</tbody></table>
-<div id="detail" hidden>
-  <button id="up">領収書をアップロード</button>
-  <input type="file" id="f" hidden>
-  <button id="close">閉じる</button>
+# UPSIDER の画面(利用履歴の一覧 → 明細詳細ページ)を模したダミー
+FAKE_LIST = """<!doctype html><meta charset="utf-8">
+<h2>利用履歴 <span>2026年07月</span></h2><div>計 ￥86,810</div><div>11 件</div>
+<div class="list">
+  <a class="card" href="detail.html?id=a"><div>申請ID：+</div>
+    <div><span>7月28日 19時59分</span><span>📄 <b>なし</b></span></div>
+    <div><span>GO(TAXI APP)</span><span>￥4,400</span></div></a>
+  <a class="card" href="detail.html?id=b"><div>申請ID：+</div>
+    <div><span>7月28日 2時40分</span><span>📄 <b>1</b></span></div>
+    <div><span>ｴ-ｴﾇｴ-ｳｴﾌﾞ (ANA WEB)</span><span>￥11,680</span></div></a>
 </div>
 <script>
-let current = null;
-document.querySelectorAll('tbody tr').forEach(tr => tr.onclick = () => {
-  current = tr; document.getElementById('detail').hidden = false;
-});
+for (const b of document.querySelectorAll('b'))
+  if (b.textContent === 'なし' && localStorage.getItem('up_a')) b.textContent = '1';
+</script>"""
+
+FAKE_DETAIL = """<!doctype html><meta charset="utf-8">
+<h2>ｺﾞ-(ﾀｸｼ-ｱﾌﾟﾘ) (GO(TAXI APP))</h2><div>2026年07月28日 19時59分 ￥4,400</div>
+<div>証憑</div><button id="up">ファイルをアップロード</button>
+<input type="file" id="f" style="display:none"><div id="files"></div>
+<script>
 document.getElementById('up').onclick = () => document.getElementById('f').click();
 document.getElementById('f').onchange = e => {
-  current.querySelector('.st').textContent = '添付済 ' + e.target.files[0].name;
-  localStorage.setItem('uploaded', e.target.files[0].name);
+  document.getElementById('files').textContent = e.target.files[0].name;
+  localStorage.setItem('up_a', e.target.files[0].name);
 };
-document.getElementById('close').onclick = () => document.getElementById('detail').hidden = true;
 </script>"""
 
 
@@ -208,12 +214,12 @@ class BrowserTests(unittest.TestCase):
             self.skipTest("playwright 未導入")
 
         with tempfile.TemporaryDirectory() as d:
-            page_path = Path(d) / "list.html"
-            page_path.write_text(FAKE_PAGE, encoding="utf-8")
+            (Path(d) / "list.html").write_text(FAKE_LIST, encoding="utf-8")
+            (Path(d) / "detail.html").write_text(FAKE_DETAIL, encoding="utf-8")
             pdf = Path(d) / "r.pdf"
             pdf.write_bytes(b"%PDF-1.4\n%%EOF")
             upsider.PROFILE_DIR = Path(d) / "profile"
-            url = page_path.as_uri() + "?yearMonth=202607"
+            url = (Path(d) / "list.html").as_uri() + "?yearMonth=202607"
             try:
                 client = upsider.UpsiderClient(url, show_browser=False)
                 client.__enter__()
@@ -221,14 +227,23 @@ class BrowserTests(unittest.TestCase):
                 self.skipTest(f"Chromium を起動できません: {e}")
             try:
                 txs = client.list_transactions((2026, 7), url)
-                self.assertEqual(len(txs), 2)
-                self.assertFalse(txs[0].has_receipt)
-                self.assertTrue(txs[1].has_receipt)
-                client.attach_receipt(txs[0], pdf)
-                status = client.page.locator("tbody tr").first.inner_text()
-                self.assertIn("r.pdf", status)
+                self.assertEqual(len(txs), 2)  # 見出しの「計 ￥86,810」は行に含めない
+                go, ana = txs
+                self.assertEqual((go.date, go.time, go.amount), (date(2026, 7, 28), time(19, 59), 4400))
+                self.assertEqual(go.merchant, "GO(TAXI APP)")
+                self.assertFalse(go.has_receipt)  # 📄 なし
+                self.assertTrue(ana.has_receipt)  # 📄 1
+                res = plan_matches([receipt("2026-07-28", 4400, t="19:42")], txs)
+                self.assertIs(res[0].chosen.tx, go)
+
+                client.attach_receipt(go, pdf)
+                self.assertIn("detail.html", client.page.url)
+                self.assertEqual(client.page.locator("#files").inner_text(), "r.pdf")
                 client.close_detail()
-                self.assertTrue(client.page.locator("#detail").is_hidden())
+                self.assertIn("list.html", client.page.url)
+                # 一覧に戻ると添付済みになっている
+                after = client.list_transactions((2026, 7), url)
+                self.assertTrue(after[0].has_receipt)
             finally:
                 client.__exit__(None, None, None)
 

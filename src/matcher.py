@@ -150,6 +150,7 @@ def parse_row_text(
     text: str,
     year_month: tuple[int, int] | None = None,
     receipt_attached_keywords: list[str] | None = None,
+    receipt_missing_keywords: list[str] | None = None,
 ) -> Transaction | None:
     """一覧の1行分のテキストから明細を組み立てる。日付か金額が無ければ None。"""
     year = year_month[0] if year_month else None
@@ -160,17 +161,36 @@ def parse_row_text(
 
     # 日付・金額・ステータスっぽい行を除いた一番長い行を「利用先」とみなす
     keywords = receipt_attached_keywords or []
-    has_receipt = any(k and k in text for k in keywords)
-
+    missing = receipt_missing_keywords or []
     lines = [ln.strip() for ln in text.splitlines() if ln.strip()]
-    merchant_lines = [
-        ln
-        for ln in lines
-        if parse_date(ln, default_year=year) is None
-        and parse_amount(ln) is None
-        and not re.fullmatch(r"[\d,.\s:/\-¥￥円]+", ln)
-        and not any(k and k in ln for k in keywords)
+    has_receipt = any(k and k in text for k in keywords)
+    if missing and not has_receipt:
+        # 「なし」だけの行があれば未添付、無ければ添付済み
+        has_receipt = not any(
+            re.search(rf"(^|[\s📄]){re.escape(m)}($|\s)", ln) for ln in lines for m in missing
+        )
+
+    # 各行から日付・時刻・金額・ステータス等を取り除き、残った一番長い文字列を「利用先」とする
+    noise = [
+        r"\d{4}\s*[/\-.年]\s*\d{1,2}\s*[/\-.月]\s*\d{1,2}日?",
+        r"\d{1,2}\s*月\s*\d{1,2}\s*日",
+        r"\d{1,2}\s*[:時]\s*\d{2}\s*分?",
+        r"[¥￥]\s*-?[\d,]+",
+        r"-?[\d,]+\s*円",
+        r"申請ID\s*[:：]?\s*\+?",
     ]
+    merchant_lines = []
+    for ln in lines:
+        if ln in missing or any(k and k in ln for k in keywords):
+            continue
+        rest = unicodedata.normalize("NFKC", ln)
+        for pat in noise:
+            rest = re.sub(pat, " ", rest)
+        rest = re.sub(r"\s+", " ", rest).strip(" 📄+:")
+        for m in missing:
+            rest = re.sub(rf"(^|\s){re.escape(m)}($|\s)", " ", rest).strip()
+        if rest and not re.fullmatch(r"[\d,.\s:/\-]+", rest):
+            merchant_lines.append(rest)
     merchant = max(merchant_lines, key=len) if merchant_lines else ""
     return Transaction(
         index, d, amount, merchant, has_receipt, time=parse_time(text), raw=text

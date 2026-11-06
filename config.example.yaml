@@ -40,6 +40,8 @@ default_currency: JPY
 upsider:
   # カード明細一覧のURL。yearMonth はどの月でもOK(領収書の日付から必要な月を自動で開きます)
   card_url: "https://up-sider.com/user-cards/<カードID>/?yearMonth=202607"
+  # このカードの末尾4桁。領収書に別カードの番号が書かれていれば対象外にする
+  card_last4: "9382"
   # 領収書の日付とカード明細の日付が、何日までずれていても同じ取引とみなすか
   date_tolerance_days: 3
   # 画面が変わって動かないときだけ設定(--inspect の出力を見て調整)

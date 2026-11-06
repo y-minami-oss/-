@@ -123,6 +123,11 @@ def main() -> int:
         action="store_true",
         help="URLの月だけ処理する(既定は領収書の日付から必要な月を全部読む)",
     )
+    parser.add_argument(
+        "--card-last4",
+        default=str(up_cfg.get("card_last4") or "") or None,
+        help="このカードの末尾4桁(例: 9382)。別カードで払った領収書は除外する",
+    )
     parser.add_argument("--yes", action="store_true", help="自動で決まった明細は確認せず添付")
     args = parser.parse_args()
 
@@ -169,10 +174,26 @@ def main() -> int:
         except Exception as e:
             print(f"  ✗ 読み取り失敗: {e}")
             continue
-        print(f"   {r.date} {r.time or '--:--'}  ¥{r.amount:,}  {r.vendor}")
+        card = f"  ****{r.card_last4}" if r.card_last4 else ""
+        print(f"   {r.date} {r.time or '--:--'}  ¥{r.amount:,}  {r.vendor}{card}")
         items.append((path, r))
     if not items:
         return 1
+
+    # 別のカードで支払った領収書は、このカードの明細には出てこないので除外
+    other_card: list[tuple[Path, Receipt]] = []
+    if args.card_last4:
+        other_card = [
+            (p, r) for p, r in items if r.card_last4 and r.card_last4 != args.card_last4
+        ]
+        items = [(p, r) for p, r in items if (p, r) not in other_card]
+        if other_card:
+            print(f"\n💳 別カードで支払った領収書 {len(other_card)} 件は対象外にします:")
+            for p, r in other_card:
+                print(f"   - {p.name}  ¥{r.amount:,}  (****{r.card_last4})")
+        if not items:
+            print("このカード(****%s)の領収書がありません。" % args.card_last4)
+            return 0
 
     # 2. 明細の取得 → 3. 突き合わせ
     if args.transactions_csv:
@@ -261,6 +282,8 @@ def main() -> int:
 
     print("\n" + "=" * 70)
     print(f" 完了: 添付 {len(uploaded)} 件 / スキップ {len(skipped)} 件")
+    if other_card:
+        print(f"   (別カードのため対象外: {len(other_card)} 件)")
     for name in skipped:
         print(f"   - 未添付: {name}")
     return 0

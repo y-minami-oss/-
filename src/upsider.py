@@ -24,7 +24,10 @@ PROFILE_DIR = Path(".auth/upsider")
 
 DEFAULT_SELECTORS: dict[str, Any] = {
     # 明細一覧の1行。上から順に試し、見つかったものを使う。
+    # "auto" = 「日付(7月28日 など)と金額(¥)を1つずつ含む最小の要素」を行とみなす。
+    # UPSIDER の利用履歴はカード型の一覧なので、これで拾える。
     "row": [
+        "auto",
         "table tbody tr",
         "[role='row']:has([role='cell'])",
         "[data-testid*='transaction']",
@@ -34,9 +37,36 @@ DEFAULT_SELECTORS: dict[str, Any] = {
     "upload_button_text": r"領収書|証憑|アップロード|添付|ファイルを選択",
     # 一覧の行テキストにこれが含まれていれば「添付済み」とみなしてスキップ
     "receipt_attached_keywords": ["添付済", "領収書あり", "提出済"],
+    # 行の中にこの文字だけの行があれば「領収書が未添付」(UPSIDER は 📄 なし と表示)。
+    # これが無い行は添付済みとみなす。
+    "receipt_missing_keywords": ["なし"],
     # 詳細を閉じるボタン(無ければ Escape キー → 一覧URLへ戻る)
     "close_button_text": r"^(閉じる|×|✕)$",
 }
+
+
+AUTO_ROW_ATTR = "data-claude-row"
+
+_MARK_ROWS_JS = """
+(attr) => {
+  document.querySelectorAll('[' + attr + ']').forEach(e => e.removeAttribute(attr));
+  const dateRe = /\\d{1,2}月\\d{1,2}日|\\d{4}[\\/\\-.]\\d{1,2}[\\/\\-.]\\d{1,2}/g;
+  const amtRe = /[¥￥]\\s*[\\d,]+/;
+  const ok = el => {
+    const t = el.textContent || '';
+    if (!amtRe.test(t)) return false;
+    const m = t.match(dateRe);
+    return m && m.length === 1;
+  };
+  const all = [...document.querySelectorAll('body *')].filter(ok);
+  const set = new Set(all);
+  // 子孫に条件を満たす要素を持たない「最小」の要素 = 明細1件
+  const rows = all.filter(el => ![...el.querySelectorAll('*')].some(c => set.has(c)))
+                  .filter(el => el.getClientRects().length > 0);
+  rows.forEach((el, i) => el.setAttribute(attr, String(i)));
+  return rows.length;
+}
+"""
 
 
 class UpsiderClient:
@@ -125,6 +155,11 @@ class UpsiderClient:
         rows = self.sel["row"]
         for s in [rows] if isinstance(rows, str) else rows:
             try:
+                if s == "auto":
+                    if self.page.evaluate(_MARK_ROWS_JS, AUTO_ROW_ATTR) > 0:
+                        self._row_selector = s
+                        return s
+                    continue
                 if self.page.locator(s).count() > 0:
                     self._row_selector = s
                     return s
@@ -135,6 +170,10 @@ class UpsiderClient:
     def _rows(self) -> Locator:
         assert self.page is not None
         s = self._row_selector or self._find_row_selector()
+        if s == "auto":
+            # スクロールで行が増える・再描画されるので毎回付け直す
+            self.page.evaluate(_MARK_ROWS_JS, AUTO_ROW_ATTR)
+            return self.page.locator(f"[{AUTO_ROW_ATTR}]")
         if s is None:
             raise RuntimeError(
                 "明細一覧の行が見つかりません。`--inspect` で画面構造を書き出し、"
@@ -173,7 +212,11 @@ class UpsiderClient:
         txs: list[Transaction] = []
         for i, text in enumerate(texts):
             tx = parse_row_text(
-                i, text, year_month, self.sel["receipt_attached_keywords"]
+                i,
+                text,
+                year_month,
+                self.sel["receipt_attached_keywords"],
+                self.sel.get("receipt_missing_keywords"),
             )
             if tx is not None:
                 tx.source_url = url
@@ -202,7 +245,14 @@ class UpsiderClient:
         self._load_all_rows()
         row = self._locate_row(tx)
         row.scroll_into_view_if_needed()
+        before = page.url
+        self._return_url = before
         row.click()
+        # UPSIDER は明細詳細が別ページ(/transactions/<決済ID>/)。遷移を待つ
+        try:
+            page.wait_for_url(lambda u: u != before, timeout=10000)
+        except Exception:
+            pass  # 同じページ内でパネルが開く画面の場合
         self._wait_settled()
         page.wait_for_timeout(800)
 
@@ -236,6 +286,12 @@ class UpsiderClient:
 
     def close_detail(self) -> None:
         assert self.page is not None
+        # 詳細が別ページ(UPSIDER は /transactions/<決済ID>/)なら一覧に戻る
+        back = getattr(self, "_return_url", None)
+        if back and self.page.url != back:
+            self.page.goto(back, wait_until="domcontentloaded")
+            self._wait_settled()
+            return
         close = self.page.get_by_role(
             "button", name=re.compile(self.sel["close_button_text"])
         )
